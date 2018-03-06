@@ -1,4 +1,4 @@
-Introduction 3
+Introduction
 1.1 Purpose
 The purpose of the system is to compare and visualize informations about hostpitals on a geographical map. The user should be able to select different variables and they should visualize on the map to give the user a benchmark of the hospitals. In order to achieve this we use the official data from the BAG (bag.admin.ch).
 1.2 Stakeholders
@@ -9,20 +9,30 @@ The purpose of the system is to compare and visualize informations about hostpit
 1.3 Definitions
 
 1.4 System Overview
-
-1.5 References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-1.6 Open Questions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-2 Overall Description 4
-2.1 Use Cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-2.1.1 Use cases of the admin . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-2.1.2 Use cases of the driver . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-2.1.3 Use cases of the system . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-2.2 Actor Characteristics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-2.2.1 Admin . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-2.2.2 Driver . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-2.3 Open Questions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-2.4 Nice-to-have List . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-3 Specific Requirements 6
+Frontend: Based on angular, displays hospitals and attributes on a switzerland map, user can select attributes to display
+Backend: Based on nodeJS, stores and manages the data, allow data import, definitions and calculation of new varibales
+1.5 References
+Project description Geopital from eonum
+1.6 Open Question
+- categorization of numerical variables for a simpler visualization
+2 Overall Description
+2.1 Use Cases
+2.1.1 User
+- Display map with location of all hospitals
+- Zoom in
+- Selecting variables, display the selected variables on the map with size, color, shape
+- View hospital profiles
+2.1.2 Admin
+- Import new data
+- Manage data (add, edit, delete)
+- Add, calculate new attributes
+2.2 Actor Characteristics
+User: easy understandable without reading a manual, fast response
+Admin: easy to maintain application and data
+2.3 Open Questions
+- Authentication/Authorisation for admin needed?
+- Statistic view (boxplot, scatterplot)  needed? How to realize?
+3 Specific Requirements
 3.1 Functional Requirements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
 3.2 Non-functional Requirements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
 3.3 Open Questions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
