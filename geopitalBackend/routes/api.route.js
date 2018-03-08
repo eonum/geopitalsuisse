@@ -1,8 +1,8 @@
-var express = require('express')
-var router = express.Router()
+var express = require('express');
+var router = express.Router();
 
-var hospitalAddresses = require('./api/geopital.routes')
+var hospitalAddresses = require('./api/geopital.routes');
 
-router.use('/hospital/', hospitalAddresses)
+router.use('/hospital/', hospitalAddresses);
 
 module.exports = router;
