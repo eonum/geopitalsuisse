@@ -49,6 +49,6 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 mongoose.Promise = bluebird;
-mongoose.connect('mongodb://127.0.0.1:27017/geopitalsuisse')
-    .then(()=> { console.log(`Succesfully Connected to the Mongodb Database  at URL : mongodb://127.0.0.1:27017/geopitalsuisse`)})
-    .catch(()=> { console.log(`Error Connecting to the Mongodb Database at URL : mongodb://127.0.0.1:27017/geopitalsuisse`)})
+mongoose.connect('mongodb://127.0.0.1:27017/geopital-backend')
+    .then(()=> { console.log(`Succesfully Connected to the Mongodb Database  at URL : mongodb://127.0.0.1:27017/geopital-backend`)})
+    .catch(()=> { console.log(`Error Connecting to the Mongodb Database at URL : mongodb://127.0.0.1:27017/geopital-backend`)})
