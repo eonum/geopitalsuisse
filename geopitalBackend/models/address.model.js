@@ -2,9 +2,7 @@
 var mongoose = require('mongoose');
 
 // Define Hospital Schema
-var Schema = new mongoose.Schema;
-
-var addressSchema = new Schema({
+var addressSchema = new mongoose.Schema({
     street: String,
     streetNumber: Number,
     plz: Number,
@@ -13,3 +11,5 @@ var addressSchema = new Schema({
 
 // Compile model from schema
 var addresslModel = mongoose.model('addressModel', addressSchema);
+
+module.export = addresslModel;
