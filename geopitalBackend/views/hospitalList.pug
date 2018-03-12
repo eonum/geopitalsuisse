@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	h1=title
+
+	ul
+	each hospital in hospitalList
+		li
+			p #{hospital.name} | #{hospital.year}
+
+	else
+		li There are no hospitals.

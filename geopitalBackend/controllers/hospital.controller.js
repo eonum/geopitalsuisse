@@ -25,6 +25,7 @@ exports.getHospitals = async function(req, res, next){
 }
 exports.createDummyHospitals = async function(req, res, next){
 	var dummy = {
+		year: "1991",
 		name: "Test",
 		street: "Street",
 		streetNumber: "12",
