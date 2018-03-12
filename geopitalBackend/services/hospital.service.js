@@ -93,4 +93,4 @@ exports.deleteHospital = async function(id){
     }catch(e){
         throw Error("Error Occured while Deleting the hospitla")
     }
-}
+};
