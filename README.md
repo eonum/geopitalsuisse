@@ -17,8 +17,9 @@
  7. change to geopitalFrontend
  8. npm install
  9. ng serve -> The frontend is now running.
- 10.Access  
+
+## Access  
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTg4MjYyMjU2OF19
+eyJoaXN0b3J5IjpbLTM1ODAzNDYwNV19
 -->
