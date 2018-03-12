@@ -19,8 +19,8 @@
  9. ng serve -> The frontend is now running.
 
 ## Backend
-You can access the backend on localh  
+You can access the backend on localhost:3000  
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMTA1ODcyMzddfQ==
+eyJoaXN0b3J5IjpbLTE3NTkyMjg2MjBdfQ==
 -->
