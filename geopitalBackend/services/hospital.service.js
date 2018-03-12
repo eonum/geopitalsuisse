@@ -11,8 +11,10 @@ exports.getHospitals = async function(){
 
     try {
 
+        var hospital = await Hospital.paginate(query, options);
+
         // Return the hospital list returned by the mongoose promise
-        return Hospital;
+        return hospital;
 
     } catch (e) {
 
@@ -52,7 +54,7 @@ exports.createHospital = async function(hospital){
 };
 
 exports.updateHospital = async function(hospital){
-    var id = hospital.id
+    var id = hospital.id;
 
     try{
 
@@ -70,9 +72,7 @@ exports.updateHospital = async function(hospital){
     console.log(oldHospital);
 
     //Edit the hospital object
-    oldHospital.title = todo.title;
-    oldHospital.description = todo.description;
-    oldHospital.status = todo.status;
+    oldHospital.name = hospital.name;
 
     console.log(oldHospital);
 
@@ -83,3 +83,14 @@ exports.updateHospital = async function(hospital){
         throw Error("An Error occured while updating the Hospital");
     }
 };
+
+exports.deleteHospital = async function(id){
+
+    // Delete the hospital
+    try{
+        return await Hospital.remove({_id: id})
+
+    }catch(e){
+        throw Error("Error Occured while Deleting the hospitla")
+    }
+}
