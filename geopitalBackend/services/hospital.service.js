@@ -26,6 +26,7 @@ exports.createHospital = async function(hospital){
     // Creating a new hospital object by using the new keyword
     var newHospital = new Hospital({
         name: hospital.name,
+        address: hospital.address,
     });
 
     // Creating a new address object by using the new keyword
