@@ -25,8 +25,11 @@ Following routes can be accessed:
  - /api/geopital/ gives you two hospitals with addresses
  - /api/hospital/ gives you an empty array: Work in progress
 
+## Frontend
+You can access the frontend on localhost:4200
+
   
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU3NjM2ODYzMF19
+eyJoaXN0b3J5IjpbLTE5Mjk4MDY1MzZdfQ==
 -->
