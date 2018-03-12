@@ -22,11 +22,11 @@
 You can access the backend on localhost:3000, it gives you json data about the hospitals.
 Following routes can be accessed:
 
- - /api/geopital/ gives you an empty array: Work in progress
- - /api/hospital/
+ - /api/geopital/ gives you two hospitals with addresses
+ - /api/hospital/ gives you an empty array: Work in progress
 
   
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA5NjkwNDk4OF19
+eyJoaXN0b3J5IjpbLTU3NjM2ODYzMF19
 -->
