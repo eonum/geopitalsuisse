@@ -12,5 +12,4 @@ var addressSchema = new mongoose.Schema({
 // Compile model from schema
 var addresslModel = mongoose.model('addressModel', addressSchema);
 
-// Export function to create "addressModel" model class
 module.export = addresslModel;

@@ -11,10 +11,8 @@ exports.getHospitals = async function(){
 
     try {
 
-        var hospital = await Hospital.paginate(query, options);
-
         // Return the hospital list returned by the mongoose promise
-        return hospital;
+        return Hospital;
 
     } catch (e) {
 
@@ -28,7 +26,6 @@ exports.createHospital = async function(hospital){
     // Creating a new hospital object by using the new keyword
     var newHospital = new Hospital({
         name: hospital.name,
-        address: hospital.address,
     });
 
     // Creating a new address object by using the new keyword
@@ -42,8 +39,8 @@ exports.createHospital = async function(hospital){
     try{
 
         // Saving the Hospital
-        //console.log("Are you working ?");
-        var savedHospital = await newHospital.save();
+        console.log("Are you working ?");
+        var savedHospital = await newHospital.save() && newAddress.save();
 
         return savedHospital;
     }catch(e){
@@ -53,8 +50,8 @@ exports.createHospital = async function(hospital){
     }
 };
 
-exports.updateHospital = async function(hospital){
-    var id = hospital.id;
+exports.updateTodo = async function(hospital){
+    var id = hospital.id
 
     try{
 
@@ -64,15 +61,17 @@ exports.updateHospital = async function(hospital){
         throw Error("Error occured while Finding the Todo")
     }
 
-    // If no old hospital Object exists return false
+    // If no old Todo Object exists return false
     if(!oldHospital){
         return false;
     }
 
-    console.log(oldHospital);
+    console.log(oldHospital)
 
     //Edit the hospital object
-    oldHospital.name = hospital.name;
+    oldHospital.title = todo.title;
+    oldHospital.description = todo.description;
+    oldHospital.status = todo.status;
 
     console.log(oldHospital);
 
@@ -80,17 +79,6 @@ exports.updateHospital = async function(hospital){
         var savedHospital = await oldHospital.save();
         return savedHospital;
     }catch(e){
-        throw Error("An Error occured while updating the Hospital");
-    }
-};
-
-exports.deleteHospital = async function(id){
-
-    // Delete the hospital
-    try{
-        return await Hospital.remove({_id: id})
-
-    }catch(e){
-        throw Error("Error Occured while Deleting the hospitla")
+        throw Error("And Error occured while updating the Hospital");
     }
 };
