@@ -18,8 +18,9 @@
  8. npm install
  9. ng serve -> The frontend is now running.
 
-##   
+## Backend
+You can access the backend on localh  
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTc3MzM1MjddfQ==
+eyJoaXN0b3J5IjpbLTEwMTA1ODcyMzddfQ==
 -->
