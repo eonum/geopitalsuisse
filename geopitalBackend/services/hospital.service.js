@@ -39,8 +39,8 @@ exports.createHospital = async function(hospital){
     try{
 
         // Saving the Hospital
-        console.log("Are you working ?");
-        var savedHospital = await newHospital.save() && newAddress.save();
+        //console.log("Are you working ?");
+        var savedHospital = await newHospital.save();
 
         return savedHospital;
     }catch(e){
@@ -50,7 +50,7 @@ exports.createHospital = async function(hospital){
     }
 };
 
-exports.updateTodo = async function(hospital){
+exports.updateHospital = async function(hospital){
     var id = hospital.id
 
     try{
@@ -66,7 +66,7 @@ exports.updateTodo = async function(hospital){
         return false;
     }
 
-    console.log(oldHospital)
+    console.log(oldHospital);
 
     //Edit the hospital object
     oldHospital.title = todo.title;
