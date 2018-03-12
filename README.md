@@ -13,8 +13,12 @@
  3. Clone Repository
  4. Change to geopitalBackend
  5. npm install
- 6. npm start 
+ 6. npm start -> The backend is now runnig
+ 7. change to geopitalFrontend
+ 8. npm install
+ 9. ng serve -> The frontend is now running.
+ 10.Access  
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk0ODY1MTkyM119
+eyJoaXN0b3J5IjpbLTg4MjYyMjU2OF19
 -->
