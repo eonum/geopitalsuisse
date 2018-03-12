@@ -19,8 +19,14 @@
  9. ng serve -> The frontend is now running.
 
 ## Backend
-You can access the backend on localhost:3000  
+You can access the backend on localhost:3000, it gives you json data about the hospitals.
+Following routes can be accessed:
+
+ - /api/geopital/ gives you an empty array: Work in progress
+ - /api/hospital/
+
+  
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3NTkyMjg2MjBdfQ==
+eyJoaXN0b3J5IjpbMTA5NjkwNDk4OF19
 -->
