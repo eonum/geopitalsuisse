@@ -61,7 +61,7 @@ exports.updateTodo = async function(hospital){
         throw Error("Error occured while Finding the Todo")
     }
 
-    // If no old Todo Object exists return false
+    // If no old hospital Object exists return false
     if(!oldHospital){
         return false;
     }
@@ -79,6 +79,6 @@ exports.updateTodo = async function(hospital){
         var savedHospital = await oldHospital.save();
         return savedHospital;
     }catch(e){
-        throw Error("And Error occured while updating the Hospital");
+        throw Error("An Error occured while updating the Hospital");
     }
 };
