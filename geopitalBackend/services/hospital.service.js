@@ -12,7 +12,7 @@ exports.getHospitals = async function(){
     try {
 
         // Return the hospital list returned by the mongoose promise
-        return Hospital;
+        return Hospital.find();
 
     } catch (e) {
 
@@ -49,6 +49,17 @@ exports.createHospital = async function(hospital){
         throw Error("Error while Creating Hospital")
     }
 };
+
+exports.hospitalCreate = async function(name){
+	var hospital = new Hospital(name);
+	hospital.save(function (err){
+		if(err){
+			cb(err, null)
+			return
+		}
+		console.log('New hospital:' + hospital);
+	});
+}
 
 exports.updateTodo = async function(hospital){
     var id = hospital.id

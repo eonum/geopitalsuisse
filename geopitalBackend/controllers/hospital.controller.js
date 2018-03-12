@@ -23,3 +23,15 @@ exports.getHospitals = async function(req, res, next){
 
     }
 }
+exports.createDummyHospitals = async function(req, res, next){
+	var dummy = {
+		name: "Test",
+		street: "Street",
+		streetNumber: "12",
+		plz:"1511",
+		city:"Test"
+	}
+	var hospital = hospitalService.hospitalCreate(dummy);
+	return res.status(200).json({status: 200,data: hospital, message:'This should work'
+	})
+}
