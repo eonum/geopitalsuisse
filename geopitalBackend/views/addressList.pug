@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	h1=title
+
+	ul
+	each address in addressList
+		li
+			p #{address.street} #{address.streetNumber} , #{address.plz} #{address.city}
+
+	else
+		li There are no hospitals.
