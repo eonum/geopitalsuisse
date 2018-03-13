@@ -1,15 +1,27 @@
 // Require mongoose
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var Hospital = require('./hospital.model');
 
 // Define Hospital Schema
 var addressSchema = new mongoose.Schema({
+	hospital: { type: Schema.Types.ObjectId, ref:'Hospital'},
     street: String,
     streetNumber: Number,
     plz: Number,
     city: String
 });
 
-// Compile model from schema
-var addresslModel = mongoose.model('addressModel', addressSchema);
+addressSchema.virtual('line').get(function(){
+	return this.street+' '+this.streetNumber+', '+this.plz+' '+this.city
+});
+// Virtual for author's full name
+addressSchema
+.virtual('name')
+.get(function () {
+  return this.street + ', ' + this.plz;
+});
 
-module.export = addresslModel;
+// Compile model from schema
+
+module.exports = mongoose.model('Address', addressSchema);;

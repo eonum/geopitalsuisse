@@ -1,5 +1,5 @@
 var hospitalService = require('../services/hospital.service');
-
+var Hospital = require('../models/hospital.model');
 // Saving the context of this module inside the _the variable
 
 _this = this;
@@ -10,11 +10,15 @@ exports.getHospitals = async function(req, res, next){
 
     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
     try{
-
-        var hospitals = await hospitalService.getHospitals();
-
+      Hospital.find({year: 2016}).populate('address').exec(function (err, hospitals){
+        if (err){return next(err);}
+        console.log(hospitals);
+        var list = hospitals;
+        return res.status(200).json({status: 200, data: list, message: "Hospital Succesfully Recieved"});
+      });
+        //var hospitals = await hospitalService.getHospitals();
         // Return the hospital list with the appropriate HTTP Status Code and Message.
-        return res.status(200).json({status: 200, data: hospitals, message: "Hospital Succesfully Recieved"});
+
 
     }catch(e){
 
@@ -22,4 +26,17 @@ exports.getHospitals = async function(req, res, next){
         return res.status(400).json({status: 400, message: e.message});
 
     }
+}
+exports.createDummyHospitals = async function(req, res, next){
+	var dummy = {
+		year: "2015",
+		name: "Insel Spital",
+		street: "Freiburgstrasse",
+		streetNumber: "8",
+		plz:"3010",
+		city:"Bern"
+	}
+	var hospital = hospitalService.hospitalCreate(dummy);
+	return res.status(200).json({status: 200,data: hospital, message:'This should work'
+	})
 }
