@@ -1,4 +1,5 @@
-./idea/
+.idea/
+.DS_Store
 geopitalBackend/node_modules/
 
 
