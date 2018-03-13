@@ -4,10 +4,14 @@ import { AgmCoreModule } from '@agm/core';
 import { FormsModule} from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { AppComponent } from './app.component';
+import { MapsComponent } from './components/maps/maps.component';
+import { CharacteristicsComponent } from './components/characteristics/characteristics.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    MapsComponent,
+    CharacteristicsComponent,
   ],
   imports: [
     BrowserModule,
