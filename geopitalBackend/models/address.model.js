@@ -12,7 +12,16 @@ var addressSchema = new mongoose.Schema({
     city: String
 });
 
-// Compile model from schema
-var Address = mongoose.model('Address', addressSchema);
+addressSchema.virtual('line').get(function(){
+	return this.street+' '+this.streetNumber+', '+this.plz+' '+this.city
+});
+// Virtual for author's full name
+addressSchema
+.virtual('name')
+.get(function () {
+  return this.street + ', ' + this.plz;
+});
 
-module.export = Address;
+// Compile model from schema
+
+module.exports = mongoose.model('Address', addressSchema);;

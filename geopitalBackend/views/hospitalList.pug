@@ -6,7 +6,7 @@ block content
 	ul
 	each hospital in hospitalList
 		li
-			p #{hospital.name} | #{hospital.year}
+			p #{hospital.year} #{hospital.name} #{hospital.address.line}
 
 	else
 		li There are no hospitals.
