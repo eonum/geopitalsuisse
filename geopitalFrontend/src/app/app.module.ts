@@ -6,12 +6,14 @@ import { CommonModule } from "@angular/common";
 import { AppComponent } from './app.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { CharacteristicsComponent } from './components/characteristics/characteristics.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapsComponent,
     CharacteristicsComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
