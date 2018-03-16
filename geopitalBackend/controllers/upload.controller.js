@@ -32,7 +32,7 @@ exports.uploadPost= function (req, res) {
         //convert excel to json and stores it to the uploads directory
         convertExcel('uploads/hospitalData.xlsx', 'uploads/hospitalData.json')
 
-
+        uploadService.storeJsonImport();
 
         res.end('File uploaded!')
     }
