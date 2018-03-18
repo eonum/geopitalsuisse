@@ -10,6 +10,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {HttpClientModule} from '@angular/common/http';
 import {MapService} from './services/map.service';
 import {CharacteristicsService} from './services/characteristics.service';
+import { HospitalComponent } from './components/hospital/hospital.component';
+import { AddressComponent } from './components/address/address.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import {CharacteristicsService} from './services/characteristics.service';
     MapsComponent,
     CharacteristicsComponent,
     NavbarComponent,
+    HospitalComponent,
+    AddressComponent,
   ],
   imports: [
     BrowserModule,
