@@ -7,7 +7,7 @@ var Hospital = require('./hospital.model');
 var addressSchema = new mongoose.Schema({
 	hospital: { type: Schema.Types.ObjectId, ref:'Hospital'},
     street: String,
-    streetNumber: Number,
+    streetNumber: String,//A street number can contain a letter: 23a
     plz: Number,
     city: String
 });
