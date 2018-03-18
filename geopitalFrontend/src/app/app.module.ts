@@ -13,6 +13,8 @@ import {CharacteristicsService} from './services/characteristics.service';
 import { HospitalComponent } from './components/hospital/hospital.component';
 import { AddressComponent } from './components/address/address.component';
 import {environment} from "../environments/environment";
+import {HospitalService} from "./services/hospital.service";
+import {AddressService} from "./services/address.service";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import {environment} from "../environments/environment";
   ],
   providers: [
     MapService,
-    CharacteristicsService
+    CharacteristicsService,
+    HospitalService,
+    AddressService
   ],
   bootstrap: [AppComponent]
 })

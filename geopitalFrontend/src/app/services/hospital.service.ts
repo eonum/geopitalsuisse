@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 //import { Article } from './article.type';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+import { Hospital} from "../Interfaces/hospital.type";
 import 'rxjs/add/operator/map';
-import Hospital from "../models/hospital.model";
 import {environment} from "../../environments/environment";
 
 @Injectable()

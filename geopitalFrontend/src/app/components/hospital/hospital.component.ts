@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HospitalService} from "../../services/hospital.service";
-import Hospital from "../../models/hospital.model";
+import {Hospital} from "../../Interfaces/hospital.type";
+import {HospitalService} from "../../services/hospital.service";
 
 @Component({
   selector: 'app-hospital',
@@ -9,18 +9,18 @@ import Hospital from "../../models/hospital.model";
 })
 export class HospitalComponent implements OnInit {
 
-  hospital: Hospital;
+  hospital: Hospital[] = [];
 
   constructor(
     private hospitalService: HospitalService
   ) { }
 
   ngOnInit() {
-/*/!*    this.hospitalService.getDummyData().subscribe(
-      (hos) => {
-        this.hospital = hos[0];*!/
-      }
-    )*/
+    this.hospitalService.getDummyData().subscribe((data) => {
+      this.hospital = data;
+      debugger;
+      console.log(data);
+    });
   }
 
 }
