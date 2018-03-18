@@ -12,6 +12,7 @@ import {MapService} from './services/map.service';
 import {CharacteristicsService} from './services/characteristics.service';
 import { HospitalComponent } from './components/hospital/hospital.component';
 import { AddressComponent } from './components/address/address.component';
+import {environment} from "../environments/environment";
 
 @NgModule({
   declarations: [
