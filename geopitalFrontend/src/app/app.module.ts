@@ -15,6 +15,7 @@ import { AddressComponent } from './components/address/address.component';
 import {environment} from "../environments/environment";
 import {HospitalService} from "./services/hospital.service";
 import {AddressService} from "./services/address.service";
+import {AppRoutingModule} from "./app-routing.module";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import {AddressService} from "./services/address.service";
     HttpClientModule,
     CommonModule,
     FormsModule,
+    AppRoutingModule,
     AgmCoreModule.forRoot ({
       apiKey: 'AIzaSyBRs9r5mVR66zxTv3Jf5lG05M5jRkWf-Ws'
     })

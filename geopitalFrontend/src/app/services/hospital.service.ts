@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-//import { Article } from './article.type';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Hospital} from "../Interfaces/hospital.type";
@@ -17,7 +16,7 @@ export class HospitalService {
   }
 
   getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + '/api/geopital')
+    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/geopital')
   }
 
 }
