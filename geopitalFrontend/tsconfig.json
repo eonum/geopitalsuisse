@@ -1,4 +1,9 @@
 {
+  "exclude": [
+    "typings/browser.d.ts",
+    "typings/browser",
+    "node_modules"
+  ],
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
@@ -17,3 +22,4 @@
     ]
   }
 }
+
