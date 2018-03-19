@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+
+  <link rel="stylesheet" href="../../../assets/map-styles.css">
+
+
+  <!--Row 1 - title image and colour key-->
+
+  <!--Row 2 - search option radio buttons (buttons hidden, labels instead)-->
+  <tr>
+    <td colspan='2' id='title'>
+      <input type="radio" id='location'  name="search_option" value="location" checked="checked"><label for="location"> Location </label>&nbsp;&nbsp;
+      <input type="radio" id='dashboard'  name="search_option" value="dashboard"><label for="dashboard"> Dashboard </label>&nbsp;&nbsp;
+      <input type="radio" id='manager' name="search_option" value="manager"><label for="manager"> Manager </label>&nbsp;&nbsp;
+      <input type="radio" id='department'  name="search_option" value="department"><label for="department"> Department </label>&nbsp;&nbsp;
+      <input type="radio" id='group'  name="search_option" value="group"><label for="group"> Group </label>&nbsp;&nbsp;
+    </td>
+
+
+    <!--Row 3 - a break so there is a space inbetween the radio and the charts-->
+  <tr>
+    <td colspan='3'></td>
+  </tr>
+  <!--Row 4 - charts - 4 columns, charts in individual  tables -->
+  <tr>
+    <!--list_title - dynamically created checkbox - see effective.js -->
+    <td class='chart_td'>
+      <table class='chart_table'>
+        <tr><td id='list_title'>LOCATION</td></tr>
+        <tr><td id='list_radio'></td><tr>
+      </table>
+    </td>
+    <!--map td and title -->
+    <td class='chart_td'>
+      <table class='chart_table'>
+        <tr><td id='map_title'>LOCATION</td></tr>
+        <tr><td><div id="map"></div>
+        </td><tr>
+      </table>
+    </td>
+
+  </tr>
+</table>
+
+</body>
+</html>

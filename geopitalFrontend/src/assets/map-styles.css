@@ -1,0 +1,204 @@
+/* ALL TABLES */
+table {
+  width: 100%;
+  border-collapse:collapse;
+  font-family: sans-serif;
+  padding: 0;
+  border: none;
+}
+
+#green,#red,#amber {
+  color: white;
+  padding: 12px;
+  text-align: center;
+  font-size: 20px;
+  border: none;
+}
+
+#green{
+  background-color: #006600;
+}
+#red{
+  background-color: #cc0000;
+}
+#amber{
+  background-color: #ff9900;
+}
+
+
+
+#map {
+  width: 1200px;
+  height: 600px;
+  margin: 0;
+  padding: 0;
+}
+
+.effective, .effective svg {
+  position: absolute;
+}
+
+.effective svg {
+  width: 60px;
+  height: 60px;
+  padding-right: 100px;
+  font: 10px sans-serif;
+}
+
+.effective circle {
+  fill: #DC143C;
+  stroke: grey;
+  stroke-width: 0.5px;
+}
+/* Colour Table and individual tds - Colour key, Row 1*/
+#colours{
+  width: 30%;
+}
+
+
+/* Title Bar - Row 1, image and text*/
+#title {
+  background-color: #3d4a57;
+  color: white;
+  font-size: 25px;
+  padding: 14px;
+  text-align: right;
+}
+
+#title_img {
+  text-align: left;
+  background-color: #3d4a57;
+  padding: 4px;
+}
+
+/* Line Chart lines, tooltips and All axes text and paths */
+
+#title_txt {
+  text-align: right;
+  padding: 14px;
+}
+
+
+.tooltip_map{
+  width: auto;
+  height: auto;
+  text-align: left;
+  visibility: hidden;
+  position: absolute;
+  border: 1px solid grey;
+  padding: 5px;
+  font: 10px sans-serif;
+  background: white;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+
+.line {
+  fill: none;
+  stroke-width: 2.5px;
+}
+
+
+.x_hbar text, .y_hbar text, .x_vbar text, .y_vbar text, .x_line text, .y_line text {
+  font-size: 14px;
+}
+
+.y_hbar path, .x_hbar path, .x_vbar path, .y_vbar path,  .x_line path, .y_line path { display: none; }
+
+/* Input Boxes */
+
+input[type=radio] {
+  display:none;
+}
+
+input[name="options"] {
+  display:none;
+  font-size: 14px;
+}
+
+input[name="search_option"]:checked + label {
+  color: #57bcd2;
+}
+
+input[name="options"]:checked + label {
+  color: #57bcd2;
+}
+
+#input{
+  padding: 10px;
+  font-size: 20px;
+}
+
+/* Chart Title Tds */
+#list_title, #bar_title, #donut_title, #v_bar_title, #line_title {
+  background-color: white;
+  border-color: grey;
+  border: 2px;
+}
+
+#list_title, #bar_title, #donut_title, #v_bar_title, #line_title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid lightgrey;
+}
+
+
+/* Chart  Tds */
+#option_donut, #option_vertical_bar,#option_line {
+  height: 250px;
+  vertical-align: top;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+
+#option_horizontal_bar,#list_radio{
+  height: 560px;
+  vertical-align: top;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+
+#list_radio{
+  text-align: center;
+  font-size: 16px;
+  padding: 10px;
+  width: 200px;
+}
+
+.tooltip_vbar,.tooltip_hbar, .tooltip_donut{
+  width: auto;
+  height: auto;
+  visibility: hidden;
+  position: absolute;
+  border: 1px solid grey;
+  padding: 5px;
+  font: 10px sans-serif;
+  background: white;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.tooltip_vbar{
+  text-align: left;
+}
+
+.tooltip_donut{
+  text-align: left;
+}
+
+.tooltip_hbar{
+  text-align: center;
+}
+
+.chart_td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+#option_line_td {
+  padding: 10px;
+  vertical-align: top;
+}

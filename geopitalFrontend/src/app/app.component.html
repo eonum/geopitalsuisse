@@ -3,7 +3,11 @@
 
 <h1>{{ title }}</h1>
 
-<agm-map [latitude]="lat" [longitude]="lng"
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+
+<!--<agm-map [latitude]="lat" [longitude]="lng"
 [styles]='[
   {
     "featureType": "administrative",
@@ -254,5 +258,5 @@
       }
     ]
   }]'>
-  <!--agm-marker [latitude]="lat" [longitude]="lng"></agm-marker-->
-</agm-map>
+  &lt;!&ndash;agm-marker [latitude]="lat" [longitude]="lng"></agm-marker&ndash;&gt;
+</agm-map>-->
