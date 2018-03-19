@@ -12,9 +12,11 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api.route');
 var mvc = require('./routes/mvc.route');
+const cors = require('cors');
 
 var app = express();
 const fileUpload = require('express-fileupload');
+app.use(cors());
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
