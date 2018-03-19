@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import { CharacteristicsService } from './services/characteristics.service';
+import Characteristics from './models/characteristics.model';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +10,12 @@ import {HttpClient} from "@angular/common/http";
 })
 
 export class AppComponent implements OnInit{
-  lat: number = 46.818188;
-  lng: number = 8.227512
 
-  constructor(private http: HttpClient){
+  constructor(
+    private http: HttpClient,
 
-  }
+  ){ }
+
 
   /**
    * Gives a "connection refused" error
