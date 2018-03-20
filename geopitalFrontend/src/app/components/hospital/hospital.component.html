@@ -1,5 +1,4 @@
 <p>
   hospital works!
 </p>
-<li> *ngIf="hospital.length > 0"
-  </li>
+<li *ngIf="hospital.length > 0" [innerHTML]="hospital.toString()"></li>

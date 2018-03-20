@@ -2,6 +2,7 @@
 
 
 <h1>{{ title }}</h1>
+<app-hospital></app-hospital>
 
 <agm-map [latitude]="lat" [longitude]="lng"
 [styles]='[
@@ -255,4 +256,10 @@
     ]
   }]'>
   <!--agm-marker [latitude]="lat" [longitude]="lng"></agm-marker-->
+  <agm-marker [latitude]="46.947142" [longitude]="7.425471000000016" [visible]="true" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/hospitals.png'">
+    <agm-info-window>Inselspital Bern</agm-info-window>
+  </agm-marker>
+  <agm-marker [latitude]="47.3795461" [longitude]="8.547388899999987" [visible]="true"  [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/hospitals.png'" >
+    <agm-info-window>Universitätsspital Zürich</agm-info-window>
+  </agm-marker>
 </agm-map>
