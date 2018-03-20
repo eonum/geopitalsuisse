@@ -1,4 +1,4 @@
-class Hospital {
+export class Hospital {
 
   _id: String;
   year: Number;
@@ -13,5 +13,3 @@ class Hospital {
   }
 
 }
-
-export default Hospital;
