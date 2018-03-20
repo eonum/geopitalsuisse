@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { CharacteristicsService } from './services/characteristics.service';
-import Characteristics from './models/characteristics.model';
+import { Characteristics } from './models/characteristics.model';
 
 @Component({
   selector: 'app-root',

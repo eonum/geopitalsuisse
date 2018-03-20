@@ -1,17 +1,16 @@
-class Hospital {
+export class Hospital {
 
   _id: String;
-  year: Number;
+  year: number;
   name: String;
-  address: String;
+  plz: String;
+  street: String;
+  streetNumber: String;
 
 
   constructor(){
     this.year = 0;
     this.name = "";
-    this.address = "";
   }
 
 }
-
-export default Hospital;

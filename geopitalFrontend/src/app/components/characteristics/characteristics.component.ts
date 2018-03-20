@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CharacteristicsService } from '../../services/characteristics.service';
-import Characteristics from '../../models/characteristics.model';
-import { Hospital } from '../../Interfaces/hospital.type';
+import { Characteristics } from '../../models/characteristics.model';
+import { Hospital } from '../../models/hospital.model';
 
 @Component({
   selector: 'app-characteristics',

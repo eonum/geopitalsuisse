@@ -1,6 +1,6 @@
-import Address from '../models/address.model';
+import { Address } from '../models/address.model';
 
-class Characteristics {
+export class Characteristics {
   _id: string;
   year: number;
   name: string;
@@ -15,5 +15,3 @@ class Characteristics {
   }
 
 }
-
-export default Characteristics;

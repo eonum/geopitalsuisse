@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
-import {Address} from "../Interfaces/address.type";
+import {Address} from '../models/address.model';
 
 @Injectable()
 export class AddressService {
