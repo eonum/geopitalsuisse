@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { AgmCoreModule } from "@agm/core";
+
 
 @Component({
   selector: 'app-root',
@@ -9,13 +9,12 @@ import { AgmCoreModule } from "@agm/core";
 })
 
 export class AppComponent implements OnInit{
-  title: string = 'geopital suisse';
-  lat: number = 46.818188;
-  lng: number = 8.227512
 
-  constructor(private http: HttpClient){
+  constructor(
+    private http: HttpClient,
 
-  }
+  ) { }
+
 
   /**
    * Gives a "connection refused" error

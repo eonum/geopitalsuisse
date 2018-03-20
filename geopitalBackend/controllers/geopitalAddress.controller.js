@@ -13,10 +13,10 @@ exports.getHospitals = async function(req, res, next){
 
     try{
 
-        var hospitals = await hospitalService.getHospitals()
-        console.log('It should go throug here');
+        var hospitals = await hospitalService.getHospitals();
+        console.log('It should go through here');
         // Return the todos list with the appropriate HTTP Status Code and Message.
-
+        console.log(hospitals);
         return res.status(200).json({status: 200, data: hospitals, message: "Succesfully Todos Recieved"});
 
     }catch(e){

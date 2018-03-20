@@ -24,7 +24,9 @@
     "@angular/router": "^5.2.9",
     "bootswatch": "^4.0.0",
     "core-js": "^2.4.1",
+    "jquery": "^3.3.1",
     "npm": "^5.7.1",
+    "popper": "^1.0.1",
     "rxjs": "^5.5.7",
     "zone.js": "^0.8.19"
   },

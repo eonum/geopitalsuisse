@@ -1,4 +1,4 @@
-class Address {
+export class Address {
 
   _id: String;
   hospital: String;
@@ -15,7 +15,4 @@ class Address {
     this.plz=  0;
     this.city = ""
   }
-
 }
-
-export default Address;

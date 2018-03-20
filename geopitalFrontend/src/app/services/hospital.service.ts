@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Hospital} from "../Interfaces/hospital.type";
+import { Hospital} from '../models/hospital.model';
 import 'rxjs/add/operator/map';
 import {environment} from "../../environments/environment";
 
@@ -17,6 +17,9 @@ export class HospitalService {
 
   getDummyData(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/geopital')
+      .map(res => {
+        return res['data'] as Hospital[];
+      })
   }
 
 }
