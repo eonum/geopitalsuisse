@@ -10,7 +10,7 @@ import { Characteristics } from './models/characteristics.model';
 })
 
 export class AppComponent implements OnInit{
-
+  
   constructor(
     private http: HttpClient,
 
