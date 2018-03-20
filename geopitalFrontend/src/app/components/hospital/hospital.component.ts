@@ -9,17 +9,24 @@ import {HospitalService} from "../../services/hospital.service";
 })
 export class HospitalComponent implements OnInit {
 
-  hospitals: Hospital[] = [];
+  hospitals: any[] = [];
+  public hospitalList: Hospital[] = [];
 
   constructor(
     private hospitalService: HospitalService
   ) { }
 
   ngOnInit() {
-    this.hospitalService.getDummyData().subscribe((data) => {
-      this.hospitals = data.data;
-      console.log(this.hospitals);
-    });
+    this.hospitalService.getDummyData()
+      .subscribe(hospitals => {
+        console.log(hospitals);
+        this.hospitalList = hospitals;
+        console.log(this.hospitalList);
+      });
+  }
+
+  showHp(): void {
+    console.log(this.hospitalList);
   }
 
 }

@@ -17,6 +17,9 @@ export class HospitalService {
 
   getDummyData(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/geopital')
+      .map(res => {
+        return res['data'] as Hospital[];
+      })
   }
 
 }

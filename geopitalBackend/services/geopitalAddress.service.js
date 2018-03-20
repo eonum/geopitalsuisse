@@ -26,7 +26,7 @@ exports.getHospitals = async function(){
 		plz: "8000",
 		city:"Zuerich"
 }
-	var hospitals={bern, zuerich}	
+	var hospitals = [bern, zuerich];
        try {
         
         // Return the todod list that was retured by the mongoose promise
