@@ -61,5 +61,14 @@
   "defaults": {
     "styleExt": "css",
     "component": {}
-  }
+  },
+  "styles": [
+    "../node_modules/bootswatch/dist/superhero/bootstrap.css",
+    "styles.css"
+  ],
+  "scripts": [
+    "../node_modules/jquery/dist/jquery.min.js",
+    "../node_modules/popper.js/dist/umd/popper.min.js",
+    "../mode_modules/bootstrap/dist/js/bootstrap.min.js"
+  ]
 }
