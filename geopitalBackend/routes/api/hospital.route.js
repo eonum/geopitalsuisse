@@ -6,5 +6,6 @@ var hospitalController = require('../../controllers/hospital.controller')
 
 router.get('/', hospitalController.getHospitals)
 router.get('/create', hospitalController.createDummyHospitals)
+router.get('/:id/dummy', hospitalController.getHospitalDummy)
 
 module.exports = router

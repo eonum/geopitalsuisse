@@ -1,5 +1,6 @@
 var hospitalService = require('../services/hospital.service');
 var Hospital = require('../models/hospital.model');
+var geopitalService = require('../services/geopitalAddress.service');
 // Saving the context of this module inside the _the variable
 
 _this = this;
@@ -39,4 +40,17 @@ exports.createDummyHospitals = async function(req, res, next){
 	var hospital = hospitalService.hospitalCreate(dummy);
 	return res.status(200).json({status: 200,data: hospital, message:'This should work'
 	})
+}
+
+exports.getHospitalDummy = async function(req, res, next){
+  console.log(req.params.id);
+  try{
+    const hospitals = await geopitalService.getDummyHospitals();
+    const hospital = hospitals[req.params.id -1];
+    delete hospital.coordinates;
+    return res.status(200).json({status: 200, data: hospital, message: "Succesfully received Dummys"});
+  }
+  catch(e){
+    return res.status(400).json({status: 400, message: e.message+" Please report the bug to your backend team"});
+  }
 }

@@ -1,9 +1,10 @@
 var express = require('express')
 var router = express.Router()
 
-var hospitalAddressController = require('../../controllers/geopitalAddress.controller')
+var geopitalAddressController = require('../../controllers/geopitalAddress.controller')
 
 
-router.get('/', hospitalAddressController.getHospitals)
+router.get('/', geopitalAddressController.getHospitals)
+router.get('/dummy', geopitalAddressController.getDummyHospitals)
 
 module.exports = router;

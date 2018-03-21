@@ -14,8 +14,7 @@ exports.getHospitals = async function(req, res, next){
     try{
 
         var hospitals = await hospitalService.getHospitals();
-        console.log('It should go through here');
-        // Return the todos list with the appropriate HTTP Status Code and Message.
+        // Return the hospitals list with the appropriate HTTP Status Code and Message.
         console.log(hospitals);
         return res.status(200).json({status: 200, data: hospitals, message: "Succesfully Todos Recieved"});
 
@@ -26,4 +25,17 @@ exports.getHospitals = async function(req, res, next){
         return res.status(400).json({status: 400, message: e.message+"ewefef"});
 
     }
+}
+
+exports.getDummyHospitals = async function(req, res, next){
+  try{
+    const hospitals = await hospitalService.getDummyHospitals();
+    for(var i = 0; i < hospitals.length; i++){
+      delete hospitals[i].address;
+    }
+    return res.status(200).json({status: 200, data: hospitals, message: "Succesfully received Dummys"});
+  }
+  catch(e){
+    return res.status(400).json({status: 400, message: e.message+"Please repport the bug to your backend team"});
+  }
 }
