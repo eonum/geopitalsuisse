@@ -1,7 +1,3 @@
-<p>
-  characteristics works!
-</p>
 <ul>
-  <li>{{ name }}</li>
-  <li>{{ year }} </li>
-</ul>
+    <li *ngFor="let hospital of hospitalList">{{ hospital.name }} {{ hospital.city }}</li>
+  </ul>

@@ -12,4 +12,11 @@ export class AddressService {
     return this.http.get<Address[]>('http://localhost:3000/' + 'Address')
   }
 
+  getDummyData(): Observable<Address[]> {
+    return this.http.get<Address[]>('http://localhost:3000/' + 'api/geopital')
+      .map(res => {
+        return res['data'] as Address[];
+      })
+  }
+
 }

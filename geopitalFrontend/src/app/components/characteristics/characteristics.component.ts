@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CharacteristicsService } from '../../services/characteristics.service';
+import { HospitalService } from '../../services/hospital.service';
 import { Characteristics } from '../../models/characteristics.model';
 import { Hospital } from '../../models/hospital.model';
 
@@ -11,7 +12,8 @@ import { Hospital } from '../../models/hospital.model';
 export class CharacteristicsComponent implements OnInit {
 
   constructor(
-    private characteristicService: CharacteristicsService
+    private characteristicService: CharacteristicsService,
+    private hospitalService: HospitalService
   ) { }
 
 
@@ -20,12 +22,17 @@ export class CharacteristicsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.characteristicService.getDummyData()
+    this.hospitalService.getDummyData()
     .subscribe(characteristics => {
       //assign the todolist property to the proper http response
       this.characteristicsList = characteristics
-      console.log(characteristics)
+      console.log(this.characteristicsList)
     })
   }
+
+
+showHp(): void {
+console.log(this.characteristicsList);
+}
 
 }

@@ -1,10 +1,11 @@
-<<<<<<< HEAD
 <p>
   hospital works!
 </p>
 <li *ngIf="hospital.length > 0" [innerHTML]="hospital.toString()"></li>
-=======
 <ul>
   <li *ngFor="let hospital of hospitalList">{{ hospital.name }}</li>
 </ul>
->>>>>>> c8cd5902d75cce43eba959e6daa6479c9e88f4c6
+<ul>
+  <li *ngFor="let hospital of hospitalList">{{ hospital.name }} {{ hospital.city }}</li>
+</ul>
+
