@@ -11,7 +11,7 @@ exports.getHospitals = async function(req, res, next){
 
     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
     try{
-      Hospital.find({year: 2016}).populate('address').exec(function (err, hospitals){
+      Hospital.find().populate('address').exec(function (err, hospitals){
         if (err){return next(err);}
         console.log(hospitals);
         var list = hospitals;

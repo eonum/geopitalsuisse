@@ -1,15 +1,17 @@
 // Require mongoose
 var mongoose = require('mongoose');
-var Address = require('./address.model')
-var Schema = mongoose.Schema
+var Schema = mongoose.Schema;
+
+var Address = require('./address.model');
+var Coordinates = require('./coordinates.model');
 
 // Define Hospital Schema
 var hostpitalSchema = Schema({
 	year: {type: Number},
-    name: {type: String},
-    address: {type: Schema.Types.ObjectId, ref:'Address'}
+  name: {type: String},
+  address: {type: Schema.Types.ObjectId, ref:'Address'},
+	coordinates: {type : Schema.Types.ObjectId, ref: 'Coordinates'}
+	
 });
 
-// Compile model from schema
 module.exports = mongoose.model('Hospital', hostpitalSchema);
-
