@@ -47,7 +47,7 @@ exports.getDummyHospitals = async function(){
 		},
 		attributes: [
 			{name: 'Anzahl Fälle', value:78410},
-			{name: 'Anzahl Ärtzte', value: 200},
+			{name: 'Anzahl Ärzte', value: 200},
 			{name: 'Personalkosten', value: 2123123}
 		]
 }
@@ -65,7 +65,7 @@ exports.getDummyHospitals = async function(){
 		},
 		attributes: [
 			{name: 'Anzahl Fälle', value:91238},
-			{name: 'Anzahl Ärtzte', value: 351},
+			{name: 'Anzahl Ärzte', value: 351},
 			{name: 'Personalkosten', value: 4556456}
 		]
 }
@@ -83,7 +83,7 @@ exports.getDummyHospitals = async function(){
 		},
 		attributes: [
 			{name: 'Anzahl Fälle', value:10123},
-			{name: 'Anzahl Ärtzte', value: 100},
+			{name: 'Anzahl Ärzte', value: 100},
 			{name: 'Personalkosten', value: 1234351}
 		]
 	}
