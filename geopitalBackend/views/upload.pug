@@ -8,3 +8,8 @@ block content
         br
         input(type="submit")
 
+    each file in listJson
+        li
+            p #{file}
+    else
+        li There are no files to put in DB.
