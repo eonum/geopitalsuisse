@@ -78,31 +78,6 @@ exports.hospitalCreate = async function(data){
     });
   });
 }
-  /*
-  var address = new Address({
-    street : name.street,
-    city : name.city
-  });
-  address.save(function (err){
-    if(err){
-      cb(err, null)
-      return
-    }
-  });
-  var hospitalDetail = {
-    year : name.year,
-    name : name.name,
-    address : address._id
-  }
-	var hospital = new Hospital(hospitalDetail);
-	hospital.save(function (err){
-		if(err){
-			cb(err, null)
-			return
-		}
-		console.log('New hospital:' + hospital);
-	});
-*/
 
 exports.updateTodo = async function(hospital){
     var id = hospital.id
