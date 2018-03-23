@@ -4,14 +4,6 @@ _this = this
 
 exports.getHospitals = async function(){
 
-/*	var Hospital{
-		name: String,
-		street: String,
-		streetNumber: String,
-		plz: String,
-		city: String
-	}
-*/
 	var bern = {
 		name: "Inselspital",
 		street: "Bahnhof",
@@ -41,14 +33,6 @@ exports.getHospitals = async function(){
 
 exports.getDummyHospitals = async function(){
 
-/*	var Hospital{
-		name: String,
-		street: String,
-		streetNumber: String,
-		plz: String,
-		city: String
-	}
-*/
 	var bern = {
 		name: "Inselspital",
 		address: {
@@ -60,7 +44,12 @@ exports.getDummyHospitals = async function(){
 		coordinates: {
 			latitude: "46°56'52.7N",
 			longitude : "7°25'29.2E"
-		}
+		},
+		attributes: [
+			{name: 'Anzahl Fälle', value:78410},
+			{name: 'Anzahl Ärtzte', value: 200},
+			{name: 'Personalkosten', value: 2123123}
+		]
 }
 	var zuerich = {
 		name: "Unispital Zürich",
@@ -73,7 +62,12 @@ exports.getDummyHospitals = async function(){
 		coordinates: {
 			latitude: "47°22'36.4N",
 			longitude: "8°33'03.8E"
-		}
+		},
+		attributes: [
+			{name: 'Anzahl Fälle', value:91238},
+			{name: 'Anzahl Ärtzte', value: 351},
+			{name: 'Personalkosten', value: 4556456}
+		]
 }
 	var basel = {
 		name: "Unispital Basel",
@@ -86,7 +80,12 @@ exports.getDummyHospitals = async function(){
 		coordinates: {
 			latitude: "47°33'44.3N",
 			longitude: "7°34'59.7E"
-		}
+		},
+		attributes: [
+			{name: 'Anzahl Fälle', value:10123},
+			{name: 'Anzahl Ärtzte', value: 100},
+			{name: 'Personalkosten', value: 1234351}
+		]
 	}
 	var hospitals = [bern, zuerich, basel];
        try {
