@@ -14,7 +14,7 @@ describe("geopital-backend server", function(){
             });
         });
 
-        // Supposed to fail, needed for understanding 
+        // Supposed to fail, needed for understanding
         it("returns Hello World", function(done) {
             request.get(baseUrl, function(error, response, body) {
                 expect(body).toBe("Hello World");
