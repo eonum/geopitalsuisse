@@ -22,6 +22,11 @@ exports.parse = function (req, res){
   res.redirect('/mvc/coordinates');
 }
 
+exports.fileToDBPost = async function(req, res) {
+    await uploadService.storeJsonImport('../uploads/json/' + req.body.fileName);
+    res.redirect('/mvc/upload');
+}
+
 exports.uploadPost= async function (req, res) {
     //Clear uploads directory
     uploadService.uploadsDelete();

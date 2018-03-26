@@ -8,8 +8,14 @@ block content
         br
         input(type="submit")
 
-    each file in listJson
-        li
-            p #{file}
-    else
-        li There are no files to put in DB.
+    form#fileToDB(method="post" action="/mvc/upload/storeJson")
+        each file in listJson
+            input(type="radio", name="fileName", value=file)
+            | #{file}
+            br
+        input(type="submit")
+
+
+
+
+
