@@ -15,7 +15,15 @@ exports.uploadsDelete = function(){
 };
 
 exports.storeJsonImport = function(){
-    var obj = JSON.parse(fs.readFileSync('./hospital15.json', 'utf8'));
+    var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
+
+    obj.forEach(function(hosp){
+        hospitalCreate(hosp);
+    })
+};
+
+exports.initJsonImport = function(){
+    var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
 
     obj.forEach(function(hosp){
         hospitalCreate(hosp);
