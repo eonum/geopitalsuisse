@@ -1,12 +1,16 @@
 var initService = require('../services/upload.service');
 var geocodingService = require('../services/geocoding.service');
 
-exports.insertHospitals = function (req, res){
+exports.insertHospitals =  async function (req, res){
   initService.initJsonImport();
-  res.redirect('/mvc/hospitals');
+  await setTimeout(function () {
+      res.redirect('/mvc/init/coords');
+  }, 5000);
 }
 
-exports.insertCoordinates = function (req, res){
+exports.insertCoordinates = async function (req, res){
   geocodingService.addCoordinatesToHospitals();
-  res.redirect('/mvc/coordinates');
+  await setTimeout(function () {
+      res.redirect('/mvc/hospitals');
+  }, 5000);
 }

@@ -17,7 +17,6 @@ exports.index = function(req, res){
 exports.hospitalList = function(req, res){
 	Hospital.find().populate('address').exec(function (err, hospitalList){
 		if (err){return next(err);}
-		console.log(hospitalList);
 		res.render('hospitalList',{title: 'All hospitals', hospitalList: hospitalList});
 	});
 }
@@ -25,7 +24,6 @@ exports.hospitalList = function(req, res){
 exports.hospitalListCoordinates = function(req, res){
 	Hospital.find().populate('coordinates').exec(function (err, hospitalList){
 		if (err){return next(err);}
-		console.log(hospitalList);
 		res.render('hospitalListCoordinates',{title: 'All hospitals', hospitalList: hospitalList});
 	});
 }
@@ -33,7 +31,6 @@ exports.hospitalListCoordinates = function(req, res){
 exports.addressList= function(req, res){
 	Address.find().exec(function(err, addressList){
 		if (err){return next(err);}
-		console.log(addressList);
 		res.render('addressList', {title: 'All addresses', addressList: addressList});
 	});
 }

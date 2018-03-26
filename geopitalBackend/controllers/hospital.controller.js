@@ -13,7 +13,6 @@ exports.getHospitals = async function(req, res, next){
     try{
       Hospital.find().populate('address').exec(function (err, hospitals){
         if (err){return next(err);}
-        console.log(hospitals);
         var list = hospitals;
         return res.status(200).json({status: 200, data: list, message: "Hospital Succesfully Recieved"});
       });
