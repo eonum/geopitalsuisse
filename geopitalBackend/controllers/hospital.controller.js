@@ -56,11 +56,13 @@ exports.getHospitalDummy = async function(req, res, next){
 }
 exports.getAllHospitalsNoAttributes = async function(req, res, next){
   try{
-    throw new Error('Not yet implemented')
+    Hospital.find().populate('coordinates').populate('address').exec(function (err, hospitals){
+      return res.status(200).json({status: 200, data: hospitals});
+    });
   }catch(e){
-    return res.status(400).json({status:400, message: e.message});
+    return res.status(400).json({status:400, message: "Here" + e.message});
   }
-  return res.status(400).json({status:400, message: 'Not yet implemented!'});
+  //return res.status(400).json({status:400, message: 'Not yet implemented!'});
 }
 exports.Dummy_getAllHospitalsNoAttributes = async function(req, res, next){
   try{

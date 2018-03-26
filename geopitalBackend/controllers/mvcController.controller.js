@@ -21,6 +21,15 @@ exports.hospitalList = function(req, res){
 		res.render('hospitalList',{title: 'All hospitals', hospitalList: hospitalList});
 	});
 }
+
+exports.hospitalListCoordinates = function(req, res){
+	Hospital.find().populate('coordinates').exec(function (err, hospitalList){
+		if (err){return next(err);}
+		console.log(hospitalList);
+		res.render('hospitalListCoordinates',{title: 'All hospitals', hospitalList: hospitalList});
+	});
+}
+
 exports.addressList= function(req, res){
 	Address.find().exec(function(err, addressList){
 		if (err){return next(err);}

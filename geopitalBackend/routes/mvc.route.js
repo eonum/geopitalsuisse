@@ -7,6 +7,7 @@ var fileUpload = require('./mvc/upload.route');
 router.get('/', mvcController.index);
 router.get('/hospitals', mvcController.hospitalList);
 router.get('/addresses', mvcController.addressList);
+router.get('/coordinates', mvcController.hospitalListCoordinates);
 router.use('/upload/', fileUpload);
 
 module.exports = router;

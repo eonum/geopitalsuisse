@@ -10,10 +10,10 @@ var options = {
 
 var geocoder = NodeGeocoder(options);
 
-exports.geocode = function(){
+exports.geocode = function(address){
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve(geocoder.geocode('Freiburgstrasse 8, 3010 Bern'));
+      resolve(geocoder.geocode(address));
     }, 2000);
   });
   /*

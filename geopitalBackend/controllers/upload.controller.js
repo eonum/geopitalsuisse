@@ -17,6 +17,7 @@ exports.upload= function(req, res){
 }
 
 exports.parse = function (req, res){
+  //uploadService.storeJsonImport();
   geocodingService.addCoordinatesToHospitals();
   return("Success");
 }
@@ -35,7 +36,7 @@ exports.uploadPost= async function (req, res) {
 
 
         })
-        
+
         //convert excel to json and stores it to the uploads directory
         try {
             await convertExcel('../uploads/xlsx/hospitalData.xlsx', '../uploads/json/hospitalData.json')
@@ -43,7 +44,7 @@ exports.uploadPost= async function (req, res) {
             console.log('Excel to Json Error: ' + err)
             return res.status(500).send()
         }
-        
+
 
         //uploadService.storeJsonImport();
 
