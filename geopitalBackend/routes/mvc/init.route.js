@@ -6,10 +6,7 @@ var uploadController = require('../../controllers/upload.controller');
 var initController = require('../../controllers/init.controller');
 
 
-router.get('/', uploadController.upload)
-router.post('/', uploadController.uploadPost)
-router.get('/parse', uploadController.parse)
-router.post('/fileName', uploadController.fileToDBPost)
-
+router.get('/hospitals', initController.insertHospitals)
+router.get('/coords', initController.insertCoordinates)
 
 module.exports = router;
