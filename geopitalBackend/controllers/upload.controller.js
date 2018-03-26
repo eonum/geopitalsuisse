@@ -25,12 +25,14 @@ exports.parse = function (req, res){
 exports.uploadPost= async function (req, res) {
     //Clear uploads directory
     uploadService.uploadsDelete();
+    var fileName = '';
     // Was a file uploaded?
     if (!req.files.foo)
         return res.status(400).send('No files were uploaded!');
     else{
+        fileName = req.files.foo.name.split('.')[0];
         //saved file to uploads/ with the filename hospitalData
-        req.files.foo.mv('../uploads/xlsx/hospitalData.xlsx', function (err) {
+        req.files.foo.mv('../uploads/xlsx/'+ fileName +'.xlsx', function (err) {
             if(err)
                 return res.status(400).send(err.toString());
 
@@ -39,7 +41,7 @@ exports.uploadPost= async function (req, res) {
 
         //convert excel to json and stores it to the uploads directory
         try {
-            await convertExcel('../uploads/xlsx/hospitalData.xlsx', '../uploads/json/hospitalData.json')
+            await convertExcel('../uploads/xlsx/'+ fileName +'.xlsx', '../uploads/json/'+ fileName +'.json')
         } catch (err) {
             console.log('Excel to Json Error: ' + err)
             return res.status(500).send()
