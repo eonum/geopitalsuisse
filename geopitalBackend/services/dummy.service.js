@@ -1,36 +1,3 @@
-
-
-_this = this
-
-exports.getHospitals = async function(){
-
-	var bern = {
-		name: "Inselspital",
-		street: "Bahnhof",
-		streetNumber:"1",
-		plz: "3000",
-		city:"Bern"
-}
-	var zuerich = {
-		name: "Unispital",
-		street: "Bahnhof",
-		streetNumber:"1",
-		plz: "8000",
-		city:"Zuerich"
-}
-	var hospitals = [bern, zuerich];
-       try {
-
-        // Return the todod list that was retured by the mongoose promise
-        return hospitals;
-
-    } catch (e) {
-
-        // return a Error message describing the reason
-        throw Error('Error while Paginating Todos')
-    }
-}
-
 exports.getDummyHospitals = async function(){
 
 	var bern = {
@@ -47,7 +14,7 @@ exports.getDummyHospitals = async function(){
 		},
 		attributes: [
 			{name: 'Anzahl Fälle', value:78410},
-			{name: 'Anzahl Ärtzte', value: 200},
+			{name: 'Anzahl Ärzte', value: 200},
 			{name: 'Personalkosten', value: 2123123}
 		]
 }
@@ -65,7 +32,7 @@ exports.getDummyHospitals = async function(){
 		},
 		attributes: [
 			{name: 'Anzahl Fälle', value:91238},
-			{name: 'Anzahl Ärtzte', value: 351},
+			{name: 'Anzahl Ärzte', value: 351},
 			{name: 'Personalkosten', value: 4556456}
 		]
 }
@@ -83,19 +50,15 @@ exports.getDummyHospitals = async function(){
 		},
 		attributes: [
 			{name: 'Anzahl Fälle', value:10123},
-			{name: 'Anzahl Ärtzte', value: 100},
+			{name: 'Anzahl Ärzte', value: 100},
 			{name: 'Personalkosten', value: 1234351}
 		]
 	}
 	var hospitals = [bern, zuerich, basel];
        try {
-
-        // Return the todod list that was retured by the mongoose promise
         return hospitals;
 
     } catch (e) {
-
-        // return a Error message describing the reason
-        throw Error('Error while Paginating Todos')
+        throw Error('Error while loading dummys')
     }
 }

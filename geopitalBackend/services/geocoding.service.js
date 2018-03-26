@@ -4,35 +4,23 @@ var Address = require('../models/address.model');
 var Coordinates = require('../models/coordinates.model');
 var geocoderService = require('./geocoder.service');
 
+/*
+Takes all hospitals from the db and geocodes their addresses.
+*/
 exports.addCoordinatesToHospitals = async function(){
   Hospital.find().populate('address').exec(function (err, hospitals){
-    console.log('start');
-
     for(var i = 0; i < hospitals.length; i++){
-      getCoordinatesFromJson(hospitals[i]);
+      getCoordinatesAndSave(hospitals[i]);
     }
   });
 }
-
-saveCoordinates = async function(hospital){
-  console.log('start');
-  geocoder.geocode();
+/*
+GeoCodes a single hospital address with a geocoder and adds the coordinates to
+the hospital model. This only works in Europe at the moment.
+*/
+getCoordinatesAndSave = async function(hospital){
   try{
-    throw error('test');
-    geocoder.geocode(hospital.address.line, function(err, res){
-      console.log(res);
-    })
-  }
-  catch(e){
-    console.log('Oops');
-  }
-}
-
-getCoordinatesFromJson = async function(hospital){
-  try{
-    console.log(hospital.address.line);
     var json = await geocoderService.geocode(hospital.address.line);
-    console.log(json);
     var coordinates = new Coordinates({
       _id: new mongoose.Types.ObjectId(),
       latitude: json[0].latitude + 'N',

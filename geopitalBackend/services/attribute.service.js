@@ -1,7 +1,5 @@
 // Getting the mongoose model we just created
 var mongoose = require('mongoose');
-var Hospital = require('../models/hospital.model');
-var Address = require('../models/address.model');
 var AttributeType = require('../models/attributeType.model');
 var fs = require('fs');
 
