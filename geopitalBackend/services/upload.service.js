@@ -14,16 +14,8 @@ exports.uploadsDelete = function(){
     del('uploads/*');
 };
 
-exports.storeJsonImport = function(){
-    var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
-
-    obj.forEach(function(hosp){
-        hospitalCreate(hosp);
-    })
-};
-
-exports.initJsonImport = function(){
-    var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
+exports.storeJsonImport = function(filePath){
+    var obj = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
     obj.forEach(function(hosp){
         hospitalCreate(hosp);
