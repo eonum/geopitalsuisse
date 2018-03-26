@@ -105,11 +105,41 @@
       .style("height", yMax + padding);
   }
 
-  map.on('zoomend', function() {
+
+/*  map.on("viewreset", update);
+  update();
+
+  function update() {
+    feature.attr("transform",
+      function(d) {
+        return "translate("+
+          map.projectPoint(d.x, d.y).x, xMax);
+          map.projectPoint(d.x, d.y).y, yMax)
+      }
+    )
+  }*/
+
+  var zoom = d3.behavior.zoom()
+    .scaleExtent([1, 10])
+    .on("zoom", zoomed);
+
+  function zoomed() {
+    container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
+
+  map.on('zoomed', function() {
     calculateSVGBounds(testData);
     // D3 UPDATE HERE.
+    //container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     alert('points should be updated');
   });
+
+/*  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+    .call(zoom);*/
 
 </script>
 
