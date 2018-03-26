@@ -19,7 +19,7 @@ exports.upload= function(req, res){
 exports.parse = function (req, res){
   //uploadService.storeJsonImport();
   geocodingService.addCoordinatesToHospitals();
-  return("Success");
+  res.redirect('/mvc/coordinates');
 }
 
 exports.uploadPost= async function (req, res) {
