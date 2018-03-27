@@ -18,7 +18,7 @@
 <html>
 <head>
 
-  <title>Quick Start - Leaflet</title>
+  <title>GeopitalSuisse</title>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,7 +64,7 @@
   }).addTo(map);
 
 
-  // draws a customizable circle on map
+  // draws a customizable circle on map, zoom weird
   var circle = L.circle([47.212213, 7.755064], {
     color: 'red',
     fillColor: '#f03',
@@ -72,17 +72,16 @@
     radius: 1000
   }).addTo(map);
 
-  // this does not work yet..
-  circle.bindPopup("Show something");
+  // popup at beginning but circle not clickable
+  circle.bindPopup("I am a circle.").openPopup();
 
 
-
-
+  // default marker in leaflet with popup
   L.marker([46.947142, 7.425471000000016]).addTo(map)
     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 
 
-
+  // test data for the hospitals
   var testData = [
     {x: 7.425471000000016, y: 46.947142},
     {x: 8.547388899999987, y: 47.3795461},
@@ -91,8 +90,6 @@
     {x: 7.58587, y: 47.561557},
     {x: 8.059350999999992, y: 47.388479},
     {x: 8.953260999999998, y: 46.0176793},
-
-
   ]
 
   var svg = d3.select(map.getPanes().overlayPane).append("svg");
