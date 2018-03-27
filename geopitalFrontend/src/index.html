@@ -37,7 +37,7 @@
 
 
 
-<div id="mapid" style="width: 100%; height: 100%; position: absolute;"></div->
+<div id="mapid" style="width: 100%; height: 100%; position: absolute;"></div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
@@ -102,12 +102,12 @@
     {x: 8.953260999999998, y: 46.0176793},
   ]
 
-  var svg = d3.select(map.getPanes().overlayPane).append("svg");
+  var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
 
   calculateSVGBounds(testData);
 
 
-  svg.selectAll('circle')
+  var circles = svg.selectAll('circle')
     .data(testData)
     .enter()
     .append('circle')
@@ -125,6 +125,7 @@
 
   // we have to calculate the width and the height of the svg element.
   // calculate the y max and x max value for all datapoints and add a padding. xmax is width and ymax is height of svg
+  // todo: this function has to be changed that the bounds are calculated better
   function calculateSVGBounds(data) {
     var xMin = 1000000;
     var xMax = 0;
@@ -142,6 +143,19 @@
       .style("height", yMax + padding);
   }
 
+  map.on('zoomstart', function () {
+    d3.select('#circleSVG').style('visibility', 'hidden');
+  });
+
+  map.on('zoomend', function() {
+    d3.select('#circleSVG').style('visibility', 'visible');
+    calculateSVGBounds(testData);
+    circles
+      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+    //container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  });
+
 
 /*  map.on("viewreset", update);
   update();
@@ -156,20 +170,15 @@
     )
   }*/
 
-  var zoom = d3.behavior.zoom()
+/*  var zoom = d3.behavior.zoom()
     .scaleExtent([1, 10])
     .on("zoom", zoomed);
 
   function zoomed() {
     container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-  }
+  }*/
 
-  map.on('zoomed', function() {
-    calculateSVGBounds(testData);
-    // D3 UPDATE HERE.
-    //container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    alert('points should be updated');
-  });
+
 
 /*  var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
