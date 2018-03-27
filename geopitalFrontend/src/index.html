@@ -64,13 +64,23 @@
   }).addTo(map);
 
 
+  var latlng = L.latLng(47.212213, 7.755064);
+
+  // draws marker as circle, zoom good, popup disappears
+  var circle = L.circleMarker(latlng,{
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+  }).addTo(map);
+
   // draws a customizable circle on map, zoom weird
-  var circle = L.circle([47.212213, 7.755064], {
+  /*var circle = L.circle([47.212213, 7.755064], {
     color: 'red',
     fillColor: '#f03',
     fillOpacity: 0.5,
     radius: 1000
-  }).addTo(map);
+  }).addTo(map);*/
 
   // popup at beginning but circle not clickable
   circle.bindPopup("I am a circle.").openPopup();
