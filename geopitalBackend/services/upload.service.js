@@ -57,13 +57,15 @@ hospitalCreateWithAttributes = async function(data, types) {
         address: address._id
     });
     types.forEach(async function(attributeType){
-      var code = attributeType.Code;
+      var code = attributeType.code;
+      var value = data[code];
+      console.log(value);
       var attribute = new Attribute({
         attributeType: attributeType,
-        value: 1
+        value: value
       });
       hospital.attributes.push(attribute);
-      var savedAttribute = await attribute.save();
+      attribute.save();
     })
     //save address and hospital in db
     try{

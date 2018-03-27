@@ -42,7 +42,7 @@ exports.Dummy_getHospitalData = async function(req, res, next){
 
 exports.getHospitalData = async function(req, res, next){
   try{
-    Hospital.findOne().populate('coordinates').populate('address')
+    Hospital.findOne().populate('coordinates address')
       .populate({
         path : 'attributes',
         populate :{
