@@ -12,8 +12,7 @@ exports.insertAttributeTypes = async function(req, res){
 exports.insertHospitals =  async function (req, res){
   uploadService.initJsonImport();
   await setTimeout(function () {
-    res.redirect('mvc/init/coords');
-      //res.redirect('/mvc/init/coords');
+      res.redirect('/mvc/init/coords');
   }, 5000);
 }
 

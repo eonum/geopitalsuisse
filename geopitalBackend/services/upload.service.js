@@ -41,7 +41,7 @@ exports.initJsonImport = function(){
 
 };
 
-hospitalCreateWithAttributes = async function(data, types) {
+hospitalCreateWithAttributes = function(data, types) {
     //create new address and fill with data
     var address = new Address({
         _id: new mongoose.Types.ObjectId(),
@@ -59,7 +59,6 @@ hospitalCreateWithAttributes = async function(data, types) {
     types.forEach(async function(attributeType){
       var code = attributeType.code;
       var value = data[code];
-      console.log(value);
       var attribute = new Attribute({
         attributeType: attributeType,
         value: value
@@ -71,9 +70,9 @@ hospitalCreateWithAttributes = async function(data, types) {
     try{
         //do not save a hospital wthout a name -> avoid to save empty hospitals and addresses
         if(hospital.name != '') {
-            var savedAddress = await address.save();
-            var savedHospital = await hospital.save();
-            return savedHospital;
+            address.save();
+            // var savedHospital = await hospital.save();
+            return hospital.save();
         }
     }catch(e){
         throw Error("Error: "+ e +". And Error occured while importing xlsx-File");
@@ -101,7 +100,6 @@ hospitalCreate = async function(data) {
     try{
         //do not save a hospital wthout a name -> avoid to save empty hospitals and addresses
         if(hospital.name != '') {
-            console.log(hospital);
             var savedAddress = await address.save();
             var savedHospital = await hospital.save();
             return savedHospital;
