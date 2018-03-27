@@ -22,7 +22,7 @@ saveAttributeType = async function(group, attributeType) {
     //create new address and fill with data
     var type = new AttributeType({
         _id: new mongoose.Types.ObjectId(),
-        Code : attributeType.Code,
+        code : attributeType.Code,
         name: {
           de: attributeType.Text_DE,
           fr: attributeType.Text_FR,
