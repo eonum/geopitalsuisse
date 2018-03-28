@@ -58,15 +58,6 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-// Jasmine tutorial (for testing)
-/*var server = app.listen(3000, function(){
-    console.log('Magic is happening on port 3000');
-});
-
-exports.closeServer = function(){
-  server.close();
-};*/
-
 // Set up default mongoose connection
 mongoose.Promise = bluebird;
 mongoose.connect('mongodb://127.0.0.1:27017/geopital-backend')
