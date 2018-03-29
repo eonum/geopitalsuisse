@@ -8,3 +8,14 @@ block content
         br
         input(type="submit")
 
+    form#fileToDB(method="post" action="/mvc/upload/storeJson")
+        each file in listJson
+            input(type="radio", name="fileName", value=file)
+            | #{file}
+            br
+        input(type="submit")
+
+
+
+
+
