@@ -1,12 +1,24 @@
-var initService = require('../services/upload.service');
+var uploadService = require('../services/upload.service');
 var geocodingService = require('../services/geocoding.service');
+var attributeService = require('../services/attribute.service');
 
-exports.insertHospitals = function (req, res){
-  initService.storeJsonImport('./data/hospital15.json');
-  res.redirect('/mvc/hospitals');
+exports.insertAttributeTypes = async function(req, res){
+  attributeService.importAttributeType();
+  await setTimeout(function () {
+      res.redirect('/mvc/init/hospitals');
+  }, 5000);
 }
 
-exports.insertCoordinates = function (req, res){
+exports.insertHospitals =  async function (req, res){
+  uploadService.initJsonImport();
+  await setTimeout(function () {
+      res.redirect('/mvc/init/coords');
+  }, 5000);
+}
+
+exports.insertCoordinates = async function (req, res){
   geocodingService.addCoordinatesToHospitals();
-  res.redirect('/mvc/coordinates');
+  await setTimeout(function () {
+      res.redirect('/mvc/hospitals');
+  }, 5000);
 }

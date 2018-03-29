@@ -1,31 +1,21 @@
 var NodeGeocoder = require('node-geocoder');
-
+/*
+Yandex is used because there is no need to set a API Key
+*/
 var options = {
   provider: 'yandex',
-
-  // Optional depending on the providers
-  httpAdapter: 'https', // Default
-  formatter: null         // 'gpx', 'string', ...
+  httpAdapter: 'https',
+  formatter: null
 };
 
 var geocoder = NodeGeocoder(options);
-
+/*
+Takes address and returns JSON with coordinates and address
+*/
 exports.geocode = function(address){
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(geocoder.geocode(address));
     }, 2000);
   });
-  /*
-  return new Promise(jsonArray => {
-    geocoder.geocode('Freiburgstrasse 8, 3010 Bern', function(err, res){
-  })
-  });
-  /*
-  console.log('start');
-  geocoder.geocode('Freiburgstrasse 8, 3010 Bern', function(err, res){
-  console.log(res);
-  return res;
-});
-*/
 };

@@ -2,6 +2,8 @@
 var mongoose = require('mongoose');
 var Hospital = require('../models/hospital.model');
 var Address = require('../models/address.model');
+var AttributeTypes = require('../models/attributeType.model');
+var Attribute = require('../models/attribute.model');
 const del = require('del');
 var fs = require('fs');
 
@@ -14,13 +16,69 @@ exports.uploadsDelete = function(){
     del('uploads/*');
 };
 
-exports.storeJsonImport = function(filePath){
-    var obj = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+exports.storeJsonImport = function(){
+    var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
 
     obj.forEach(function(hosp){
         hospitalCreate(hosp);
     })
 };
+
+exports.initJsonImport = function(){
+  var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
+  try{
+    AttributeTypes.find().exec(function(err, types){
+        console.log(types);
+        console.log(obj);
+        obj.forEach(function(hosp){
+            hospitalCreateWithAttributes(hosp, types);
+        })
+
+    });
+  }catch(e){
+    console.log(e.message);
+  }
+
+};
+
+hospitalCreateWithAttributes = function(data, types) {
+    //create new address and fill with data
+    var address = new Address({
+        _id: new mongoose.Types.ObjectId(),
+        street: extractStreet(data.Adr),
+        streetNumber: extractStreetNumber(data.Adr),
+        plz: data.Ort.split(' ')[0],
+        city: extractCity(data.Ort)
+    });
+    //create new hospital and fill with data
+    var hospital = new Hospital({
+        year: data.year,
+        name: data.Inst,
+        address: address._id
+    });
+    types.forEach(async function(attributeType){
+      var code = attributeType.code;
+      var value = data[code];
+      var attribute = new Attribute({
+        attributeType: attributeType,
+        value: value
+      });
+      hospital.attributes.push(attribute);
+      attribute.save();
+    })
+    //save address and hospital in db
+    try{
+        //do not save a hospital wthout a name -> avoid to save empty hospitals and addresses
+        if(hospital.name != '') {
+            address.save();
+            // var savedHospital = await hospital.save();
+            return hospital.save();
+        }
+    }catch(e){
+        throw Error("Error: "+ e +". And Error occured while importing xlsx-File");
+    }
+}
+
 
 hospitalCreate = async function(data) {
     //create new address and fill with data
@@ -44,7 +102,7 @@ hospitalCreate = async function(data) {
         if(hospital.name != '') {
             var savedAddress = await address.save();
             var savedHospital = await hospital.save();
-            return savedAddress, savedHospital;
+            return savedHospital;
         }
     }catch(e){
         throw Error("Error: "+ e +". And Error occured while importing xlsx-File");
