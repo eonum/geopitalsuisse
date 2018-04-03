@@ -32,9 +32,7 @@ import {AppRoutingModule} from "./app-routing.module";
     CommonModule,
     FormsModule,
     AppRoutingModule,
-    AgmCoreModule.forRoot ({
-      apiKey: 'AIzaSyBRs9r5mVR66zxTv3Jf5lG05M5jRkWf-Ws'
-    })
+
   ],
   providers: [
     MapService,

@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewChecked, Component, OnInit} from '@angular/core';
+declare function test(): any;
+
 
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css']
 })
-export class MapsComponent implements OnInit {
+export class MapsComponent implements OnInit, AfterViewChecked {
   lat: number = 46.818188;
   lng: number = 8.227512;
   lat1: number = 46.9490830802915;
@@ -16,6 +18,12 @@ export class MapsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    setTimeout(function () {
+      test();
+    }, 500);
+  }
+
+  ngAfterViewChecked() {
   }
 
 }
