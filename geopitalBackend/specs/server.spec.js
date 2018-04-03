@@ -13,12 +13,12 @@ describe("geopital-backend server", function(){
             });
         });
 
-        // Supposed to fail, needed for understanding
-        it("returns /mvc body", function(done) {
+        // Have to find a better solution to test the return of an api
+        /*it("returns /mvc body", function(done) {
             request.get(baseUrl, function(error, response, body) {
                 expect(body).toEqual('<!DOCTYPE html><html lang="en"><head><title>Geopital Suisse Management</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><link rel="stylesheet" href="/stylesheets/style.css"></head><body><div class="container-fluid"><div class="row"><div class="col-sm-2"><ul class="sidebar-nav"><li> <a href="/mvc">Home</a></li><li> <a href="/mvc/hospitals">See hospitals</a></li><li> <a href="/mvc/create">Create hospital</a></li><li> <a href="/api/geopital">See DummyData for Frontend</a></li><li> <a href="/api/hospital">See DummyData from MongoDB</a></li><li><a href="/mvc/upload">Upload xlsx data file</a></li></ul></div><div class="col-sm-10"><h1>Geopital Suisse Management</h1><p>Welcome to Geopital Suisse Management</p><h1>Hospitals</h1><ul><li><strong>Hospitals:</strong> 2</li></ul></div></div></div></body></html>');
                 done();
             });
-        });
+        });*/
     });
 });
