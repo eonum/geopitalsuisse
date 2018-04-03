@@ -146,17 +146,20 @@
     var xMax = 0;
     var yMin = 1000000;
     var yMax = 0;
-    var padding = 50;
+    var heightPadding = 100;
+    var widthPadding = 300;
     data.forEach(function(d) {
       xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
       yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
     });
     svg
       .style("left", 0)
-      .style("width", xMax + padding)
+      .style("width", xMax + widthPadding)
       .style("top", 0)
-      .style("height", yMax + padding);
+      .style("height", yMax + heightPadding);
   }
+
+
 
   // makes points invisible when user starts zooming
   map.on('zoomstart', function () {
