@@ -30,8 +30,6 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
 
-
-
 </head>
 <body>
 
@@ -68,8 +66,13 @@
 
 <script>
 
+  /**
+   * build map with OpenStreetMap and Mapbox
+   */
+  // create new basic map
   var map = L.map('mapid').setView([46.818188, 8.227512], 8);
 
+  // basic map using OpenStreetMap tiles with costume design using mapbox
   L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -79,6 +82,23 @@
   }).addTo(map);
 
 
+  /**
+   * test data for the hospitals
+   */
+  var testData = [
+    {x: 7.425471000000016, y: 46.947142},
+    {x: 8.547388899999987, y: 47.3795461},
+    {x: 9.388304000000062, y: 47.429348},
+    {x: 8.295154400000001, y: 47.05875549999999},
+    {x: 7.58587, y: 47.561557},
+    {x: 8.059350999999992, y: 47.388479},
+    {x: 8.953260999999998, y: 46.0176793},
+  ]
+
+
+  /**
+   * trying markers with leaflet
+   */
   var latlng = L.latLng(47.212213, 7.755064);
 
   // draws marker as circle, zoom good, popup disappears
@@ -98,8 +118,7 @@
   }).addTo(map);*/
 
   // popup at beginning but circle not clickable
-  circle.bindPopup("I am a circle.").openPopup();
-
+  circle.bindPopup("I am a circle.");
 
   // default marker in leaflet with popup
   L.marker([46.947142, 7.425471000000016]).addTo(map)
@@ -121,6 +140,13 @@
     .append("svg")
     .attr('id', 'circleSVG');
 
+  /**
+   * markers with D3
+   */
+  // add SVG element to leaflet's overlay pane (group layers)
+  var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
+
+  // calculates svg bounds when we first open the map
   calculateSVGBounds(testData);
 
   var div = d3.select("body")
@@ -131,6 +157,7 @@
     .style("visibility", "hidden")
     .text(testData.name + "<br/>" + testData.city);
 
+  // project points using procectPoint() function
   var circles = svg.selectAll('circle')
     .data(testData)
     .enter()
@@ -143,6 +170,7 @@
     .on("mouseout", function(){return div.style("visibility", "hidden");});
 
 
+  // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
   function projectPoint(x, y) {
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
@@ -157,22 +185,27 @@
     var xMax = 0;
     var yMin = 1000000;
     var yMax = 0;
-    var padding = 50;
+    var heightPadding = 100;
+    var widthPadding = 300;
     data.forEach(function(d) {
       xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
       yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
     });
     svg
       .style("left", 0)
-      .style("width", xMax + padding)
+      .style("width", xMax + widthPadding)
       .style("top", 0)
-      .style("height", yMax + padding);
+      .style("height", yMax + heightPadding);
   }
 
+
+
+  // makes points invisible when user starts zooming
   map.on('zoomstart', function () {
     d3.select('#circleSVG').style('visibility', 'hidden');
   });
 
+  // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     d3.select('#circleSVG').style('visibility', 'visible');
     calculateSVGBounds(testData);
@@ -185,9 +218,6 @@
 
 
 </script>
-
-
-
 </body>
 </html>
 
