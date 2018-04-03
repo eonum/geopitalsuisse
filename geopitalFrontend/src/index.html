@@ -51,6 +51,21 @@
           integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
           crossorigin=""></script>
 
+<style>
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 60px;
+    height: 28px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+</style>
+
 <script>
 
   var map = L.map('mapid').setView([46.818188, 8.227512], 8);
@@ -93,19 +108,28 @@
 
   // test data for the hospitals
   var testData = [
-    {x: 7.425471000000016, y: 46.947142},
-    {x: 8.547388899999987, y: 47.3795461},
-    {x: 9.388304000000062, y: 47.429348},
+    {x: 7.425471000000016, y: 46.947142, name: 'Inselspital', city: '3010 Bern'},
+    {x: 8.547388899999987, y: 47.3795461, name: 'Universitätsspital Zürich', city: '8091 Zürich'},
+    {x: 9.388304000000062, y: 47.429348, name: 'Kantonsspital St.Gallen', city: '9007 St.Gallen'},
     {x: 8.295154400000001, y: 47.05875549999999},
     {x: 7.58587, y: 47.561557},
     {x: 8.059350999999992, y: 47.388479},
     {x: 8.953260999999998, y: 46.0176793},
   ]
 
-  var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
+  var svg = d3.select(map.getPanes().overlayPane)
+    .append("svg")
+    .attr('id', 'circleSVG');
 
   calculateSVGBounds(testData);
 
+  var div = d3.select("body")
+    .attr('class', 'tooltip')
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .text(testData.name + "<br/>" + testData.city);
 
   var circles = svg.selectAll('circle')
     .data(testData)
@@ -115,6 +139,8 @@
     .attr('fill','#d633ff')
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+    .on("mouseover", function(){return div.style("visibility", "visible");})
+    .on("mouseout", function(){return div.style("visibility", "hidden");});
 
 
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -157,35 +183,6 @@
   });
 
 
-/*  map.on("viewreset", update);
-  update();
-
-  function update() {
-    feature.attr("transform",
-      function(d) {
-        return "translate("+
-          map.projectPoint(d.x, d.y).x, xMax);
-          map.projectPoint(d.x, d.y).y, yMax)
-      }
-    )
-  }*/
-
-/*  var zoom = d3.behavior.zoom()
-    .scaleExtent([1, 10])
-    .on("zoom", zoomed);
-
-  function zoomed() {
-    container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-  }*/
-
-
-
-/*  var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
-    .call(zoom);*/
 
 </script>
 
