@@ -9,7 +9,7 @@ _this = this;
 
 // Async function to get the hospital list
 exports.getHospitals = async function(){
-
+  console.log("DEPRECATED");
     try {
       Hospital.find().populate('address').exec(function (err, hospitals){
         if (err){return next(err);}
@@ -27,7 +27,7 @@ exports.getHospitals = async function(){
 };
 
 exports.createHospital = async function(hospital){
-
+console.log("DEPRECATED");
     // Creating a new hospital object by using the new keyword
     var newHospital = new Hospital({
         name: hospital.name,
@@ -43,22 +43,17 @@ exports.createHospital = async function(hospital){
 
     try{
 
-        // Saving the Hospital
-        console.log("Are you working ?");
         var savedHospital = await newHospital.save() && newAddress.save();
 
         return savedHospital;
     }catch(e){
 
-        // return a Error message describing the reason
         throw Error("Error while Creating Hospital")
     }
 };
 
 exports.hospitalCreate = async function(data){
-  //Hospital.collection.drop();
-  //Address.collection.drop();
-
+  console.log("DEPRECATED");
   var address = new Address({
     _id : new mongoose.Types.ObjectId(),
     street : data.street,
@@ -78,33 +73,9 @@ exports.hospitalCreate = async function(data){
     });
   });
 }
-  /*
-  var address = new Address({
-    street : name.street,
-    city : name.city
-  });
-  address.save(function (err){
-    if(err){
-      cb(err, null)
-      return
-    }
-  });
-  var hospitalDetail = {
-    year : name.year,
-    name : name.name,
-    address : address._id
-  }
-	var hospital = new Hospital(hospitalDetail);
-	hospital.save(function (err){
-		if(err){
-			cb(err, null)
-			return
-		}
-		console.log('New hospital:' + hospital);
-	});
-*/
 
 exports.updateTodo = async function(hospital){
+console.log("DEPRECATED");
     var id = hospital.id
 
     try{
