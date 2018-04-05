@@ -1,5 +1,7 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
-declare function test(): any;
+declare function mapDrawer(data): any;
+import { HospitalService } from '../../services/hospital.service';
+import {Hospital} from "../../models/hospital.model";
 
 
 @Component({
@@ -15,15 +17,22 @@ export class MapsComponent implements OnInit, AfterViewChecked {
   lat2: number = 47.3781037802915;
   lng2: number = 8.552398080291503;
 
-  constructor() { }
+  hospitals: any[] = [];
+  public hospitalList: Hospital[] = [];
+
+
+  constructor(private hospitalService: HospitalService) {
+  }
 
   ngOnInit() {
-    setTimeout(function () {
-      test();
-    }, 500);
+
   }
 
   ngAfterViewChecked() {
+    this.hospitalService.getDummyData().subscribe(hospitals => {
+        mapDrawer(hospitals);
+      }
+    )
   }
 
 }

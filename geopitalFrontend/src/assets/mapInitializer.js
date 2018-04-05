@@ -1,8 +1,9 @@
-var test = function() {
+var mapDrawer = function(data) {
   /**
    * build map with OpenStreetMap and Mapbox
    */
     // create new basic map
+    var test = document.getElementById('mapid');
   var map = L.map('mapid').setView([46.818188, 8.227512], 8);
 
 // basic map using OpenStreetMap tiles with costume design using mapbox
@@ -67,11 +68,7 @@ var test = function() {
     {x: 7.58587, y: 47.561557},
     {x: 8.059350999999992, y: 47.388479},
     {x: 8.953260999999998, y: 46.0176793},
-  ]
-
-  var svg = d3.select(map.getPanes().overlayPane)
-    .append("svg")
-    .attr('id', 'circleSVG');
+  ];
 
   /**
    * markers with D3
@@ -82,13 +79,13 @@ var test = function() {
 // calculates svg bounds when we first open the map
   calculateSVGBounds(testData);
 
-  var div = d3.select("body")
+/*  var div = svg
     .attr('class', 'tooltip')
     .append("div")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
-    .text(testData.name + "<br/>" + testData.city);
+    .text(testData.name + "<br/>" + testData.city);*/
 
 // project points using procectPoint() function
   var circles = svg.selectAll('circle')
@@ -99,8 +96,8 @@ var test = function() {
     .attr('fill','#d633ff')
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-    .on("mouseover", function(){return div.style("visibility", "visible");})
-    .on("mouseout", function(){return div.style("visibility", "hidden");});
+    // .on("mouseover", function(){return div.style("visibility", "visible");})
+    // .on("mouseout", function(){return div.style("visibility", "hidden");});
 
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
