@@ -16,12 +16,13 @@ export class Hospital {
   coordinates: {
     latitude: String;
     longitude: String;
-  }
-  
+  }  
 
   constructor(){
     this.year = 0;
     this.name = "";
+    this.address = { street: "", streetNumber: "", plz: "", city: ""};
+    this.coordinates = { latitude: "", longitude: ""};
   }
 
 }

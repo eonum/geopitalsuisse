@@ -9,33 +9,29 @@ import {Hospital} from "../../models/hospital.model";
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css']
 })
+
 export class MapsComponent implements OnInit, AfterViewChecked {
-/*   lat: number = 46.818188;
-  lng: number = 8.227512;
-  lat1: number = 46.9490830802915;
-  lng1: number = 7.426111180291502;
-  lat2: number = 47.3781037802915;
-  lng2: number = 8.552398080291503; */
+  
+  constructor(private hospitalService: HospitalService) {
+  }
 
   hospitals: any[] = [];
   public hospitalList: Hospital[] = [];
-
-
-  constructor(private hospitalService: HospitalService) {
-  }
 
   ngOnInit() {
     // load hospital data from backend
     this.hospitalService.getDummyData()
       .subscribe(hospitals => {
         this.hospitalList = hospitals;
-        for (var i = 0; i<this.hospitalList.length; i++)
-        console.log(this.hospitalList[i]);
+
+        var hospitalCoordinates = [[],[],[]]
+        // draw map with arguments from service
+        mapDrawer(this.hospitalList);
+        // for (var i = 0; i<this.hospitalList.length; i++)
+        // console.log(this.hospitalList[i]);
       });
 
-    // draw map 
-    mapDrawer(this.hospitalList);
-    console.log("map loaded");
+    
   }
 
   // everything in here is getting triggered every time the map is touched or hoverd over

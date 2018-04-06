@@ -1,11 +1,14 @@
 var mapDrawer = function(data) {
-  console.log("data from map");
-
+  // check if data arrived
+  console.log("data on map:");
+  for (var i = 0; i < data.length; i++)
+  console.log(data[i]);
+  
   /**
    * build map with OpenStreetMap and Mapbox
    */
     // create new basic map
-    var test = document.getElementById('mapid');
+  var test = document.getElementById('mapid');
   var map = L.map('mapid').setView([46.818188, 8.227512], 8);
 
 // basic map using OpenStreetMap tiles with costume design using mapbox
@@ -35,6 +38,7 @@ var mapDrawer = function(data) {
   /**
    * trying markers with leaflet
    */
+
   var latlng = L.latLng(47.212213, 7.755064);
 
 // draws marker as circle, zoom good, popup disappears
@@ -56,7 +60,12 @@ var mapDrawer = function(data) {
 // popup at beginning but circle not clickable
   circle.bindPopup("I am a circle.");
 
-// default marker in leaflet with popup
+
+  // for (var i=0; i<testData.length; i++)
+  //   console.log(testData[i].x, testData[i].y);
+
+
+  // default marker in leaflet with popup
   L.marker([46.947142, 7.425471000000016]).addTo(map)
     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 
