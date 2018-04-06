@@ -1,4 +1,6 @@
 var mapDrawer = function(data) {
+  console.log("data from map");
+
   /**
    * build map with OpenStreetMap and Mapbox
    */
