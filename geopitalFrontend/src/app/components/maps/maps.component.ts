@@ -23,8 +23,6 @@ export class MapsComponent implements OnInit, AfterViewChecked {
     this.hospitalService.getDummyData()
       .subscribe(hospitals => {
         this.hospitalList = hospitals;
-
-        var hospitalCoordinates = [[],[],[]]
         // draw map with arguments from service
         mapDrawer(this.hospitalList);
         // for (var i = 0; i<this.hospitalList.length; i++)
