@@ -12,7 +12,10 @@ export class HospitalService {
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'Hospital')
+    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/public')
+    .map(res => {
+      return res['data'] as Hospital[];
+    })
   }
 
   getDummyData(): Observable<Hospital[]> {
