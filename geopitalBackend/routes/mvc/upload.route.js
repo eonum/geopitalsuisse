@@ -7,7 +7,7 @@ var initController = require('../../controllers/init.controller');
 
 
 router.get('/', uploadController.upload)
-router.post('/', uploadController.uploadPost)
+router.post('/', uploadController.uploadExcelToJson)
 router.post('/storeJson', uploadController.fileToDBPost)
 
 

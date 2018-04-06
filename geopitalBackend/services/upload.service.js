@@ -4,24 +4,26 @@ var Hospital = require('../models/hospital.model');
 var Address = require('../models/address.model');
 var AttributeTypes = require('../models/attributeType.model');
 var Attribute = require('../models/attribute.model');
-const del = require('del');
 var fs = require('fs');
-
 
 // Saving the context of this module inside the _the variable
 _this = this;
 
-// Async function to get the hospital list
-exports.uploadsDelete = function(){
-    del('uploads/*');
-};
+exports.storeJsonImport = function(filePath){
+    var obj = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
-exports.storeJsonImport = function(){
-    var obj = JSON.parse(fs.readFileSync('./data/hospital15.json', 'utf8'));
+    try{
+        AttributeTypes.find().exec(function(err, types){
+            console.log(types);
+            console.log(obj);
+            obj.forEach(function(hosp){
+                hospitalCreateWithAttributes(hosp, types);
+            })
 
-    obj.forEach(function(hosp){
-        hospitalCreate(hosp);
-    })
+        });
+    }catch(e){
+        console.log(e.message);
+    }
 };
 
 exports.initJsonImport = function(){
