@@ -16,12 +16,6 @@ exports.upload= function(req, res){
     res.render('upload', {title: 'Excel Upload', listJson: listJson});
 }
 
-exports.parse = function (req, res){
-  //uploadService.storeJsonImport();
-  geocodingService.addCoordinatesToHospitals();
-  res.redirect('/mvc/coordinates');
-}
-
 exports.fileToDBPost = async function(req, res) {
     await uploadService.storeJsonImport('../uploads/json/' + req.body.fileName);
     res.redirect('/mvc/upload');
