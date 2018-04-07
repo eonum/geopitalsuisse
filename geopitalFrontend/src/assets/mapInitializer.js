@@ -1,6 +1,8 @@
 var mapDrawer = function(data) {
+
+  var data = data;
   // check if data arrived
-  console.log("data on map:");
+  console.log("data from mapInitializer:");
   for (var i = 0; i < data.length; i++)
   console.log(data[i]);
   
@@ -60,15 +62,9 @@ var mapDrawer = function(data) {
 // popup at beginning but circle not clickable
   circle.bindPopup("I am a circle.");
 
-
-  // for (var i=0; i<testData.length; i++)
-  //   console.log(testData[i].x, testData[i].y);
-
-
   // default marker in leaflet with popup
   L.marker([46.947142, 7.425471000000016]).addTo(map)
-    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
-
+   .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 
 // test data for the hospitals
   var testData = [
@@ -155,7 +151,13 @@ var mapDrawer = function(data) {
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
     //container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   });
+/* 
+  tooltops with d3
+ */
 
+// var div = d3.select("body").append("div")	
+//   .attr("class", "tooltip")				
+//   .style("opacity", 0);
 }
 
 

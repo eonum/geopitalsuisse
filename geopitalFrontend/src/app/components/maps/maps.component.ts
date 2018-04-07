@@ -21,12 +21,15 @@ export class MapsComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     // load hospital data from backend
     this.hospitalService.getDummyData()
+     // this.hospitalService.getAll()
+     // TODO: getAll() does not work yet!
       .subscribe(hospitals => {
         this.hospitalList = hospitals;
         // draw map with arguments from service
         mapDrawer(this.hospitalList);
-        // for (var i = 0; i<this.hospitalList.length; i++)
-        // console.log(this.hospitalList[i]);
+        console.log("data from component")
+        for (var i = 0; i<this.hospitalList.length; i++)
+        console.log(this.hospitalList[i]);
       });
 
     
