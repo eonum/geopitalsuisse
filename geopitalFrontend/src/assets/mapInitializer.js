@@ -1,4 +1,4 @@
-// temporary solution with convertion of dataformat
+// temporary solution with convertion of dataformat (for dummy data with degree and stuff)
 var coordinateConverter = function(degreeMinuteSecondString){
   var degree = Number(degreeMinuteSecondString.split("°")[0]);
   var minutes = Number(degreeMinuteSecondString.split("°")[1].split("'")[0]);
@@ -9,22 +9,25 @@ var coordinateConverter = function(degreeMinuteSecondString){
 
 
 var mapDrawer = function(data) {
-
+  
+  
   // convert shitty format to good format
   // and store coordinates in new object
   var hospitalCoordinates = []
   for (var i = 0; i < data.length; i++){
-    var latitude = coordinateConverter(data[i].coordinates.latitude);
-    var longitude = coordinateConverter(data[i].coordinates.longitude);
-    var newCoordinates = {x: longitude, y: latitude};
-    hospitalCoordinates.push(newCoordinates);
-    
+    if(data[i].coordinates != null){
+      var latitude = data[i].coordinates.latitude.slice(0,-1);
+      var longitude = data[i].coordinates.longitude.slice(0,-1);
+      var newCoordinates = {x: longitude, y: latitude};
+      hospitalCoordinates.push(newCoordinates);
+    }else{
+      console.log(i);
+      console.log(data[i]);
+      continue;
+    }
+
   }
 
-
-  for (var i = 0; i < data.length; i++)
-  console.log(data[i]);
-  
   /**
    * build map with OpenStreetMap and Mapbox
    */
@@ -96,7 +99,7 @@ var mapDrawer = function(data) {
     {x: 8.953260999999998, y: 46.0176793},
   ];
 
- console.log(testData);
+
 
 
   /**
