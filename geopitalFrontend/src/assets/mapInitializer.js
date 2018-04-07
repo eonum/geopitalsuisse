@@ -1,8 +1,27 @@
+// temporary solution with convertion of dataformat
+var coordinateConverter = function(degreeMinuteSecondString){
+  var degree = Number(degreeMinuteSecondString.split("°")[0]);
+  var minutes = Number(degreeMinuteSecondString.split("°")[1].split("'")[0]);
+  var seconds = Number(degreeMinuteSecondString.split("°")[1].split("'")[1].split(".")[0]);
+  var latitude = degree + (minutes + seconds/60.0)/60.0
+  return latitude;
+};
+
+
 var mapDrawer = function(data) {
 
-  var data = data;
-  // check if data arrived
-  console.log("data from mapInitializer:");
+  // convert shitty format to good format
+  // and store coordinates in new object
+  var hospitalCoordinates = []
+  for (var i = 0; i < data.length; i++){
+    var latitude = coordinateConverter(data[i].coordinates.latitude);
+    var longitude = coordinateConverter(data[i].coordinates.longitude);
+    var newCoordinates = {x: longitude, y: latitude};
+    hospitalCoordinates.push(newCoordinates);
+    
+  }
+
+
   for (var i = 0; i < data.length; i++)
   console.log(data[i]);
   
@@ -26,7 +45,7 @@ var mapDrawer = function(data) {
   /**
    * test data for the hospitals
    */
-  var testData = [
+/*   var testData = [
     {x: 7.425471000000016, y: 46.947142},
     {x: 8.547388899999987, y: 47.3795461},
     {x: 9.388304000000062, y: 47.429348},
@@ -34,7 +53,7 @@ var mapDrawer = function(data) {
     {x: 7.58587, y: 47.561557},
     {x: 8.059350999999992, y: 47.388479},
     {x: 8.953260999999998, y: 46.0176793},
-  ]
+  ] */
 
 
   /**
@@ -77,6 +96,9 @@ var mapDrawer = function(data) {
     {x: 8.953260999999998, y: 46.0176793},
   ];
 
+ console.log(testData);
+
+
   /**
    * markers with D3
    */
@@ -96,7 +118,7 @@ var mapDrawer = function(data) {
 
 // project points using procectPoint() function
   var circles = svg.selectAll('circle')
-    .data(testData)
+    .data(hospitalCoordinates)
     .enter()
     .append('circle')
     .attr("r", 6)
@@ -135,8 +157,6 @@ var mapDrawer = function(data) {
       .style("height", yMax + heightPadding);
   }
 
-
-
 // makes points invisible when user starts zooming
   map.on('zoomstart', function () {
     d3.select('#circleSVG').style('visibility', 'hidden');
@@ -145,7 +165,7 @@ var mapDrawer = function(data) {
 // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     d3.select('#circleSVG').style('visibility', 'visible');
-    calculateSVGBounds(testData);
+    calculateSVGBounds(hospitalCoordinates);
     circles
       .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
