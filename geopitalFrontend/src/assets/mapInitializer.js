@@ -25,8 +25,8 @@ var mapDrawer = function(data) {
       var newCoordinates = {x: longitude, y: latitude, name:hospitalName};
       hospitalCoordinates.push(newCoordinates);
     }else{
-     // console.log(i);
-     // console.log(data[i]);
+     //console.log(i);
+     //console.log(data[i]);
       continue;
     }
   }
@@ -166,8 +166,6 @@ var mapDrawer = function(data) {
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
     .on("mouseover", function(d) {
-      console.log("Mouse Over Works")
-      console.log(d);
       div.transition()
         .duration(1)
         .style("opacity", .98);
