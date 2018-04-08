@@ -21,10 +21,9 @@ export class HospitalService {
 
   // TODO: create correct Charactersitics class
   getAttributes(hospitalId): Observable<Characteristics[]>{
-    console.log('http://localhost:3000/' + 'api/hospital/' + hospitalId);
+    //console.log('http://localhost:3000/' + 'api/hospital/' + hospitalId);
     return this.http.get<Characteristics[]>('http://localhost:3000/' + 'api/hospital/' + hospitalId)
     .map(res => {
-      console.log('----------');
       return res['data'] as Characteristics[];
     })
   }

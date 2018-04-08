@@ -13,8 +13,9 @@ div.tooltip {
   height: 60px;
   padding: 2px;
   font: 15px sans-serif;
-  background: rgb(124, 174, 240);
-  border: 0px;
-  border-radius: 8px;
+  background: rgb(81, 131, 189);
+  border: 2px;
+  border-radius: 15px;
   pointer-events: none;
+  color: rgb(255, 255, 255)
 }

@@ -131,7 +131,7 @@ var mapDrawer = function(data) {
 // Define the div for the tooltip
   var div = d3.select("body").append("div")
     .attr("class", "tooltip")
-    .style("opacity", 0);
+    .style("opacity", 0.0);
 
     var tooltip = svg
     .append("div")
