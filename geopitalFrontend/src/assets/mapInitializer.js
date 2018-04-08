@@ -1,5 +1,3 @@
-
-
 // temporary solution with convertion of dataformat (for dummy data with degree and stuff)
 var coordinateConverter = function(degreeMinuteSecondString){
   var degree = Number(degreeMinuteSecondString.split("°")[0]);
@@ -8,6 +6,9 @@ var coordinateConverter = function(degreeMinuteSecondString){
   var latitude = degree + (minutes + seconds/60.0)/60.0
   return latitude;
 };
+
+
+
 
 
 var mapDrawer = function(data) {
@@ -119,17 +120,20 @@ var mapDrawer = function(data) {
     .style("z-index", "10")
     .style("visibility", "hidden")
     .text(testData.name + "<br/>" + testData.city); */
-
+  // console.log("create div")
   // var div = svg.append("div")	
   //   .attr("class", "tooltip")				
-  //   .style("opacity", 0);
+  //   .style("opacity", 0.9);
+    
+    // console.log(div);
+
+// Define the div for the tooltip
+  var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
 
     var tooltip = svg
     .append("div")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .style("background", "#000")
     .text("a simple tooltip");
 /* 
     d3.csv("data", function(error, data) {
@@ -160,19 +164,21 @@ var mapDrawer = function(data) {
     //.attr('fill','#d633ff') // purple
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-//     .on("mouseover", function(d) {
-//       debugger;
-//       div.transition()
-//         .duration(200)
-//         .style("opacity", .9);
-//       div	.html(d.name + "<br/>"  + d.address)	
-// /*         .style("left", (d3.event.pageX) + "px")		
-//         .style("top", (d3.event.pageY - 28) + "px") */;
-//     })
-//     .on("mouseout", function(d) {		
-//       div.transition()		
-//           .duration(500)		
-//           .style("opacity", 0);	
+    .on("mouseover", function(d) {
+      console.log("Mouse Over Works")
+      console.log(d);
+      div.transition()
+        .duration(1)
+        .style("opacity", .98);
+        div	.html("x = " + d.x + "<br/>" + "y =" + d.y)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 0) + "px");
+    })
+     .on("mouseout", function(d) {		
+       div.transition()		
+           .duration(500)		
+           .style("opacity", 0);	
+     })
           
     // .on("mouseover", function(){return div.style("visibility", "visible");})
     // .on("mouseout", function(){return div.style("visibility", "hidden");});

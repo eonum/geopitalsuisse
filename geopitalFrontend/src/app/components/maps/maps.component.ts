@@ -21,20 +21,20 @@ export class MapsComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
 
-    this.hospitalService.getAttributes("5ac8d24f6af3b31a03bac028").
-    subscribe(characteristics => {
-      console.log(characteristics)
-    });
+    // this.hospitalService.getAttributes("5ac8d24f6af3b31a03bac028").
+    // subscribe(characteristics => {
+    //   console.log(characteristics)
+    // });
 
     // load hospital data from backend
     //this.hospitalService.getDummyData()
     this.hospitalService.getAll()
-     // TODO: getAll() does not work yet!
       .subscribe(hospitals => {
         this.hospitalList = hospitals;
+       // this.hospitalService.getAttributes(this.hospitalList)
         //console.log("data from component")
         //for (var i = 0; i<this.hospitalList.length; i++)
-         //  console.log(this.hospitalList[i]);
+          console.log(this.hospitalList);
         // draw map with arguments from service
         mapDrawer(this.hospitalList);
       

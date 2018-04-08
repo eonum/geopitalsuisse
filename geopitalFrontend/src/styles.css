@@ -4,15 +4,15 @@
 }
 
 
-.body { font: 12px Arial;}
+body { font: 12px Arial;}
 
-.tooltip {	
+div.tooltip {	
   position: absolute;			
   text-align: center;			
-  width: 60px;					
-  height: 28px;					
+  width: 150px;					
+  height: 60px;					
   padding: 2px;				
-  font: 12px sans-serif;		
+  font: 20px sans-serif;		
   background: rgb(124, 174, 240);	
   border: 0px;		
   border-radius: 8px;			
