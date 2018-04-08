@@ -12,16 +12,17 @@ var coordinateConverter = function(degreeMinuteSecondString){
 
 
 var mapDrawer = function(data) {
-  
-  
+
+
   // convert shitty format to good format
   // and store coordinates in new object
   var hospitalCoordinates = []
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null){
+      var hospitalName = data[i].name;
       var latitude = data[i].coordinates.latitude.slice(0,-1);
       var longitude = data[i].coordinates.longitude.slice(0,-1);
-      var newCoordinates = {x: longitude, y: latitude};
+      var newCoordinates = {x: longitude, y: latitude, name:hospitalName};
       hospitalCoordinates.push(newCoordinates);
     }else{
      // console.log(i);
@@ -121,21 +122,21 @@ var mapDrawer = function(data) {
     .style("visibility", "hidden")
     .text(testData.name + "<br/>" + testData.city); */
   // console.log("create div")
-  // var div = svg.append("div")	
-  //   .attr("class", "tooltip")				
+  // var div = svg.append("div")
+  //   .attr("class", "tooltip")
   //   .style("opacity", 0.9);
-    
+
     // console.log(div);
 
 // Define the div for the tooltip
-  var div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
     .style("opacity", 0);
 
     var tooltip = svg
     .append("div")
     .text("a simple tooltip");
-/* 
+/*
     d3.csv("data", function(error, data) {
       data.forEach(function(d) {
           d.name = d.name;
@@ -154,7 +155,7 @@ var mapDrawer = function(data) {
 
 // project points using procectPoint() function
   var circles = svg.selectAll('circle')
-    //.selectAll("div")  
+    //.selectAll("div")
     .data(hospitalCoordinates)
     .enter()
     .append('circle')
@@ -170,16 +171,16 @@ var mapDrawer = function(data) {
       div.transition()
         .duration(1)
         .style("opacity", .98);
-        div	.html("x = " + d.x + "<br/>" + "y =" + d.y)	
-                .style("left", (d3.event.pageX) + "px")		
+        div	.html(d.name)
+                .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 0) + "px");
     })
-     .on("mouseout", function(d) {		
-       div.transition()		
-           .duration(500)		
-           .style("opacity", 0);	
+     .on("mouseout", function(d) {
+       div.transition()
+           .duration(500)
+           .style("opacity", 0);
      })
-          
+
     // .on("mouseover", function(){return div.style("visibility", "visible");})
     // .on("mouseout", function(){return div.style("visibility", "hidden");});
 

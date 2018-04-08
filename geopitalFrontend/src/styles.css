@@ -6,15 +6,15 @@
 
 body { font: 12px Arial;}
 
-div.tooltip {	
-  position: absolute;			
-  text-align: center;			
-  width: 150px;					
-  height: 60px;					
-  padding: 2px;				
-  font: 20px sans-serif;		
-  background: rgb(124, 174, 240);	
-  border: 0px;		
-  border-radius: 8px;			
-  pointer-events: none;			
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 150px;
+  height: 60px;
+  padding: 2px;
+  font: 15px sans-serif;
+  background: rgb(124, 174, 240);
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
 }
