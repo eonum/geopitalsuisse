@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Hospital} from '../models/hospital.model';
+import { Characteristics} from '../models/characteristics.model';
 import 'rxjs/add/operator/map';
 import {environment} from "../../environments/environment";
 
@@ -18,6 +19,16 @@ export class HospitalService {
     })
   }
 
+  // TODO: create correct Charactersitics class
+  getAttributes(hospitalId): Observable<Characteristics[]>{
+    console.log('http://localhost:3000/' + 'api/hospital/' + hospitalId);
+    return this.http.get<Characteristics[]>('http://localhost:3000/' + 'api/hospital/' + hospitalId)
+    .map(res => {
+      console.log('----------');
+      return res['data'] as Characteristics[];
+    })
+  }
+  
   getDummyData(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/public/dummy')
       .map(res => {

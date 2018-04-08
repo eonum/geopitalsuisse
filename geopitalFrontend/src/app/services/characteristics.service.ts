@@ -23,6 +23,7 @@ export class CharacteristicsService {
       })
   }
 
+
   /* getHospitalCharacteristics(): Observable<Hospital[]>{
     return this.http.get(this.characteristicUrl)
     .map(res  => {

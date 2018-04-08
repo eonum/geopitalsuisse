@@ -16,9 +16,16 @@ export class MapsComponent implements OnInit, AfterViewChecked {
   }
 
   hospitals: any[] = [];
+  characteristics: any[] = [];
   public hospitalList: Hospital[] = [];
 
   ngOnInit() {
+
+    this.hospitalService.getAttributes("5ac8d24f6af3b31a03bac028").
+    subscribe(characteristics => {
+      console.log(characteristics)
+    });
+
     // load hospital data from backend
     //this.hospitalService.getDummyData()
     this.hospitalService.getAll()

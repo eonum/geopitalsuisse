@@ -1,3 +1,5 @@
+
+
 // temporary solution with convertion of dataformat (for dummy data with degree and stuff)
 var coordinateConverter = function(degreeMinuteSecondString){
   var degree = Number(degreeMinuteSecondString.split("°")[0]);
@@ -21,11 +23,10 @@ var mapDrawer = function(data) {
       var newCoordinates = {x: longitude, y: latitude};
       hospitalCoordinates.push(newCoordinates);
     }else{
-      console.log(i);
-      console.log(data[i]);
+     // console.log(i);
+     // console.log(data[i]);
       continue;
     }
-
   }
 
   /**
@@ -63,15 +64,15 @@ var mapDrawer = function(data) {
    * trying markers with leaflet
    */
 
-  var latlng = L.latLng(47.212213, 7.755064);
+  //var latlng = L.latLng(47.212213, 7.755064);
 
 // draws marker as circle, zoom good, popup disappears
-  var circle = L.circleMarker(latlng,{
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 10
-  }).addTo(map);
+  // var circle = L.circleMarker(latlng,{
+  //   color: 'red',
+  //   fillColor: '#f03',
+  //   fillOpacity: 0.5,
+  //   radius: 10
+  // }).addTo(map);
 
 // draws a customizable circle on map, zoom weird
   /*var circle = L.circle([47.212213, 7.755064], {
@@ -82,11 +83,11 @@ var mapDrawer = function(data) {
   }).addTo(map);*/
 
 // popup at beginning but circle not clickable
-  circle.bindPopup("I am a circle.");
+  //circle.bindPopup("I am a circle.");
 
   // default marker in leaflet with popup
-  L.marker([46.947142, 7.425471000000016]).addTo(map)
-   .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
+  // L.marker([46.947142, 7.425471000000016]).addTo(map)
+  //  .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 
 // test data for the hospitals
   var testData = [
@@ -111,23 +112,68 @@ var mapDrawer = function(data) {
 // calculates svg bounds when we first open the map
   calculateSVGBounds(testData);
 
-/*  var div = svg
+ /* var div = svg
     .attr('class', 'tooltip')
     .append("div")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
-    .text(testData.name + "<br/>" + testData.city);*/
+    .text(testData.name + "<br/>" + testData.city); */
+
+  // var div = svg.append("div")	
+  //   .attr("class", "tooltip")				
+  //   .style("opacity", 0);
+
+    var tooltip = svg
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("background", "#000")
+    .text("a simple tooltip");
+/* 
+    d3.csv("data", function(error, data) {
+      data.forEach(function(d) {
+          d.name = d.name;
+          d.address = d.address;
+      }); */
+
+      // d3.select("body")
+      // .selectAll("div")
+      //   .data(data)
+      // .enter().append("div")
+      //   .style("width", function(d) { return x(d) + "px"; })
+      //   .text(function(d) { return d; })
+      //   .on("mouseover", function(d){tooltip.text(d); return tooltip.style("visibility", "visible");})
+      //     .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+      //     .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
 // project points using procectPoint() function
   var circles = svg.selectAll('circle')
+    //.selectAll("div")  
     .data(hospitalCoordinates)
     .enter()
     .append('circle')
-    .attr("r", 6)
-    .attr('fill','#d633ff')
+    //.append('div')
+    .attr("r", 4)
+    .attr('fill', '#990000') // crimson red
+    //.attr('fill','#d633ff') // purple
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+//     .on("mouseover", function(d) {
+//       debugger;
+//       div.transition()
+//         .duration(200)
+//         .style("opacity", .9);
+//       div	.html(d.name + "<br/>"  + d.address)	
+// /*         .style("left", (d3.event.pageX) + "px")		
+//         .style("top", (d3.event.pageY - 28) + "px") */;
+//     })
+//     .on("mouseout", function(d) {		
+//       div.transition()		
+//           .duration(500)		
+//           .style("opacity", 0);	
+          
     // .on("mouseover", function(){return div.style("visibility", "visible");})
     // .on("mouseout", function(){return div.style("visibility", "hidden");});
 
@@ -165,6 +211,7 @@ var mapDrawer = function(data) {
     d3.select('#circleSVG').style('visibility', 'hidden');
   });
 
+
 // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     d3.select('#circleSVG').style('visibility', 'visible');
@@ -172,15 +219,6 @@ var mapDrawer = function(data) {
     circles
       .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-    //container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   });
-/* 
-  tooltops with d3
- */
 
-// var div = d3.select("body").append("div")	
-//   .attr("class", "tooltip")				
-//   .style("opacity", 0);
 }
-
-
