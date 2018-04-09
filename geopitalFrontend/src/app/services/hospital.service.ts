@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Hospital} from '../models/hospital.model';
+import { Characteristics} from '../models/characteristics.model';
 import 'rxjs/add/operator/map';
 import {environment} from "../../environments/environment";
 
@@ -12,11 +13,23 @@ export class HospitalService {
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'Hospital')
+    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/public')
+    .map(res => {
+      return res['data'] as Hospital[];
+    })
   }
 
+  // TODO: create correct Charactersitics class
+  getAttributes(hospitalId): Observable<Characteristics[]>{
+    //console.log('http://localhost:3000/' + 'api/hospital/' + hospitalId);
+    return this.http.get<Characteristics[]>('http://localhost:3000/' + 'api/hospital/' + hospitalId)
+    .map(res => {
+      return res['data'] as Characteristics[];
+    })
+  }
+  
   getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/geopital')
+    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/public/dummy')
       .map(res => {
         return res['data'] as Hospital[];
       })
