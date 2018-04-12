@@ -1,4 +1,5 @@
 .idea/
 .DS_Store
 geopitalBackend/node_modules/
-uploads/
+uploads/json/
+uploads/xlsx/
