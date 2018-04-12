@@ -5,6 +5,7 @@ var Address = require('../models/address.model');
 var AttributeTypes = require('../models/attributeType.model');
 var Attribute = require('../models/attribute.model');
 var fs = require('fs');
+var geocodingService = require('../services/geocoding.service')
 
 // Saving the context of this module inside the _the variable
 _this = this;
@@ -17,9 +18,10 @@ exports.storeJsonImport = function(filePath){
 
     try{
         AttributeTypes.find().exec(function(err, types){
-            console.log(types);
-            console.log(obj);
+            //console.log(types);
+            //console.log(obj);
             obj.forEach(function(hosp){
+                //console.log(hosp.Inst + ' start to save blabla');
                 hospitalCreateWithAttributes(hosp, types);
             })
 
@@ -58,8 +60,10 @@ hospitalCreateWithAttributes = function(data, types) {
         _id: new mongoose.Types.ObjectId(),
         street: extractStreet(data.Adr),
         streetNumber: extractStreetNumber(data.Adr),
-        plz: data.Ort.split(' ')[0],
-        city: extractCity(data.Ort)
+        //plz: data.Ort.split(' ')[0],
+
+        //city: extractCity(data.Ort)
+        city: data.Ort
     });
     //create new hospital and fill with data
     var hospital = new Hospital({
@@ -82,11 +86,11 @@ hospitalCreateWithAttributes = function(data, types) {
         //do not save a hospital wthout a name -> avoid to save empty hospitals and addresses
         if(hospital.name != '') {
             address.save();
-            // var savedHospital = await hospital.save();
-            return hospital.save();
+            hospital.save();
+            return geocodingService.getCoordinatesAndSave(hospital, address);
         }
     }catch(e){
-        throw Error("Error: "+ e +". And Error occured while importing xlsx-File");
+        throw Error("Error: "+ e +". And Error occured while importing json-File");
     }
 }
 

@@ -14,8 +14,8 @@ Takes address and returns JSON with coordinates and address
 */
 exports.geocode = function(address){
   return new Promise(resolve => {
-    setTimeout(() => {
+    //setTimeout(() => {
       resolve(geocoder.geocode(address));
-    }, 2000);
+    //}, 10);
   });
 };
