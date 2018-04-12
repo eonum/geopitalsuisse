@@ -1,6 +1,7 @@
 var uploadService = require('../services/upload.service');
 var fs = require('fs');
 var convertExcel = require('excel-as-json').processFile;
+var excel2Json = require('node-excel-to-json');
 
 // Saving the context of this module inside the _the variable
 _this = this;
@@ -31,21 +32,16 @@ exports.uploadExcelToJson= async function (req, res) {
         return res.status(400).send('No files were uploaded!');
     else{
         fileName = req.files.foo.name.split('.')[0];
-        //saved file to uploads/ with the filename hospitalData
-        req.files.foo.mv('../uploads/xlsx/'+ fileName +'.xlsx', function (err) {
-            if(err)
-                return res.status(400).send(err.toString());
+        var log = await saveUpload(fileName, req);
+        console.log(log);
 
-
-        })
-
-        //convert excel to json and stores it to the uploads directory
         try {
-            await convertExcel('../uploads/xlsx/'+ fileName +'.xlsx', '../uploads/json/'+ fileName +'.json')
+            convertExcel('../uploads/xlsx/' + fileName + '.xlsx', '../uploads/json/' + fileName + '.json')
         } catch (err) {
             console.log('Excel to Json Error: ' + err)
             return res.status(500).send()
         }
+
 
         //wait 100 ms for saving json file before reload page -- if you have a better way to do this, please tell me!!
         try {
@@ -59,4 +55,16 @@ exports.uploadExcelToJson= async function (req, res) {
 
     }
 
+}
+
+saveUpload = async function(fileName, req){
+    //saved file to uploads/xlsx with the filename hospitalData
+    req.files.foo.mv('../uploads/xlsx/'+ fileName +'.xlsx', function (err) {
+        if(err)
+            return err;
+        else
+            return 'Saving successfull'
+
+
+    })
 }
