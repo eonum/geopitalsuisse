@@ -18,18 +18,19 @@ exports.addCoordinatesToHospitals = async function(){
 GeoCodes a single hospital address with a geocoder and adds the coordinates to
 the hospital model. This only works in Europe at the moment.
 */
-getCoordinatesAndSave = async function(hospital){
+exports.getCoordinatesAndSave = async function(hospital, address){
   try{
-    var json = await geocoderService.geocode(hospital.address.line);
+    var json = await geocoderService.geocode('Quaderstrasse 6, 7317 Pfäfers');
     var coordinates = new Coordinates({
       _id: new mongoose.Types.ObjectId(),
-      latitude: json[0].latitude + 'N',
-      longitude: json[0].longitude + 'E'
+      latitude: json[0].latitude,
+      longitude: json[0].longitude
     });
     hospital.coordinates = coordinates;
     var savedCoordinates = coordinates.save();
     var savedHospital = hospital.save();
   }catch(e){
-    console.log(e.message);
+    console.log('hospital: ' + hospital.name + ', address: ' + address.line + '. Error message: ' + e.message);
+    return hospital;
   }
 }

@@ -5,8 +5,8 @@ var Hospital = require('./hospital.model');
 
 var coordinateSchema =  Schema({
   hospital : {type : Schema.Types.ObjectId, ref:'Hospital'},
-  latitude: { type: String},
-  longitude: { type: String}
+  latitude: { type: Number},
+  longitude: { type: Number}
 });
 
 module.exports = mongoose.model('Coordinates', coordinateSchema);
