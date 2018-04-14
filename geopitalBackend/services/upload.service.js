@@ -60,10 +60,8 @@ hospitalCreateWithAttributes = function(data, types) {
         _id: new mongoose.Types.ObjectId(),
         street: extractStreet(data.Adr),
         streetNumber: extractStreetNumber(data.Adr),
-        //plz: data.Ort.split(' ')[0],
-
-        //city: extractCity(data.Ort)
-        city: data.Ort
+        plz: data.Ort.split(' ')[0],
+        city: extractCity(data.Ort)
     });
     //create new hospital and fill with data
     var hospital = new Hospital({

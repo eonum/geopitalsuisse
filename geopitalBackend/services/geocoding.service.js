@@ -20,7 +20,7 @@ the hospital model. This only works in Europe at the moment.
 */
 exports.getCoordinatesAndSave = async function(hospital, address){
   try{
-    var json = await geocoderService.geocode('Quaderstrasse 6, 7317 Pfäfers');
+    var json = await geocoderService.geocode(address.line);
     var coordinates = new Coordinates({
       _id: new mongoose.Types.ObjectId(),
       latitude: json[0].latitude,
