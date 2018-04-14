@@ -3,22 +3,43 @@ var geocodingService = require('../services/geocoding.service');
 var attributeService = require('../services/attribute.service');
 
 exports.insertAttributeTypes = async function(req, res){
-  attributeService.importAttributeType();
-  await setTimeout(function () {
-      res.redirect('/mvc/init/hospitals');
-  }, 5000);
+  var log = await doAttributeTypes();
+  console.log(log);
+  insertHospitals(res);
 }
 
-exports.insertHospitals =  async function (req, res){
-  uploadService.initJsonImport();
-  await setTimeout(function () {
-      res.redirect('/mvc/init/coords');
-  }, 5000);
+insertHospitals =  async function (res){
+  console.log('Get to geocoding and save hospitals');
+  var log = await doInsertHospitals();
+  console.log(log);
+  // await setTimeout(function () {
+    res.redirect('/mvc/hospitals');
+  //}, 5000);
 }
 
-exports.insertCoordinates = async function (req, res){
+/*exports.insertCoordinates = async function (req, res){
   geocodingService.addCoordinatesToHospitals();
   await setTimeout(function () {
       res.redirect('/mvc/hospitals');
   }, 5000);
+}*/
+
+doInsertHospitals = async function(){
+   try {
+       uploadService.storeJsonImport('./data/hospital15.json');
+   }catch(err){
+       return err.toString();
+   }
+   return 'Upload successfull';
+}
+
+doAttributeTypes = async function(){
+    try {
+        attributeService.importAttributeType();
+    } catch (err){
+
+        return err.toString();
+    }
+    return 'Attributes successfully stored'
+
 }
