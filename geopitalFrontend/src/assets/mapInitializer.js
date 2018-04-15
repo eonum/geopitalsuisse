@@ -8,20 +8,15 @@ var coordinateConverter = function(degreeMinuteSecondString){
 };
 
 
-
-
-
 var mapDrawer = function(data) {
 
-
-  // convert shitty format to good format
-  // and store coordinates in new object
+  // store coordinates in new object
   var hospitalCoordinates = []
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null){
       var hospitalName = data[i].name;
-      var latitude = data[i].coordinates.latitude.slice(0,-1);
-      var longitude = data[i].coordinates.longitude.slice(0,-1);
+      var latitude = data[i].coordinates.latitude;
+      var longitude = data[i].coordinates.longitude;
       var newCoordinates = {x: longitude, y: latitude, name:hospitalName};
       hospitalCoordinates.push(newCoordinates);
     }else{
@@ -47,52 +42,8 @@ var mapDrawer = function(data) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-
-  /**
-   * test data for the hospitals
-   */
-/*   var testData = [
-    {x: 7.425471000000016, y: 46.947142},
-    {x: 8.547388899999987, y: 47.3795461},
-    {x: 9.388304000000062, y: 47.429348},
-    {x: 8.295154400000001, y: 47.05875549999999},
-    {x: 7.58587, y: 47.561557},
-    {x: 8.059350999999992, y: 47.388479},
-    {x: 8.953260999999998, y: 46.0176793},
-  ] */
-
-
-  /**
-   * trying markers with leaflet
-   */
-
-  //var latlng = L.latLng(47.212213, 7.755064);
-
-// draws marker as circle, zoom good, popup disappears
-  // var circle = L.circleMarker(latlng,{
-  //   color: 'red',
-  //   fillColor: '#f03',
-  //   fillOpacity: 0.5,
-  //   radius: 10
-  // }).addTo(map);
-
-// draws a customizable circle on map, zoom weird
-  /*var circle = L.circle([47.212213, 7.755064], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 1000
-  }).addTo(map);*/
-
-// popup at beginning but circle not clickable
-  //circle.bindPopup("I am a circle.");
-
-  // default marker in leaflet with popup
-  // L.marker([46.947142, 7.425471000000016]).addTo(map)
-  //  .bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
-
 // test data for the hospitals
-  var testData = [
+/*   var testData = [
     {x: 7.425471000000016, y: 46.947142, name: 'Inselspital', city: '3010 Bern'},
     {x: 8.547388899999987, y: 47.3795461, name: 'Universitätsspital Zürich', city: '8091 Zürich'},
     {x: 9.388304000000062, y: 47.429348, name: 'Kantonsspital St.Gallen', city: '9007 St.Gallen'},
@@ -100,33 +51,17 @@ var mapDrawer = function(data) {
     {x: 7.58587, y: 47.561557},
     {x: 8.059350999999992, y: 47.388479},
     {x: 8.953260999999998, y: 46.0176793},
-  ];
-
-
+  ]; */
 
 
   /**
-   * markers with D3
+   * markers and tooltip with D3
    */
     // add SVG element to leaflet's overlay pane (group layers)
   var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
 
 // calculates svg bounds when we first open the map
-  calculateSVGBounds(testData);
-
- /* var div = svg
-    .attr('class', 'tooltip')
-    .append("div")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .text(testData.name + "<br/>" + testData.city); */
-  // console.log("create div")
-  // var div = svg.append("div")
-  //   .attr("class", "tooltip")
-  //   .style("opacity", 0.9);
-
-    // console.log(div);
+  calculateSVGBounds(hospitalCoordinates);
 
 // Define the div for the tooltip
   var div = d3.select("body").append("div")
@@ -136,22 +71,7 @@ var mapDrawer = function(data) {
     var tooltip = svg
     .append("div")
     .text("a simple tooltip");
-/*
-    d3.csv("data", function(error, data) {
-      data.forEach(function(d) {
-          d.name = d.name;
-          d.address = d.address;
-      }); */
 
-      // d3.select("body")
-      // .selectAll("div")
-      //   .data(data)
-      // .enter().append("div")
-      //   .style("width", function(d) { return x(d) + "px"; })
-      //   .text(function(d) { return d; })
-      //   .on("mouseover", function(d){tooltip.text(d); return tooltip.style("visibility", "visible");})
-      //     .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-      //     .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
 // project points using procectPoint() function
   var circles = svg.selectAll('circle')

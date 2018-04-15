@@ -33,7 +33,8 @@ export class MapsComponent implements OnInit, AfterViewChecked {
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalList = hospitals;
-        console.log(this.hospitalList);
+        // console.log("component data:")
+        // console.log(this.hospitalList);
 
 
        /*  for (var i=0; i<this.hospitalList.length; i++){
@@ -45,10 +46,11 @@ export class MapsComponent implements OnInit, AfterViewChecked {
           }); */
         //}
         //console.log(this.characteristicsList);
-        console.log(this.hospitalList);
+        //console.log(this.hospitalList);
         //console.log("data from component")
         //for (var i = 0; i<this.hospitalList.length; i++)
         //  console.log(this.hospitalList);
+        
         // draw map with arguments from service
         mapDrawer(this.hospitalList);
       
