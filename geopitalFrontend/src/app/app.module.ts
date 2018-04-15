@@ -16,6 +16,7 @@ import {environment} from "../environments/environment";
 import {HospitalService} from "./services/hospital.service";
 import {AddressService} from "./services/address.service";
 import {AppRoutingModule} from "./app-routing.module";
+import { AttributesComponent } from './attributes/attributes.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {AppRoutingModule} from "./app-routing.module";
     NavbarComponent,
     HospitalComponent,
     AddressComponent,
+    AttributesComponent,
   ],
   imports: [
     BrowserModule,

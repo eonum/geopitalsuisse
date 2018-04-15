@@ -21,7 +21,6 @@ export class HospitalComponent implements OnInit {
       .subscribe(hospitals => {
         console.log(hospitals);
         this.hospitalList = hospitals;
-        console.log(this.hospitalList);
       });
   }
 

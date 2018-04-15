@@ -8,7 +8,11 @@ var coordinateConverter = function(degreeMinuteSecondString){
 };
 
 
-var mapDrawer = function(data) {
+var mapDrawer = function(data, characteristicsList) {
+
+   console.log("++++++++++++++++++++++++")
+   console.log(characteristicsList);
+   console.log("++++++++++++++++++++++++")
 
   // store coordinates in new object
   var hospitalCoordinates = []
