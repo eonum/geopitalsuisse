@@ -16,7 +16,7 @@ import {environment} from "../environments/environment";
 import {HospitalService} from "./services/hospital.service";
 import {AddressService} from "./services/address.service";
 import {AppRoutingModule} from "./app-routing.module";
-import { AttributesComponent } from './attributes/attributes.component';
+import { AttributesComponent } from './components/attributes/attributes.component';
 
 @NgModule({
   declarations: [
