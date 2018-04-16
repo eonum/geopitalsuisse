@@ -1,5 +1,5 @@
 import {AfterViewChecked, Component, OnInit, Attribute} from '@angular/core';
-declare function mapDrawer(data): any;
+declare function mapDrawer(hospitals, attributes): any;
 import { HospitalService } from '../../services/hospital.service';
 import {Hospital} from "../../models/hospital.model";
 import { Characteristics } from '../../models/characteristics.model';
