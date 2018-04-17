@@ -50,12 +50,7 @@ export class MapsComponent implements OnInit, AfterViewChecked {
 
   // everything in here is getting triggered every time the map is touched (click/hover)
   ngAfterViewChecked() {
-    //console.log("am I getting triggered");
-    
-    //this.hospitalService.getDummyData().subscribe(hospitals => {
-    //     mapDrawer(hospitals);
-    //  }
-    //)
+
   }
 
 }
