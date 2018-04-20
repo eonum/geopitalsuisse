@@ -21,9 +21,13 @@ exports.storeJsonImport = async function(filePath, yearData){
     }
     try{
         AttributeTypes.find().exec(function(err, types){
-            obj.forEach(async function(hosp){
-                hosp.year = yearData;
-                hospitalCreateWithAttributes(hosp, types);
+            obj.forEach(function(hosp){
+                Hospital.findOne({name: hosp.Inst, year: yearData}).exec(function(err, hospital){
+                   if(hospital == null){
+                       hosp.year = yearData;
+                       hospitalCreateWithAttributes(hosp, types);
+                   }
+                });
             });
         });
     }catch(e){
