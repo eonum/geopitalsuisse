@@ -26,11 +26,11 @@ exports.getCoordinatesAndSave = async function(hospital, address){
       latitude: json[0].latitude,
       longitude: json[0].longitude
     });
+    throw new Error('This is an test error');
     hospital.coordinates = coordinates;
     var savedCoordinates = coordinates.save();
     var savedHospital = hospital.save();
   }catch(e){
-    console.log('hospital: ' + hospital.name + ', address: ' + address.line + '. Error message: ' + e.message);
-    return hospital;
+    console.log(e.message);
   }
 }
