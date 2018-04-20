@@ -77,7 +77,9 @@ hospitalCreateWithAttributes = function(data, types) {
         value: value
       });
       hospital.attributes.push(attribute);
-      attribute.save();
+      if(attribute.value){
+            attribute.save();
+        }
     })
     //save address and hospital in db
     try{
