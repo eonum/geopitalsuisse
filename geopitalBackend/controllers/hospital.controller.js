@@ -2,6 +2,7 @@ var hospitalService = require('../services/hospital.service');
 var Hospital = require('../models/hospital.model');
 var AttributeType = require('../models/attributeType.model');
 var geopitalService = require('../services/dummy.service');
+var geocodingService = require('../services/geocoding.service');
 
 var Attribute = require('../models/attribute.model');
 // Saving the context of this module inside the _the variable
@@ -86,4 +87,14 @@ exports.getHospitalData = async function(req, res, next){
   }catch(e){
     return res.status(400).json({status:400, message: e.message});
   }
+}
+
+exports.reloadCoordinates = async function(req, res){
+    Hospital.find({coordinates: {$exists: false}}).populate('address').exec( async function (err, hospitals){
+        hospitals.forEach(function(hospital){
+            console.log(hospital.name);
+            geocodingService.getCoordinatesAndSave(hospital, hospital.address);
+        });
+    });
+    res.redirect('/mvc/hospitals');
 }

@@ -18,8 +18,9 @@ exports.upload= function(req, res){
 Stores a selected json file in database
  */
 exports.fileToDBPost = async function(req, res) {
-    await uploadService.storeJsonImport('../uploads/json/' + req.body.fileName);
-    res.redirect('/mvc/upload');
+    var listJson = fs.readdirSync('../uploads/json');
+    var error = await uploadService.storeJsonImport('../uploads/json/' + req.body.fileName, req.body.year);
+    res.render('upload', {title: 'Excel Upload', listJson: listJson, error: error});
 }
 
 /*

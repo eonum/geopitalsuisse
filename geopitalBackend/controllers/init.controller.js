@@ -26,7 +26,7 @@ insertHospitals =  async function (res){
 
 doInsertHospitals = async function(){
    try {
-       uploadService.storeJsonImport('./data/hospital15.json');
+       uploadService.storeJsonImport('./data/hospital15.json', 2015);
    }catch(err){
        return err.toString();
    }
