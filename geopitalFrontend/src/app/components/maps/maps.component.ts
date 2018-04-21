@@ -1,5 +1,6 @@
 import {AfterViewChecked, Component, OnInit, Attribute} from '@angular/core';
-declare function mapDrawer(hospitals, attributes): any;
+//declare function mapDrawer(hospitals, attributes): any;
+declare function mapDrawer(data): any;
 import { HospitalService } from '../../services/hospital.service';
 import {Hospital} from "../../models/hospital.model";
 import { Characteristics } from '../../models/characteristics.model';
@@ -20,34 +21,23 @@ export class MapsComponent implements OnInit, AfterViewChecked {
 
   public newHospital: Hospital = new Hospital();
   public newAttributes: Attributes = new Attributes();
-  hospitalsList: Hospital[];
-  attributesList: Attributes[];
+  private hospitalsList: Hospital[];
+  private attributesList: Attributes[];
   singleAttribute: Attributes;
 
 
   ngOnInit() {
 
-   // load hospital data from backend
-    //this.hospitalService.getDummyData()
+   // load all hospital data from backend
+    
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        
-        // load all attribute objects from all hospitals
-        for (var i = 0; i < this.hospitalsList.length; i++){
-          this.hospitalService.getAttributes(this.hospitalsList[i]._id)
-          .subscribe(attributes => {
-            this.singleAttribute = attributes;
-            var tempAttribute = new Attributes;
-            tempAttribute = attributes;
-            this.attributesList.push(tempAttribute);
-          })
-        }
-        // draw map with arguments from service
-        mapDrawer(this.hospitalsList, this.attributesList);
+        //console.log(this.hospitalsList[0].attributes);
+        mapDrawer(this.hospitalsList);
       });    
   }
-
+  
   // everything in here is getting triggered every time the map is touched (click/hover)
   ngAfterViewChecked() {
 

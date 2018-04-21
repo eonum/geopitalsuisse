@@ -8,13 +8,17 @@ var coordinateConverter = function(degreeMinuteSecondString){
 };
 
 
-var mapDrawer = function(data, characteristicsList) {
+var mapDrawer = function(data) {
 
    console.log("++++++++++++++++++++++++")
-   console.log(characteristicsList);
+   
+  //  for (var i = 0; i < data.length; i++){
+  //     console.log(data[i].attributes);
+  //    }
+   
    console.log("++++++++++++++++++++++++")
 
-  // store coordinates in new object
+  // store coordinates in new array
   var hospitalCoordinates = []
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null){
@@ -30,7 +34,57 @@ var mapDrawer = function(data, characteristicsList) {
     }
   }
 
-  /**
+  // store attributes in new array
+  var hospitalAttributes = []
+  for (var i = 0; i < data.length; i++){
+    var attributes = data[i].attributes;
+    hospitalAttributes.push(attributes);
+  }
+  //console.log(hospitalAttributes);
+
+  // store only attribute "EtMedL" for size of hospital in new array
+var sizeAttribute = []
+for (var i = 0; i < data.length; i++){
+  var att = data[i].attributes
+  var result = att.filter(function( obj ) {
+    return obj.code == "EtMedL";
+  });
+  sizeAttribute.push(result);
+}
+console.log("**************************")
+console.log("sizeAttributes (EtMedL):");
+console.log(sizeAttribute);
+console.log("sample values from array:");
+console.log(sizeAttribute[1][0].value);
+console.log(sizeAttribute[0][0].value);
+console.log(sizeAttribute[287][0].value);
+//console.log(sizeAttribute[288][0].value); not defined!
+//maybe the loop over sizeAttributes need to be length-1?
+console.log(sizeAttribute.length);
+console.log("**************************")
+
+
+//sizeAttribute[288][0].value); not defined!
+//maybe the loop over sizeAttributes need to be length-1?
+// it's crashing anyway (cannot read "value" of undefined)
+// idea would be: getting one array with just the values,
+// order the values and split the array in three or four parts
+// (like creating a size range) for different size of marker
+
+// var orderedSizeAttributes = []
+// for (var i = 0; i < sizeAttribute.length-1; i++){
+//   if(sizeAttribute[i][0].value != null){
+//    var onlySize = sizeAttribute[i][0].value;
+//    orderedSizeAttributes.push(onlySize);
+
+// missing: sorting and splitting the array
+//   }else{
+//      continue;
+//    }
+// }
+
+
+   /**
    * build map with OpenStreetMap and Mapbox
    */
     // create new basic map
