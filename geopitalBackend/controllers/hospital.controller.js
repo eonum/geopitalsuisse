@@ -40,9 +40,11 @@ exports.getAllData = async function(req, res, next){
                     delete attribute._id;
                     var nameObj = attribute.attributeType.name;
                     var codeVar = attribute.attributeType.code;
+                    var groupObj = attribute.attributeType.group;
                     delete attribute.attributeType;
                     attribute.name = nameObj;
                     attribute.code = codeVar;
+                    attribute.group = groupObj;
                 })
             });
             return res.status(200).json({status: 200, data: json});
