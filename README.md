@@ -12,11 +12,12 @@
  2. Start mongod
  3. Clone Repository
  4. Change to geopitalBackend
- 5. npm install
- 6. npm start -> The backend is now runnig
- 7. change to geopitalFrontend
- 8. npm install
- 9. ng serve -> The frontend is now running.
+ 5. Add file "apiKey.secret" to geopital/geopitalBackend/data with only the API key in it
+ 6. npm install
+ 7. npm start -> The backend is now runnig
+ 8. change to geopitalFrontend
+ 9. npm install
+ 10. ng serve -> The frontend is now running.
 
 ## Backend
 You can access the backend on localhost:3000, it gives you json data about the hospitals.
