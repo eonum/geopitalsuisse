@@ -93,13 +93,59 @@ console.log("**************************")
   var orderedArray = orderArray(sizeAttribute);
   console.log(orderedArray);
 
-  // split array in 4 categories
-  // TODO: create equal range, display markers in different categories differently
+
+  // splits array in 4 categories with equal range
+  // defines max value of each category
+  // TODO: display markers in different categories differently
   var cat1 = [];
   var cat2 = [];
   var cat3 = [];
   var cat4 = [];
-  for(var i = 0; i < orderedArray.length-1; i++){
+
+  var num = Math.round(orderedArray.length/4 + 1);
+  var maxCat1 = orderedArray[num-1];
+  var maxCat2 = orderedArray[(2*num)-1];
+  var maxCat3 = orderedArray[(3*num)-1];
+  var maxCat4 = 0;
+
+  for(var i=0; i< orderedArray.length; i++){
+    if(orderedArray[(4*num)-i] != null){
+      maxCat4 = orderedArray[(4*num)-i];
+      break;
+    }
+  }
+
+  for(var i = 0; i< num; i++){
+    var value = orderedArray[i];
+    cat1.push(value)
+  }
+  for(var i = num; i< 2*num; i++){
+    var value = orderedArray[i];
+    cat2.push(value);
+  }
+  for(var i = 2*num; i< 3*num; i++){
+    var value = orderedArray[i];
+    cat3.push(value);
+  }
+  for(var i = 3*num; i< 4*num; i++){
+    if(orderedArray[i]!=null){
+      var value = orderedArray[i];
+      cat4.push(value);
+    }
+    else{
+      continue;
+    }
+  }
+  console.log("Array category 1: " + cat1);
+  console.log("Array category 2: " + cat2);
+  console.log("Array category 3: " + cat3);
+  console.log("Array category 4: " + cat4);
+  console.log("Max value category 1: " + maxCat1);
+  console.log("Max value category 2: " + maxCat2);
+  console.log("Max value category 3: " + maxCat3);
+  console.log("Max value category 4: " + maxCat4);
+
+  /*for(var i = 0; i < orderedArray.length-1; i++){
     if (orderedArray[i]>100000000 ){
       var value = orderedArray[i];
       cat1.push(value);
@@ -113,14 +159,10 @@ console.log("**************************")
       cat3.push(value);
     }
     else{
-      var value = orderedArray[i][0].value;
+      var value = orderedArray[i];
       cat4.push(value);
     }
-  }
-  console.log(cat1.length);
-  console.log(cat2.length);
-  console.log(cat3.length);
-  console.log(cat4.length);
+  }*/
 
 
    /**
