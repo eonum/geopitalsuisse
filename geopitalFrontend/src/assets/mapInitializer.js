@@ -10,14 +10,6 @@ var coordinateConverter = function(degreeMinuteSecondString){
 
 var mapDrawer = function(data) {
 
-   console.log("++++++++++++++++++++++++")
-   
-  //  for (var i = 0; i < data.length; i++){
-  //     console.log(data[i].attributes);
-  //    }
-   
-   console.log("++++++++++++++++++++++++")
-
   // store coordinates in new array
   var hospitalCoordinates = []
   for (var i = 0; i < data.length; i++){
@@ -28,8 +20,6 @@ var mapDrawer = function(data) {
       var newCoordinates = {x: longitude, y: latitude, name:hospitalName};
       hospitalCoordinates.push(newCoordinates);
     }else{
-     //console.log(i);
-     //console.log(data[i]);
       continue;
     }
   }
@@ -40,7 +30,6 @@ var mapDrawer = function(data) {
     var attributes = data[i].attributes;
     hospitalAttributes.push(attributes);
   }
-  //console.log(hospitalAttributes);
 
   // store only attribute "EtMedL" for size of hospital in new array
 var sizeAttribute = []
@@ -82,6 +71,56 @@ console.log("**************************")
 //      continue;
 //    }
 // }
+
+  /**
+   * Converts 2-dim array that contains numbers in string format into
+   * a 1-dim array that contains numbers in ascending order.
+   */
+  function orderArray(attributes){
+    var orderedSizeAttributes = [];
+    for (var i = 0; i < attributes.length-1; i++){
+      if(attributes[i][0]!=null){
+        var value = attributes[i][0].value;
+        orderedSizeAttributes.push(value);
+      }
+    }
+    return orderedSizeAttributes.sort(function(a, b){return a-b});
+  }
+
+  // Get only values in ascending order for EtMedL-attribute
+  // min value of EtMedL: 75268
+  // max value of EtMedL: 1104189684
+  var orderedArray = orderArray(sizeAttribute);
+  console.log(orderedArray);
+
+  // split array in 4 categories
+  // TODO: create equal range, display markers in different categories differently
+  var cat1 = [];
+  var cat2 = [];
+  var cat3 = [];
+  var cat4 = [];
+  for(var i = 0; i < orderedArray.length-1; i++){
+    if (orderedArray[i]>100000000 ){
+      var value = orderedArray[i];
+      cat1.push(value);
+    }
+    else if (orderedArray[i]> 1000000){
+      var value = orderedArray[i];
+      cat2.push(value);
+    }
+    else if (orderedArray[i]> 100000){
+      var value = orderedArray[i];
+      cat3.push(value);
+    }
+    else{
+      var value = orderedArray[i][0].value;
+      cat4.push(value);
+    }
+  }
+  console.log(cat1.length);
+  console.log(cat2.length);
+  console.log(cat3.length);
+  console.log(cat4.length);
 
 
    /**
@@ -155,7 +194,7 @@ console.log("**************************")
        div.transition()
            .duration(500)
            .style("opacity", 0);
-     })
+     });
 
     // .on("mouseover", function(){return div.style("visibility", "visible");})
     // .on("mouseout", function(){return div.style("visibility", "hidden");});
