@@ -22,11 +22,9 @@ var mapDrawer = function(data) {
       var result = attr.filter(function( obj ) {
         return obj.code == "EtMedL";
       });
-
-      if(result[0]!=null){
+      if(result[0]!=null && result[0].value!=null){
         var sizeAttribute = Number(result[0].value);
       }
-
       var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute};
       hospitalData.push(newCoordinates);
     }else{
@@ -34,6 +32,22 @@ var mapDrawer = function(data) {
     }
   }
   console.log(hospitalData[0]);
+
+  // get max value of EtMedL attribute
+  var maxEtMedL = 0;
+  for(var i=0; i<hospitalData.length; i++){
+    if(hospitalData[i]!=null && hospitalData[i].EtMedL!=null){
+      if(hospitalData[i].EtMedL>maxEtMedL){
+        maxEtMedL = hospitalData[i].EtMedL;
+      }
+      else{
+        continue;
+      }
+    }
+  }
+  console.log("Max value: " + maxEtMedL);
+
+
 
   // store attributes in new array
   var hospitalAttributes = []
@@ -224,36 +238,42 @@ console.log("**************************")*/
 
 
 // project points using procectPoint() function
-  var circles = svg.selectAll('circle')
+
+  function drawCircles(data){
+    var circles = svg.selectAll('circle')
     //.selectAll("div")
-    .data(hospitalData)
-    .enter()
-    .append('circle')
-    //.append('div')
-    // radius range: 2.5, 3, 3.5, 4, 4.5
-    .attr("r", function(d){
-      console.log(Math.round(d.EtMedL*(1/10000000))/10+ 2);
-      return (Math.round(d.EtMedL*(1/10000000))/10 + 2 );})
-    .attr('fill', '#990000') // crimson red
-    //.attr('fill','#d633ff') // purple
-    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-    .on("mouseover", function(d) {
-      div.transition()
-        .duration(1)
-        .style("opacity", .98);
+      .data(data)
+      .enter()
+      .append('circle')
+      //.append('div')
+      // radius range: 2.5, 3, 3.5, 4, 4.5
+      .attr("r", function(d){
+        //console.log(Math.round(d.EtMedL*(1/10000000))/10+ 2);
+        return (Math.round(d.EtMedL*(1/10000000))/10 + 2 );})
+      .attr('fill', '#990000') // crimson red
+      //.attr('fill','#d633ff') // purple
+      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+      .on("mouseover", function(d) {
+        div.transition()
+          .duration(1)
+          .style("opacity", .98);
         div	.html(d.name)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 0) + "px");
-    })
-     .on("mouseout", function(d) {
-       div.transition()
-           .duration(500)
-           .style("opacity", 0);
-     });
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY - 0) + "px");
+      })
+      .on("mouseout", function(d) {
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
 
     // .on("mouseover", function(){return div.style("visibility", "visible");})
     // .on("mouseout", function(){return div.style("visibility", "hidden");});
+  }
+
+  // defines default radius and color of hospital-points
+  drawCircles(hospitalData);
 
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
