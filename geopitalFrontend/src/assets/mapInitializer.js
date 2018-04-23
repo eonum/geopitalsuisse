@@ -11,18 +11,29 @@ var coordinateConverter = function(degreeMinuteSecondString){
 var mapDrawer = function(data) {
 
   // store coordinates in new array
-  var hospitalCoordinates = []
+  var hospitalData = []
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null){
       var hospitalName = data[i].name;
       var latitude = data[i].coordinates.latitude;
       var longitude = data[i].coordinates.longitude;
-      var newCoordinates = {x: longitude, y: latitude, name:hospitalName};
-      hospitalCoordinates.push(newCoordinates);
+
+      var attr = data[i].attributes;
+      var result = attr.filter(function( obj ) {
+        return obj.code == "EtMedL";
+      });
+
+      if(result[0]!=null){
+        var sizeAttribute = Number(result[0].value);
+      }
+
+      var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute};
+      hospitalData.push(newCoordinates);
     }else{
       continue;
     }
   }
+  console.log(hospitalData[0]);
 
   // store attributes in new array
   var hospitalAttributes = []
@@ -32,15 +43,15 @@ var mapDrawer = function(data) {
   }
 
   // store only attribute "EtMedL" for size of hospital in new array
-var sizeAttribute = []
+/*var sizeAttribute = []
 for (var i = 0; i < data.length; i++){
   var att = data[i].attributes
   var result = att.filter(function( obj ) {
     return obj.code == "EtMedL";
   });
   sizeAttribute.push(result);
-}
-console.log("**************************")
+}*/
+/*console.log("**************************")
 console.log("sizeAttributes (EtMedL):");
 console.log(sizeAttribute);
 console.log("sample values from array:");
@@ -50,7 +61,7 @@ console.log(sizeAttribute[287][0].value);
 //console.log(sizeAttribute[288][0].value); not defined!
 //maybe the loop over sizeAttributes need to be length-1?
 console.log(sizeAttribute.length);
-console.log("**************************")
+console.log("**************************")*/
 
 
 //sizeAttribute[288][0].value); not defined!
@@ -76,7 +87,7 @@ console.log("**************************")
    * Converts 2-dim array that contains numbers in string format into
    * a 1-dim array that contains numbers in ascending order.
    */
-  function orderArray(attributes){
+  /*function orderArray(attributes){
     var orderedSizeAttributes = [];
     for (var i = 0; i < attributes.length-1; i++){
       if(attributes[i][0]!=null){
@@ -85,19 +96,19 @@ console.log("**************************")
       }
     }
     return orderedSizeAttributes.sort(function(a, b){return a-b});
-  }
+  }*/
 
   // Get only values in ascending order for EtMedL-attribute
   // min value of EtMedL: 75268
   // max value of EtMedL: 1104189684
-  var orderedArray = orderArray(sizeAttribute);
-  console.log(orderedArray);
+  /*var orderedArray = orderArray(sizeAttribute);
+  console.log(orderedArray);*/
 
 
   // splits array in 4 categories with equal range
   // defines max value of each category
   // TODO: display markers in different categories differently
-  var cat1 = [];
+  /*var cat1 = [];
   var cat2 = [];
   var cat3 = [];
   var cat4 = [];
@@ -143,7 +154,7 @@ console.log("**************************")
   console.log("Max value category 1: " + maxCat1);
   console.log("Max value category 2: " + maxCat2);
   console.log("Max value category 3: " + maxCat3);
-  console.log("Max value category 4: " + maxCat4);
+  console.log("Max value category 4: " + maxCat4);*/
 
   /*for(var i = 0; i < orderedArray.length-1; i++){
     if (orderedArray[i]>100000000 ){
@@ -200,7 +211,7 @@ console.log("**************************")
   var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
 
 // calculates svg bounds when we first open the map
-  calculateSVGBounds(hospitalCoordinates);
+  calculateSVGBounds(hospitalData);
 
 // Define the div for the tooltip
   var div = d3.select("body").append("div")
@@ -215,11 +226,14 @@ console.log("**************************")
 // project points using procectPoint() function
   var circles = svg.selectAll('circle')
     //.selectAll("div")
-    .data(hospitalCoordinates)
+    .data(hospitalData)
     .enter()
     .append('circle')
     //.append('div')
-    .attr("r", 4)
+    // radius range: 2.5, 3, 3.5, 4, 4.5
+    .attr("r", function(d){
+      console.log(Math.round(d.EtMedL*(1/10000000))/10+ 2);
+      return (Math.round(d.EtMedL*(1/10000000))/10 + 2 );})
     .attr('fill', '#990000') // crimson red
     //.attr('fill','#d633ff') // purple
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
@@ -279,7 +293,7 @@ console.log("**************************")
 // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     d3.select('#circleSVG').style('visibility', 'visible');
-    calculateSVGBounds(hospitalCoordinates);
+    calculateSVGBounds(hospitalData);
     circles
       .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
