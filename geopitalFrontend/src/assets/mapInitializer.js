@@ -238,42 +238,39 @@ console.log("**************************")*/
 
 
 // project points using procectPoint() function
+  var circles = svg.selectAll('circle')
+  //.selectAll("div")
+    .data(hospitalData)
+    .enter()
+    .append('circle')
+    //.append('div')
+    // radius range: 2.5, 3, 3.5, 4, 4.5
+    .attr("r", function(d){
+      //console.log(d.EtMedL*(1/maxEtMedL)*10 + 2.5);
+      return (d.EtMedL*(1/maxEtMedL)*10 + 2.5 );})
+    .attr('fill', '#990000') // crimson red
+    //.attr('fill','#d633ff')  // purple
+    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+    .on("mouseover", function(d) {
+      div.transition()
+        .duration(1)
+        .style("opacity", .98);
+      div	.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 0) + "px");
+    })
+    .on("mouseout", function(d) {
+      div.transition()
+        .duration(500)
+        .style("opacity", 0);
+    });
 
-  function drawCircles(data){
-    var circles = svg.selectAll('circle')
-    //.selectAll("div")
-      .data(data)
-      .enter()
-      .append('circle')
-      //.append('div')
-      // radius range: 2.5, 3, 3.5, 4, 4.5
-      .attr("r", function(d){
-        //console.log(Math.round(d.EtMedL*(1/10000000))/10+ 2);
-        return (Math.round(d.EtMedL*(1/10000000))/10 + 2 );})
-      .attr('fill', '#990000') // crimson red
-      //.attr('fill','#d633ff') // purple
-      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-      .on("mouseover", function(d) {
-        div.transition()
-          .duration(1)
-          .style("opacity", .98);
-        div	.html(d.name)
-          .style("left", (d3.event.pageX) + "px")
-          .style("top", (d3.event.pageY - 0) + "px");
-      })
-      .on("mouseout", function(d) {
-        div.transition()
-          .duration(500)
-          .style("opacity", 0);
-      });
-
-    // .on("mouseover", function(){return div.style("visibility", "visible");})
-    // .on("mouseout", function(){return div.style("visibility", "hidden");});
-  }
+  // .on("mouseover", function(){return div.style("visibility", "visible");})
+  // .on("mouseout", function(){return div.style("visibility", "hidden");});
 
   // defines default radius and color of hospital-points
-  drawCircles(hospitalData);
+  //drawCircles(hospitalData, maxEtMedL);
 
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
