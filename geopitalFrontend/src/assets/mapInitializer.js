@@ -1,11 +1,11 @@
 // temporary solution with convertion of dataformat (for dummy data with degree and stuff)
-var coordinateConverter = function(degreeMinuteSecondString){
+/* var coordinateConverter = function(degreeMinuteSecondString){
   var degree = Number(degreeMinuteSecondString.split("°")[0]);
   var minutes = Number(degreeMinuteSecondString.split("°")[1].split("'")[0]);
   var seconds = Number(degreeMinuteSecondString.split("°")[1].split("'")[1].split(".")[0]);
   var latitude = degree + (minutes + seconds/60.0)/60.0
   return latitude;
-};
+}; */
 
 
 var mapDrawer = function(data) {
@@ -19,19 +19,28 @@ var mapDrawer = function(data) {
       var longitude = data[i].coordinates.longitude;
 
       var attr = data[i].attributes;
-      var result = attr.filter(function( obj ) {
+      var sizeResult = attr.filter(function( obj ) {
         return obj.code == "EtMedL";
       });
-      if(result[0]!=null && result[0].value!=null){
-        var sizeAttribute = Number(result[0].value);
+      if(sizeResult[0]!=null && sizeResult[0].value!=null){
+        var sizeAttribute = Number(sizeResult[0].value);
       }
-      var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute};
+
+      var typResult = attr.filter(function ( obj ) {
+        return obj.code == "Typ";
+      });
+      var typAttribute = String(typResult[0].value)
+      // console.log(typAttribute);
+      // console.log(typAttribute.length)
+
+      var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
       hospitalData.push(newCoordinates);
     }else{
       continue;
     }
   }
   console.log(hospitalData[0]);
+  console.log(hospitalData.length)
 
   // get max value of EtMedL attribute
   var maxEtMedL = 0;
@@ -56,47 +65,7 @@ var mapDrawer = function(data) {
     hospitalAttributes.push(attributes);
   }
 
-  // store only attribute "EtMedL" for size of hospital in new array
-/*var sizeAttribute = []
-for (var i = 0; i < data.length; i++){
-  var att = data[i].attributes
-  var result = att.filter(function( obj ) {
-    return obj.code == "EtMedL";
-  });
-  sizeAttribute.push(result);
-}*/
-/*console.log("**************************")
-console.log("sizeAttributes (EtMedL):");
-console.log(sizeAttribute);
-console.log("sample values from array:");
-console.log(sizeAttribute[1][0].value);
-console.log(sizeAttribute[0][0].value);
-console.log(sizeAttribute[287][0].value);
-//console.log(sizeAttribute[288][0].value); not defined!
-//maybe the loop over sizeAttributes need to be length-1?
-console.log(sizeAttribute.length);
-console.log("**************************")*/
-
-
-//sizeAttribute[288][0].value); not defined!
-//maybe the loop over sizeAttributes need to be length-1?
-// it's crashing anyway (cannot read "value" of undefined)
-// idea would be: getting one array with just the values,
-// order the values and split the array in three or four parts
-// (like creating a size range) for different size of marker
-
-// var orderedSizeAttributes = []
-// for (var i = 0; i < sizeAttribute.length-1; i++){
-//   if(sizeAttribute[i][0].value != null){
-//    var onlySize = sizeAttribute[i][0].value;
-//    orderedSizeAttributes.push(onlySize);
-
-// missing: sorting and splitting the array
-//   }else{
-//      continue;
-//    }
-// }
-
+ 
   /**
    * Converts 2-dim array that contains numbers in string format into
    * a 1-dim array that contains numbers in ascending order.
@@ -248,7 +217,22 @@ console.log("**************************")*/
     .attr("r", function(d){
       //console.log(d.EtMedL*(1/maxEtMedL)*10 + 2.5);
       return (d.EtMedL*(1/maxEtMedL)*10 + 2.5 );})
-    .attr('fill', '#990000') // crimson red
+    .attr('fill', function(d) {
+      if (d.Typ == "K111") // Universitätspitäler
+        return ('#990000')
+      if (d.Typ == "K112") // Zentrumsspitäler
+        return ('#769700')
+      if (d.Typ == "K121" || d.typ == "K122" || d.Typ == "K123") // Grundversorgung
+        return ('#00978f')
+      if (d.Typ == "K211" || d.typ == "K212") // Psychiatrische Kliniken
+        return ('#976700')
+      if (d.Typ == "K212") // Rehabilitationskliniken
+        return ('#002897')
+      if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
+        return ('#970058') 
+      else
+        return ('#d633ff');
+      })
     //.attr('fill','#d633ff')  // purple
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
