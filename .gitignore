@@ -3,3 +3,4 @@
 geopitalBackend/node_modules/
 uploads/json/
 uploads/xlsx/
+*.secret

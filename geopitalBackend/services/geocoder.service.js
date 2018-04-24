@@ -1,10 +1,12 @@
 var NodeGeocoder = require('node-geocoder');
+var fs = require('fs');
 /*
 Yandex is used because there is no need to set a API Key
 */
 var options = {
-  provider: 'yandex',
+  provider: 'google',
   httpAdapter: 'https',
+  apiKey: fs.readFileSync('data/apiKey.secret'),
   formatter: null
 };
 

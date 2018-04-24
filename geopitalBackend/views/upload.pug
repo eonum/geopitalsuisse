@@ -9,11 +9,17 @@ block content
         input(type="submit")
 
     form#fileToDB(method="post" action="/mvc/upload/storeJson")
+        p Choose a json file and enter a year before submitting:
         each file in listJson
             input(type="radio", name="fileName", value=file)
             | #{file}
             br
+        p Year:
+            input(type="number" pattern="[0-9]{4}" name="year" min="1950")
         input(type="submit")
+
+    if error
+        p #{error}
 
 
 

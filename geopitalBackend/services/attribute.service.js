@@ -12,7 +12,7 @@ exports.importAttributeType = function(){
     let group = '';
     obj.forEach(function(attributeType){
       if (!attributeType.Code) group = attributeType;
-      else if (group) saveAttributeType(group, attributeType);
+      else saveAttributeType(group, attributeType);
     })
 };
 /*

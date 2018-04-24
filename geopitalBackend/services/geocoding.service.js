@@ -30,7 +30,6 @@ exports.getCoordinatesAndSave = async function(hospital, address){
     var savedCoordinates = coordinates.save();
     var savedHospital = hospital.save();
   }catch(e){
-    console.log('hospital: ' + hospital.name + ', address: ' + address.line + '. Error message: ' + e.message);
-    return hospital;
+    console.log(e.message);
   }
 }
