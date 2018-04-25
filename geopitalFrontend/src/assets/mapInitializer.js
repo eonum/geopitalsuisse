@@ -1,14 +1,39 @@
-// temporary solution with convertion of dataformat (for dummy data with degree and stuff)
-/* var coordinateConverter = function(degreeMinuteSecondString){
-  var degree = Number(degreeMinuteSecondString.split("°")[0]);
-  var minutes = Number(degreeMinuteSecondString.split("°")[1].split("'")[0]);
-  var seconds = Number(degreeMinuteSecondString.split("°")[1].split("'")[1].split(".")[0]);
-  var latitude = degree + (minutes + seconds/60.0)/60.0
-  return latitude;
-}; */
+
+var updateMap = function(){
+
+  /**
+   * build map with OpenStreetMap and Mapbox
+   */
+    // create new basic map
+  var test = document.getElementById('mapid');
+  var map = L.map('mapid').setView([46.818188, 8.227512], 8);
+
+// basic map using OpenStreetMap tiles with costume design using mapbox
+  L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    id: 'mapbox.streets'
+  }).addTo(map);
+
+}
 
 
 var mapDrawer = function(data) {
+
+  var map = L.map('mapid').setView([46.818188, 8.227512], 8);
+
+// basic map using OpenStreetMap tiles with costume design using mapbox
+  L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    id: 'mapbox.streets'
+  }).addTo(map);
+
+  console.log(data[0].attributes);
 
   // store coordinates in new array
   var hospitalData = []
@@ -65,128 +90,6 @@ var mapDrawer = function(data) {
     hospitalAttributes.push(attributes);
   }
 
-
-  /**
-   * Converts 2-dim array that contains numbers in string format into
-   * a 1-dim array that contains numbers in ascending order.
-   */
-  /*function orderArray(attributes){
-    var orderedSizeAttributes = [];
-    for (var i = 0; i < attributes.length-1; i++){
-      if(attributes[i][0]!=null){
-        var value = attributes[i][0].value;
-        orderedSizeAttributes.push(value);
-      }
-    }
-    return orderedSizeAttributes.sort(function(a, b){return a-b});
-  }*/
-
-  // Get only values in ascending order for EtMedL-attribute
-  // min value of EtMedL: 75268
-  // max value of EtMedL: 1104189684
-  /*var orderedArray = orderArray(sizeAttribute);
-  console.log(orderedArray);*/
-
-
-  // splits array in 4 categories with equal range
-  // defines max value of each category
-  // TODO: display markers in different categories differently
-  /*var cat1 = [];
-  var cat2 = [];
-  var cat3 = [];
-  var cat4 = [];
-
-  var num = Math.round(orderedArray.length/4 + 1);
-  var maxCat1 = orderedArray[num-1];
-  var maxCat2 = orderedArray[(2*num)-1];
-  var maxCat3 = orderedArray[(3*num)-1];
-  var maxCat4 = 0;
-
-  for(var i=0; i< orderedArray.length; i++){
-    if(orderedArray[(4*num)-i] != null){
-      maxCat4 = orderedArray[(4*num)-i];
-      break;
-    }
-  }
-
-  for(var i = 0; i< num; i++){
-    var value = orderedArray[i];
-    cat1.push(value)
-  }
-  for(var i = num; i< 2*num; i++){
-    var value = orderedArray[i];
-    cat2.push(value);
-  }
-  for(var i = 2*num; i< 3*num; i++){
-    var value = orderedArray[i];
-    cat3.push(value);
-  }
-  for(var i = 3*num; i< 4*num; i++){
-    if(orderedArray[i]!=null){
-      var value = orderedArray[i];
-      cat4.push(value);
-    }
-    else{
-      continue;
-    }
-  }
-  console.log("Array category 1: " + cat1);
-  console.log("Array category 2: " + cat2);
-  console.log("Array category 3: " + cat3);
-  console.log("Array category 4: " + cat4);
-  console.log("Max value category 1: " + maxCat1);
-  console.log("Max value category 2: " + maxCat2);
-  console.log("Max value category 3: " + maxCat3);
-  console.log("Max value category 4: " + maxCat4);*/
-
-  /*for(var i = 0; i < orderedArray.length-1; i++){
-    if (orderedArray[i]>100000000 ){
-      var value = orderedArray[i];
-      cat1.push(value);
-    }
-    else if (orderedArray[i]> 1000000){
-      var value = orderedArray[i];
-      cat2.push(value);
-    }
-    else if (orderedArray[i]> 100000){
-      var value = orderedArray[i];
-      cat3.push(value);
-    }
-    else{
-      var value = orderedArray[i];
-      cat4.push(value);
-    }
-  }*/
-
-
-   /**
-   * build map with OpenStreetMap and Mapbox
-   */
-    // create new basic map
-  var test = document.getElementById('mapid');
-  var map = L.map('mapid').setView([46.818188, 8.227512], 8);
-
-// basic map using OpenStreetMap tiles with costume design using mapbox
-  L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
-    maxZoom: 18,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    id: 'mapbox.streets'
-  }).addTo(map);
-
-// test data for the hospitals
-/*   var testData = [
-    {x: 7.425471000000016, y: 46.947142, name: 'Inselspital', city: '3010 Bern'},
-    {x: 8.547388899999987, y: 47.3795461, name: 'Universitätsspital Zürich', city: '8091 Zürich'},
-    {x: 9.388304000000062, y: 47.429348, name: 'Kantonsspital St.Gallen', city: '9007 St.Gallen'},
-    {x: 8.295154400000001, y: 47.05875549999999},
-    {x: 7.58587, y: 47.561557},
-    {x: 8.059350999999992, y: 47.388479},
-    {x: 8.953260999999998, y: 46.0176793},
-  ]; */
-
-
   /**
    * markers and tooltip with D3
    */
@@ -234,7 +137,7 @@ var mapDrawer = function(data) {
         return ('#00978f')
       if (d.Typ == "K211" || d.typ == "K212") // Psychiatrische Kliniken
         return ('#976700')
-      if (d.Typ == "K212") // Rehabilitationskliniken
+      if (d.Typ == "K221") // Rehabilitationskliniken
         return ('#002897')
       if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
         return ('#970058')
@@ -250,14 +153,13 @@ var mapDrawer = function(data) {
         return ('#00978f')
       if (d.Typ == "K211" || d.typ == "K212") // Psychiatrische Kliniken
         return ('#976700')
-      if (d.Typ == "K212") // Rehabilitationskliniken
+      if (d.Typ == "K221") // Rehabilitationskliniken
         return ('#002897')
       if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
         return ('#970058')
       else
         return ('#d633ff');
     })
-    //.attr('fill','#d633ff')  // purple
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
     .on("mouseover", function(d) {
@@ -273,12 +175,6 @@ var mapDrawer = function(data) {
         .duration(500)
         .style("opacity", 0);
     });
-
-  // .on("mouseover", function(){return div.style("visibility", "visible");})
-  // .on("mouseout", function(){return div.style("visibility", "hidden");});
-
-  // defines default radius and color of hospital-points
-  //drawCircles(hospitalData, maxEtMedL);
 
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
@@ -325,3 +221,5 @@ var mapDrawer = function(data) {
   });
 
 }
+
+

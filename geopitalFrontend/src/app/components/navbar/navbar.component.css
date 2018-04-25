@@ -1,0 +1,9 @@
+.nav-bar{
+  height:200px;
+  width:300px;
+  position:relative;
+  z-index:5000;
+  float:right;
+  margin-right:50px;
+  margin-top:50px;
+}
