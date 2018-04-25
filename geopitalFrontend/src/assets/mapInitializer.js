@@ -65,7 +65,7 @@ var mapDrawer = function(data) {
     hospitalAttributes.push(attributes);
   }
 
- 
+
   /**
    * Converts 2-dim array that contains numbers in string format into
    * a 1-dim array that contains numbers in ascending order.
@@ -212,11 +212,19 @@ var mapDrawer = function(data) {
     .data(hospitalData)
     .enter()
     .append('circle')
+    .style("fill-opacity", 0.5)
     //.append('div')
     // radius range: 2.5, 3, 3.5, 4, 4.5
     .attr("r", function(d){
-      //console.log(d.EtMedL*(1/maxEtMedL)*10 + 2.5);
-      return (d.EtMedL*(1/maxEtMedL)*10 + 2.5 );})
+      // radius range: 2.5, 3, 3.5, 4, 4.5 better?
+      // now: range from 2 to 6
+        console.log(d.EtMedL*(1/maxEtMedL)*10 + 2);
+        if(d.EtMedL*(1/maxEtMedL)*10 + 2 > 10){
+          return 10;
+        }
+        else{
+          return (d.EtMedL*(1/maxEtMedL)*10 + 2);
+        }})
     .attr('fill', function(d) {
       if (d.Typ == "K111") // Universitätspitäler
         return ('#990000')
@@ -229,10 +237,26 @@ var mapDrawer = function(data) {
       if (d.Typ == "K212") // Rehabilitationskliniken
         return ('#002897')
       if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
-        return ('#970058') 
+        return ('#970058')
       else
         return ('#d633ff');
       })
+    .attr('stroke', function(d) {
+      if (d.Typ == "K111") // Universitätspitäler
+        return ('#990000')
+      if (d.Typ == "K112") // Zentrumsspitäler
+        return ('#769700')
+      if (d.Typ == "K121" || d.typ == "K122" || d.Typ == "K123") // Grundversorgung
+        return ('#00978f')
+      if (d.Typ == "K211" || d.typ == "K212") // Psychiatrische Kliniken
+        return ('#976700')
+      if (d.Typ == "K212") // Rehabilitationskliniken
+        return ('#002897')
+      if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
+        return ('#970058')
+      else
+        return ('#d633ff');
+    })
     //.attr('fill','#d633ff')  // purple
     .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
     .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
