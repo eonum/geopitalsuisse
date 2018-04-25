@@ -4,8 +4,6 @@ declare function mapDrawer(data): any;
 declare function defineMap();
 import { HospitalService } from '../../services/hospital.service';
 import {Hospital} from "../../models/hospital.model";
-import { Characteristics } from '../../models/characteristics.model';
-import { Attributes } from '../../models/attributes.model';
 
 
 @Component({

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
-import {Attributes} from "../../models/attributes.model";
 import {Hospital} from "../../models/hospital.model";
 
 @Component({
@@ -23,9 +22,14 @@ export class NavbarComponent implements OnInit {
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
+        console.log(this.hospitalsList[2].attributes[1].value);
         //mapDrawer(this.hospitalsList);
       });
+  }
+
+  selectHospitalType(input){
+
+
   }
 
 }
