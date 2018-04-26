@@ -4,9 +4,9 @@ var fs = require('fs');
 Yandex is used because there is no need to set a API Key
 */
 var options = {
-  provider: 'google',
+  provider: 'yandex',
   httpAdapter: 'https',
-  apiKey: fs.readFileSync('data/apiKey.secret'),
+  //apiKey: fs.readFileSync('data/apiKey.secret'),
   formatter: null
 };
 
