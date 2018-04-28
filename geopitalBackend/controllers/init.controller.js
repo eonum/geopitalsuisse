@@ -35,7 +35,7 @@ doInsertHospitals = async function(){
 
 doAttributeTypes = async function(){
     try {
-        attributeService.importAttributeType();
+        attributeService.importAttributeType(JSON.parse(fs.readFileSync('./data/kennzahlen.json', 'utf8')));
     } catch (err){
 
         return err.toString();
