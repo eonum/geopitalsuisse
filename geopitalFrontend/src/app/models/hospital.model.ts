@@ -15,7 +15,12 @@ export class Hospital {
     longitude: String;
   }
 
-  attributes: any[];
+  //attributes: any[];
+  attributes: {
+    value: String;
+    name: String[];
+    code: String;
+  }
 
   constructor(){
     this.year = 0;

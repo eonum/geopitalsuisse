@@ -22,7 +22,9 @@ export class NavbarComponent implements OnInit {
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
+        console.log("---------------------------------")
         console.log(this.hospitalsList[2].attributes[1].value);
+        console.log("---------------------------------")
         //mapDrawer(this.hospitalsList);
       });
   }
