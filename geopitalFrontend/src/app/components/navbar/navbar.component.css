@@ -7,3 +7,235 @@
   margin-right:50px;
   margin-top:50px;
 }
+
+/* check-boxes */
+    /* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color:#a82a2a(51, 23, 23);
+}
+.checkmark2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color:#a89f2a(51, 23, 23);
+}
+.checkmark3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color:#2ca82a(51, 23, 23);
+}
+.checkmark4 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #2a8ea8(51, 23, 23);
+}
+.checkmark5 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #2c2aa8(51, 23, 23);
+}
+.checkmark6 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #772aa8(51, 23, 23);
+}
+
+/* On mouse-over, add a background color */
+.container:hover input ~ .checkmark1 {
+  background-color: #a82a2a;
+}
+.container:hover input ~ .checkmark2 {
+  background-color: #a89f2a;
+}
+.container:hover input ~ .checkmark3 {
+  background-color: #2ca82a;
+}
+.container:hover input ~ .checkmark4 {
+  background-color: #2a8ea8;
+}
+.container:hover input ~ .checkmark5 {
+  background-color: #2c2aa8;
+}
+.container:hover input ~ .checkmark6 {
+  background-color: #772aa8;
+}
+
+/* When the checkbox is checked, add a background */
+.container input:checked ~ .checkmark1 {
+  background-color: #a82a2a;
+}
+.container input:checked ~ .checkmark2 {
+  background-color: #a89f2a;
+}
+.container input:checked ~ .checkmark3 {
+  background-color: #2ca82a;
+}
+.container input:checked ~ .checkmark4 {
+  background-color: #2a8ea8;
+}
+.container input:checked ~ .checkmark5 {
+  background-color: #2c2aa8;
+}
+.container input:checked ~ .checkmark6 {
+  background-color: #772aa8;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark1:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.checkmark2:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.checkmark3:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.checkmark4:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.checkmark5:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.checkmark6:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark1:after {
+  display: block;
+}
+.container input:checked ~ .checkmark2:after {
+  display: block;
+}
+.container input:checked ~ .checkmark3:after {
+  display: block;
+}
+.container input:checked ~ .checkmark4:after {
+  display: block;
+}
+.container input:checked ~ .checkmark5:after {
+  display: block;
+}
+.container input:checked ~ .checkmark6:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark1:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.container .checkmark2:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.container .checkmark3:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.container .checkmark4:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.container .checkmark5:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.container .checkmark6:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

@@ -112,7 +112,7 @@ var mapDrawer = function(data) {
     .data(hospitalData)
     .enter()
     .append('circle')
-    .style("fill-opacity", 0.5)
+    .style("fill-opacity", 0.7)
     // radius range: 2.5, 3, 3.5, 4, 4.5
     .attr("r", function(d){
       // radius range: 2.5, 3, 3.5, 4, 4.5 better?
@@ -344,17 +344,17 @@ function d3CheckBox () {
 // functions for coloured markers
 function returnColouredMarkers(d)  {
   if (d.Typ == "K111") // Universitätspitäler
-          return ('#990000')
+          return ('#a82a2a')
         if (d.Typ == "K112") // Zentrumsspitäler
-          return ('#769700')
+          return ('#a89f2a')
         if (d.Typ == "K121" || d.Typ == "K122" || d.Typ == "K123") // Grundversorgung
-          return ('#00978f')
+          return ('#2ca82a')
         if (d.Typ == "K211" || d.Typ == "K212") // Psychiatrische Kliniken
-          return ('#976700')
+          return ('#2a8ea8')
         if (d.Typ == "K221") // Rehabilitationskliniken
-          return ('#002897')
+          return ('#2c2aa8')
         if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
-          return ('#23042b')
+          return ('#772aa8')
         else
           console.log(d)
           return ('#d633ff');
@@ -362,17 +362,17 @@ function returnColouredMarkers(d)  {
 
 function returnColouredBorders(d) {
   if (d.Typ == "K111") // Universitätspitäler
-    return ('#990000')
+    return ('#a82a2a')
   if (d.Typ == "K112") // Zentrumsspitäler
-    return ('#769700')
+    return ('#a89f2a')
   if (d.Typ == "K121" || d.Typ == "K122" || d.Typ == "K123") // Grundversorgung
-    return ('#00978f')
+    return ('#2ca82a')
   if (d.Typ == "K211" || d.Typ == "K212") // Psychiatrische Kliniken
-    return ('#976700')
+    return ('#2a8ea8')
   if (d.Typ == "K221") // Rehabilitationskliniken
-    return ('#002897')
+    return ('#2c2aa8')
   if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
-    return ('#23042b')
+    return ('#772aa8')
   else
     return ('#d633ff');
 }
