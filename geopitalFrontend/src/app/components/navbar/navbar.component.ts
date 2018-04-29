@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
+declare function updateMap(data, type): any;
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit{
 
   constructor(private hospitalService: HospitalService) {
 
@@ -16,7 +17,6 @@ export class NavbarComponent implements OnInit {
   private hospitalsList: Hospital[];
 
   ngOnInit() {
-
     // load all hospital data from backend
 
     this.hospitalService.getAll()
@@ -29,9 +29,16 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  selectHospitalType(input){
+  // is called when checkbox-check is changed
+  selectHospitalType(hospitalType){
+    console.log(hospitalType);
 
-
+    this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+        console.log(this.hospitalsList[0].attributes);
+        //defineMap();
+        updateMap(this.hospitalsList, hospitalType);
+      });
   }
-
 }

@@ -4,7 +4,6 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarColor01">
     <!--<ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -23,7 +22,7 @@
 
     <h2>Auswahl</h2>
     <label class="container">Universitätsspitäler
-      <input type="checkbox" checked="checked">
+      <input type="checkbox" checked="checked" (change)="selectHospitalType('K111')">
       <span class="checkmark1"></span>
     </label>
     <label class="container">Zentrumsspitäler
