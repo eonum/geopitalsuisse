@@ -4,10 +4,28 @@ var hospitalData = [];
 var maxEtMedL = 0;
 var hospitalAttributes = [];
 
+
+
+
+
 /**
  * Draws circles on map
  */
-var initCircles = function(){
+var initCircles = function(hospitalData){
+  
+  // update circles
+  
+  // display layer
+  d3.select('#circleSVG').style('visibility', 'visible');
+}
+
+var removeCircles = function(hospitalData){
+
+  
+// makes points invisible when user starts zooming
+  d3.select('#circleSVG').style('visibility', 'hidden');
+
+
 
 }
 
@@ -24,14 +42,24 @@ var updateMap = function(data, type, num) {
   //svg.selectAll("circles").remove();
   console.log("updateMap called");
   console.log(data)
-  console.log(type)
-  console.log(num)
+  console.log('dataType', type)
+  console.log('how many clicks', num)
+
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
   initData(data, type, num);
   console.log(hospitalData);
-
+  
+  // even numbers of clicks draw the markers
+  if ((num % 2) === 0) {
+    console.log('add circles')
+  initCircles(hospitalData);
+  // uneven numbers of clicks remove the markers
+  } else {
+    console.log('remove circles')
+    removeCircles(hospitalData);
+  }
 }
 
 /**
@@ -157,7 +185,10 @@ var mapDrawer = function(data) {
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
   });
 
-  checkbox();
+
+
+
+  //checkbox();
 };
 
 /**

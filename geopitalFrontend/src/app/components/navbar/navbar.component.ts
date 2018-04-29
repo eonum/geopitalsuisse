@@ -25,14 +25,14 @@ export class NavbarComponent implements OnInit{
   ngOnInit() {
     // load all hospital data from backend
 
-    this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        // this.hospitalsList = hospitals;
-        // console.log("---------------------------------")
-        // console.log(this.hospitalsList[2].attributes[1].value);
-        // console.log("---------------------------------")
-        //mapDrawer(this.hospitalsList);
-      });
+    // this.hospitalService.getAll()
+    //   .subscribe(hospitals => {
+    //     // this.hospitalsList = hospitals;
+    //     // console.log("---------------------------------")
+    //     // console.log(this.hospitalsList[2].attributes[1].value);
+    //     // console.log("---------------------------------")
+    //     //mapDrawer(this.hospitalsList);
+    //   });
   }
 
   // is called when checkbox-check is changed
@@ -41,8 +41,8 @@ export class NavbarComponent implements OnInit{
 
     if (hospitalType == 'K111') {
       this.numUniSp = this.numUniSp+1;
-      console.log(this.numUniSp);
-      console.log(hospitalType);
+      // console.log(this.numUniSp);
+      // console.log(hospitalType);
       
       this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -55,8 +55,8 @@ export class NavbarComponent implements OnInit{
 
     if (hospitalType == 'K112') {
       this.numZentSp = this.numZentSp+1;
-      console.log(this.numZentSp);
-      console.log(hospitalType);
+      // console.log(this.numZentSp);
+      // console.log(hospitalType);
       
       this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -69,8 +69,8 @@ export class NavbarComponent implements OnInit{
 
     if (hospitalType == 'K121' || hospitalType == 'K122' || hospitalType == 'K123') {
       this.numGrundVers = this.numGrundVers+1;
-      console.log(this.numGrundVers);
-      console.log(hospitalType);
+      // console.log(this.numGrundVers);
+      // console.log(hospitalType);
 
       this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -83,8 +83,8 @@ export class NavbarComponent implements OnInit{
 
     if (hospitalType == 'K211' || hospitalType == 'K212') {
       this.numPsychKl = this.numPsychKl+1;
-      console.log(this.numPsychKl);
-      console.log(hospitalType);
+      // console.log(this.numPsychKl);
+      // console.log(hospitalType);
 
       this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -97,8 +97,8 @@ export class NavbarComponent implements OnInit{
 
     if (hospitalType == 'K221') {
       this.numRehaKl = this.numRehaKl+1;
-      console.log(this.numRehaKl);
-      console.log(hospitalType);
+      // console.log(this.numRehaKl);
+      // console.log(hospitalType);
 
       this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -112,8 +112,8 @@ export class NavbarComponent implements OnInit{
     if (hospitalType == 'K231' || hospitalType == 'K232' || hospitalType == 'K233' 
     || hospitalType == 'K234' || hospitalType == 'K235') {
       this.numSpezKl = this.numSpezKl+1;
-      console.log(this.numSpezKl);
-      console.log(hospitalType);
+      // console.log(this.numSpezKl);
+      // console.log(hospitalType);
 
       this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -123,17 +123,5 @@ export class NavbarComponent implements OnInit{
         updateMap(this.hospitalsList, hospitalType, this.numSpezKl);
         })
     }
-
-    // this.num = this.num+1;
-    // console.log(this.num);
-    // console.log(hospitalType);
-
-    // this.hospitalService.getAll()
-    //   .subscribe(hospitals => {
-    //     this.hospitalsList = hospitals;
-    //     console.log(this.hospitalsList[0].attributes);
-    //     //defineMap();
-    //     updateMap(this.hospitalsList, hospitalType, this.num);
-    //   });
   }
 }
