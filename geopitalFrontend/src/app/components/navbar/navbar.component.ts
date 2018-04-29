@@ -15,17 +15,22 @@ export class NavbarComponent implements OnInit{
   }
 
   private hospitalsList: Hospital[];
-  private num: number = 0;
+  private numUniSp: number = 0;
+  private numZentSp: number = 0;
+  private numGrundVers: number = 0;
+  private numPsychKl: number = 0;
+  private numRehaKl: number = 0;
+  private numSpezKl: number = 0;
 
   ngOnInit() {
     // load all hospital data from backend
 
     this.hospitalService.getAll()
       .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        console.log("---------------------------------")
-        console.log(this.hospitalsList[2].attributes[1].value);
-        console.log("---------------------------------")
+        // this.hospitalsList = hospitals;
+        // console.log("---------------------------------")
+        // console.log(this.hospitalsList[2].attributes[1].value);
+        // console.log("---------------------------------")
         //mapDrawer(this.hospitalsList);
       });
   }
@@ -34,16 +39,101 @@ export class NavbarComponent implements OnInit{
   // TODO: make separate function for each call in navbar.component.html (or better version with num)
   selectHospitalType(hospitalType){
 
-    this.num = this.num+1;
-    console.log(this.num);
-    console.log(hospitalType);
-
-    this.hospitalService.getAll()
+    if (hospitalType == 'K111') {
+      this.numUniSp = this.numUniSp+1;
+      console.log(this.numUniSp);
+      console.log(hospitalType);
+      
+      this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        console.log(this.hospitalsList[0].attributes);
+        //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.num);
-      });
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp);
+        })
+      }
+
+    if (hospitalType == 'K112') {
+      this.numZentSp = this.numZentSp+1;
+      console.log(this.numZentSp);
+      console.log(hospitalType);
+      
+      this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+        //console.log(this.hospitalsList[0].attributes);
+        //defineMap();
+        updateMap(this.hospitalsList, hospitalType, this.numZentSp);
+        })
+    }
+
+    if (hospitalType == 'K121' || hospitalType == 'K122' || hospitalType == 'K123') {
+      this.numGrundVers = this.numGrundVers+1;
+      console.log(this.numGrundVers);
+      console.log(hospitalType);
+
+      this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+        //console.log(this.hospitalsList[0].attributes);
+        //defineMap();
+        updateMap(this.hospitalsList, hospitalType, this.numGrundVers);
+        })
+    }
+
+    if (hospitalType == 'K211' || hospitalType == 'K212') {
+      this.numPsychKl = this.numPsychKl+1;
+      console.log(this.numPsychKl);
+      console.log(hospitalType);
+
+      this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+        //console.log(this.hospitalsList[0].attributes);
+        //defineMap();
+        updateMap(this.hospitalsList, hospitalType, this.numPsychKl);
+        })
+    }
+
+    if (hospitalType == 'K221') {
+      this.numRehaKl = this.numRehaKl+1;
+      console.log(this.numRehaKl);
+      console.log(hospitalType);
+
+      this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+        //console.log(this.hospitalsList[0].attributes);
+        //defineMap();
+        updateMap(this.hospitalsList, hospitalType, this.numRehaKl);
+        })
+    }
+
+    if (hospitalType == 'K231' || hospitalType == 'K232' || hospitalType == 'K233' 
+    || hospitalType == 'K234' || hospitalType == 'K235') {
+      this.numSpezKl = this.numSpezKl+1;
+      console.log(this.numSpezKl);
+      console.log(hospitalType);
+
+      this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+        //console.log(this.hospitalsList[0].attributes);
+        //defineMap();
+        updateMap(this.hospitalsList, hospitalType, this.numSpezKl);
+        })
+    }
+
+    // this.num = this.num+1;
+    // console.log(this.num);
+    // console.log(hospitalType);
+
+    // this.hospitalService.getAll()
+    //   .subscribe(hospitals => {
+    //     this.hospitalsList = hospitals;
+    //     console.log(this.hospitalsList[0].attributes);
+    //     //defineMap();
+    //     updateMap(this.hospitalsList, hospitalType, this.num);
+    //   });
   }
 }

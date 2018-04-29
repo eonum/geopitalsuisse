@@ -23,6 +23,9 @@ var updateMap = function(data, type, num) {
 
   //svg.selectAll("circles").remove();
   console.log("updateMap called");
+  console.log(data)
+  console.log(type)
+  console.log(num)
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
@@ -71,7 +74,7 @@ var mapDrawer = function(data) {
     .text("a simple tooltip");
 
 
-// project points using procectPoint() function
+// project points using projectPoint() function
   circles = svg.selectAll('circle')
   //.selectAll("div")
     .data(hospitalData)
