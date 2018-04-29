@@ -3,31 +3,103 @@ var circles;
 var hospitalData = [];
 var maxEtMedL = 0;
 var hospitalAttributes = [];
-
-
-
-
+var svg;
 
 /**
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-  
-  // update circles
-  
-  // display layer
-  d3.select('#circleSVG').style('visibility', 'visible');
+
+
+  // project points using projectPoint() function
+  circles = svg.selectAll('circle')
+  //.selectAll("div")
+    .data(hospitalData)
+    .enter()
+    .append('circle')
+    .style("fill-opacity", 0.7)
+    // radius range: 2.5, 3, 3.5, 4, 4.5
+    .attr("r", function(d){
+      // radius range: 2.5, 3, 3.5, 4, 4.5 better?
+      // now: range from 2 to 6
+      //console.log(d.EtMedL*(1/maxEtMedL)*10 + 2);
+      if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+        return 10;
+      }
+      else{
+        return (d.EtMedL*(1/maxEtMedL)*10 + 4);
+      }})
+    .attr('fill', function(d) {
+      return returnColouredMarkers(d);
+    })
+    .attr('stroke', function(d) {
+      return returnColouredBorders(d);
+    })
+    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+    .on("mouseover", function(d) {
+      div.transition()
+        .duration(1)
+        .style("opacity", .98);
+      div	.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 0) + "px");
+    })
+    .on("mouseout", function(d) {
+      div.transition()
+        .duration(500)
+        .style("opacity", 0);
+    });
+
+// adapt Leaflet’s API to fit D3 with custom geometric transformation
+// calculates x and y coordinate in pixels for given coordinates (wgs84)
+  function projectPoint(x, y) {
+    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+    return point;
+  }
+
+// we have to calculate the width and the height of the svg element.
+// calculate the y max and x max value for all datapoints and add a padding. xmax is width and ymax is height of svg
+// todo: this function has to be changed that the bounds are calculated better
+  function calculateSVGBounds(data) {
+    var xMin = 1000000;
+    var xMax = 0;
+    var yMin = 1000000;
+    var yMax = 0;
+    var heightPadding = 100;
+    var widthPadding = 300;
+    data.forEach(function(d) {
+      xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
+      yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
+    });
+    svg
+      .style("left", 0)
+      .style("width", xMax + widthPadding)
+      .style("top", 0)
+      .style("height", yMax + heightPadding);
+  }
+
+// makes points invisible when user starts zooming
+  map.on('zoomstart', function () {
+    d3.select('#circleSVG').style('visibility', 'hidden');
+  });
+
+
+// makes points visible again after user has finished zooming
+  map.on('zoomend', function() {
+    d3.select('#circleSVG').style('visibility', 'visible');
+    calculateSVGBounds(hospitalData);
+    circles
+      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+  });
 }
 
 var removeCircles = function(hospitalData){
-
-  
-// makes points invisible when user starts zooming
-  d3.select('#circleSVG').style('visibility', 'hidden');
-
-
-
-}
+  if(svg!=null && svg.selectAll!=null){
+    svg.selectAll('circle').remove();
+  }
+};
 
 /**
  * Updates map with new data
@@ -50,7 +122,7 @@ var updateMap = function(data, type, num) {
   hospitalData = [];
   initData(data, type, num);
   console.log(hospitalData);
-  
+
   // even numbers of clicks draw the markers
   if ((num % 2) === 0) {
     console.log('add circles')
@@ -87,7 +159,7 @@ var mapDrawer = function(data) {
    * markers and tooltip with D3
    */
     // add SVG element to leaflet's overlay pane (group layers)
-  var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
+  svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
 
 // calculates svg bounds when we first open the map
   calculateSVGBounds(hospitalData);
