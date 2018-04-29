@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
-declare function updateMap(data, type, num): any;
+declare function updateMap(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
 
 @Component({
   selector: 'app-navbar',
@@ -43,13 +43,13 @@ export class NavbarComponent implements OnInit{
       this.numUniSp = this.numUniSp+1;
       // console.log(this.numUniSp);
       // console.log(hospitalType);
-      
+
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
         //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp);
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
       }
 
@@ -57,13 +57,13 @@ export class NavbarComponent implements OnInit{
       this.numZentSp = this.numZentSp+1;
       // console.log(this.numZentSp);
       // console.log(hospitalType);
-      
+
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
         //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.numZentSp);
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
 
@@ -77,7 +77,7 @@ export class NavbarComponent implements OnInit{
         this.hospitalsList = hospitals;
         //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.numGrundVers);
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
 
@@ -91,7 +91,7 @@ export class NavbarComponent implements OnInit{
         this.hospitalsList = hospitals;
         //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.numPsychKl);
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
 
@@ -105,11 +105,11 @@ export class NavbarComponent implements OnInit{
         this.hospitalsList = hospitals;
         //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.numRehaKl);
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
 
-    if (hospitalType == 'K231' || hospitalType == 'K232' || hospitalType == 'K233' 
+    if (hospitalType == 'K231' || hospitalType == 'K232' || hospitalType == 'K233'
     || hospitalType == 'K234' || hospitalType == 'K235') {
       this.numSpezKl = this.numSpezKl+1;
       // console.log(this.numSpezKl);
@@ -120,7 +120,7 @@ export class NavbarComponent implements OnInit{
         this.hospitalsList = hospitals;
         //console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType, this.numSpezKl);
+        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
   }

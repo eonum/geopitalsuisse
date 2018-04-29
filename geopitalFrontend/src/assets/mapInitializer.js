@@ -4,6 +4,12 @@ var hospitalData = [];
 var maxEtMedL = 0;
 var hospitalAttributes = [];
 var svg;
+var numUniSp = 0;
+var numZentSp = 0;
+var numGrundVers = 0;
+var numPsychKl = 0;
+var numRehaKl = 0;
+var numSpezKl = 0;
 
 /**
  * Draws circles on map
@@ -95,7 +101,7 @@ var initCircles = function(hospitalData){
   });
 }
 
-var removeCircles = function(hospitalData){
+var removeCircles = function(){
   if(svg!=null && svg.selectAll!=null){
     svg.selectAll('circle').remove();
   }
@@ -109,29 +115,44 @@ var removeCircles = function(hospitalData){
  * @param num: number of times checkbox was pressed --> since default is checked, even numbers (0,2,4,6)
  *             mean that this type should be displayed
  */
-var updateMap = function(data, type, num) {
+var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+
+  removeCircles();
 
   //svg.selectAll("circles").remove();
   console.log("updateMap called");
-  console.log(data)
-  console.log('dataType', type)
-  console.log('how many clicks', num)
+  console.log('how many clicks')
 
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
-  initData(data, type, num);
-  console.log(hospitalData);
+  //initData(data, type, num);
+  //console.log(hospitalData);
 
   // even numbers of clicks draw the markers
-  if ((num % 2) === 0) {
-    console.log('add circles')
-  initCircles(hospitalData);
+  if ((numUniSp % 2) === 0) {
+    console.log('K111');
+    initData(data, "K111");
   // uneven numbers of clicks remove the markers
-  } else {
-    console.log('remove circles')
-    removeCircles(hospitalData);
   }
+  if((numZentSp % 2) === 0){
+    initData(data, "K112");
+    console.log('K112');
+  }
+  if((numGrundVers % 2) === 0){
+    //initCircles(data, "K111");
+  }
+  if((numPsychKl % 2) === 0){
+
+  }
+  if((numRehaKl % 2) === 0){
+    initData(data, "K221");
+    console.log('K221');
+  }
+  if((numSpezKl % 2) === 0){
+
+  }
+  initCircles(hospitalData);
 }
 
 /**
@@ -256,11 +277,6 @@ var mapDrawer = function(data) {
       .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
   });
-
-
-
-
-  //checkbox();
 };
 
 /**
@@ -268,7 +284,7 @@ var mapDrawer = function(data) {
  * TODO: Build array with correct type, maybe split into a second function
  * @param data
  */
-function initData(data, type, num){
+function initData(data, type){
   // store coordinates in new array
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null){
