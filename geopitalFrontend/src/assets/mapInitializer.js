@@ -1,4 +1,5 @@
 var map;
+var div;
 var circles;
 var hospitalData = [];
 var maxEtMedL = 0;
@@ -119,11 +120,6 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 
   removeCircles();
 
-  //svg.selectAll("circles").remove();
-  console.log("updateMap called");
-  console.log('how many clicks')
-
-
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
   //initData(data, type, num);
@@ -131,29 +127,32 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 
   // even numbers of clicks draw the markers
   if ((numUniSp % 2) === 0) {
-    console.log('K111');
-    initData(data, "K111");
+    //console.log('uni');
+    initData(data, ["K111"]);
   // uneven numbers of clicks remove the markers
   }
   if((numZentSp % 2) === 0){
-    initData(data, "K112");
-    console.log('K112');
+    initData(data, ["K112"]);
+    //console.log('zent');
   }
   if((numGrundVers % 2) === 0){
-    //initCircles(data, "K111");
+    //console.log('grund');
+    initData(data, ["K121", "K122", "K123"]);
   }
   if((numPsychKl % 2) === 0){
-
+    //console.log('psych');
+    initData(data, ["K211", "K212"]);
   }
   if((numRehaKl % 2) === 0){
-    initData(data, "K221");
-    console.log('K221');
+    initData(data, ["K221"]);
+    //console.log('reha');
   }
   if((numSpezKl % 2) === 0){
-
+    //console.log('spez');
+    initData(data, ["K231", "K232", "K233", "K234", "K235"]);
   }
   initCircles(hospitalData);
-}
+};
 
 /**
  * Initializes map for the first time
@@ -172,9 +171,10 @@ var mapDrawer = function(data) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-  var type = 'none';
+  var type = [];
+  type.push("none");
   var num = 0;
-  initData(data, type, num);
+  initData(data, type);
 
   /**
    * markers and tooltip with D3
@@ -186,7 +186,7 @@ var mapDrawer = function(data) {
   calculateSVGBounds(hospitalData);
 
 // Define the div for the tooltip
-  var div = d3.select("body").append("div")
+  div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0.0);
 
@@ -283,11 +283,12 @@ var mapDrawer = function(data) {
  * Stores data in array for displaying it.
  * TODO: Build array with correct type, maybe split into a second function
  * @param data
+ * @param type
  */
 function initData(data, type){
   // store coordinates in new array
   for (var i = 0; i < data.length; i++){
-    if(data[i].coordinates != null){
+    if(data[i].coordinates != null && data[i].coordinates.latitude!=null && data[i].coordinates.longitude!=null){
       var hospitalName = data[i].name;
       var latitude = data[i].coordinates.latitude;
       var longitude = data[i].coordinates.longitude;
@@ -304,23 +305,21 @@ function initData(data, type){
         return obj.code == "Typ";
       });
       var typAttribute = String(typResult[0].value)
+      //console.log(typAttribute);
 
-      // store only hospitals with right attribute type in array
-      if(type!="none"){
-        if(typAttribute==type){
+      for(var j = 0; j < type.length; j++){
+        // store only hospitals with right attribute type in array
+        if(type[j]!="none"){
+          if(typAttribute==type[j]){
+            var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+            hospitalData.push(newCoordinates);
+          }
+        }
+        if(type[j]=="none"){
           var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
           hospitalData.push(newCoordinates);
         }
-        else{
-          continue;
-        }
       }
-      if(type=="none"){
-        var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
-        hospitalData.push(newCoordinates);
-      }
-    }else{
-      continue;
     }
   }
 
