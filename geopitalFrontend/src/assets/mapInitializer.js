@@ -13,13 +13,21 @@ var initCircles = function(){
 
 /**
  * Updates map with new data
+ * TODO: Split function so that circles are drawn in separate function
  * @param data
  * @param type
+ * @param num: number of times checkbox was pressed --> since default is checked, even numbers (0,2,4,6)
+ *             mean that this type should be displayed
  */
-var updateMap = function(data, type) {
+var updateMap = function(data, type, num) {
 
   //svg.selectAll("circles").remove();
   console.log("updateMap called");
+
+  // first empty array with hospital data then store only values with the right type
+  hospitalData = [];
+  initData(data, type, num);
+  console.log(hospitalData);
 
 }
 
@@ -40,7 +48,9 @@ var mapDrawer = function(data) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-  initData(data);
+  var type = 'none';
+  var num = 0;
+  initData(data, type, num);
 
   /**
    * markers and tooltip with D3
@@ -149,9 +159,10 @@ var mapDrawer = function(data) {
 
 /**
  * Stores data in array for displaying it.
+ * TODO: Build array with correct type, maybe split into a second function
  * @param data
  */
-function initData(data){
+function initData(data, type, num){
   // store coordinates in new array
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null){
@@ -172,8 +183,20 @@ function initData(data){
       });
       var typAttribute = String(typResult[0].value)
 
-      var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
-      hospitalData.push(newCoordinates);
+      // store only hospitals with right attribute type in array
+      if(type!="none"){
+        if(typAttribute==type){
+          var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+          hospitalData.push(newCoordinates);
+        }
+        else{
+          continue;
+        }
+      }
+      if(type=="none"){
+        var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+        hospitalData.push(newCoordinates);
+      }
     }else{
       continue;
     }

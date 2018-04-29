@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
-declare function updateMap(data, type): any;
+declare function updateMap(data, type, num): any;
 
 @Component({
   selector: 'app-navbar',
@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit{
   }
 
   private hospitalsList: Hospital[];
+  private num: number = 0;
 
   ngOnInit() {
     // load all hospital data from backend
@@ -30,7 +31,11 @@ export class NavbarComponent implements OnInit{
   }
 
   // is called when checkbox-check is changed
+  // TODO: make separate function for each call in navbar.component.html (or better version with num)
   selectHospitalType(hospitalType){
+
+    this.num = this.num+1;
+    console.log(this.num);
     console.log(hospitalType);
 
     this.hospitalService.getAll()
@@ -38,7 +43,7 @@ export class NavbarComponent implements OnInit{
         this.hospitalsList = hospitals;
         console.log(this.hospitalsList[0].attributes);
         //defineMap();
-        updateMap(this.hospitalsList, hospitalType);
+        updateMap(this.hospitalsList, hospitalType, this.num);
       });
   }
 }

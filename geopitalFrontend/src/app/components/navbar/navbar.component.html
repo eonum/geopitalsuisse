@@ -26,23 +26,23 @@
       <span class="checkmark1"></span>
     </label>
     <label class="container">Zentrumsspitäler
-      <input type="checkbox" checked="checked">
+      <input type="checkbox" checked="checked" (change)="selectHospitalType('K112')">
       <span class="checkmark2"></span>
     </label>
     <label class="container">Grundversorgung
-      <input type="checkbox" checked="checked">
+      <input type="checkbox" checked="checked" (change)="selectHospitalType('K121', 'K122', 'K123')">
       <span class="checkmark3"></span>
     </label>
     <label class="container">Psychiatrische Kliniken
-      <input type="checkbox" checked="checked">
+      <input type="checkbox" checked="checked" (change)="selectHospitalType('K211', 'K212')">
       <span class="checkmark4"></span>
     </label>
     <label class="container">Rehabilitationskliniken
-        <input type="checkbox" checked="checked">
+        <input type="checkbox" checked="checked" (change)="selectHospitalType('K221')">
         <span class="checkmark5"></span>
       </label>
       <label class="container">Spezialkliniken
-          <input type="checkbox" checked="checked">
+          <input type="checkbox" checked="checked" (change)="selectHospitalType('K231', 'K232', 'K233', 'K234', 'K235')">
           <span class="checkmark6"></span>
         </label>
       <!-- <legend>Menu</legend> -->
