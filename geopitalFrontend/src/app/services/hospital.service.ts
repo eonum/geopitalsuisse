@@ -17,6 +17,7 @@ export class HospitalService {
 
   constructor(private http: HttpClient) { }
 
+  // gets all hospitals with all corresponding data (address, coordinates, attributes)
   getAll(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/all/data')
     .map(res => {
@@ -40,33 +41,4 @@ export class HospitalService {
   }
 
 }
-
-
-
-/*
-@Injectable()
-export class ArticleService {
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-  constructor(private http: HttpClient) { }
-
-  getAll(): Observable<Article[]> {
-    return this.http.get<Article[]>(environment.apiUrl + 'article')
-  }
-
-  getById(id: number): Observable<Article> {
-    return this.http.get<Article>(environment.apiUrl + 'article/' + id)
-  }
-
-  getByAuthor(author: number): Observable<Article> {
-    return this.http.get<Article>( environment.apiUrl + 'article?author=' + author)
-  }
-
-  update(article: Article): Observable<Article> {
-    return this.http.put<Article>(
-      environment.apiUrl + 'article/' + article.id,
-      article, { headers: this.headers });
-  }
-
-}*/
 
