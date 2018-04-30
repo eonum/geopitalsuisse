@@ -1,0 +1,9 @@
+.info-box{
+  height:200px;
+  width:300px;
+  position:relative;
+  z-index:5000;
+  float:left;
+  margin-left:50px;
+  margin-top:50px;
+}
