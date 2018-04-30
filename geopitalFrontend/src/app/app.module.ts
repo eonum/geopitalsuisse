@@ -17,6 +17,7 @@ import {HospitalService} from "./services/hospital.service";
 import {AddressService} from "./services/address.service";
 import {AppRoutingModule} from "./app-routing.module";
 import { AttributesComponent } from './components/attributes/attributes.component';
+import { HospitalInfoComponent } from './components/hospital-info/hospital-info.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AttributesComponent } from './components/attributes/attributes.componen
     HospitalComponent,
     AddressComponent,
     AttributesComponent,
+    HospitalInfoComponent,
   ],
   imports: [
     BrowserModule,
