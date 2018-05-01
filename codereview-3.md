@@ -7,7 +7,7 @@ Consider style guide: https://github.com/airbnb/javascript
 ### General 
 
   - Way too few good documentation. 
-  - Keyword `let` is outdated and should not be used, use either `const` for variables which will not change or `let` for dynamically changing variables.
+  - Keyword `var` is outdated and should not be used, use either `const` for variables which will not change or `let` for dynamically changing variables.
 
 ### File: `geopitalBackend/controllers/hospital.controller.js
 
