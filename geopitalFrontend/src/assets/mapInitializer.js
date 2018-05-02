@@ -103,12 +103,11 @@ var mapDrawer = function(data) {
   }
 
   // we have to calculate the width and the height of the svg element.
-  // calculate the y max and x max value for all datapoints and add a padding. xmax is width and ymax is height of svg
+  // calculate the y max and x max value for all datapoints and add a padding.
+  // xmax is width and ymax is height of svg-layer
   // todo: this function has to be changed that the bounds are calculated better
   function calculateSVGBounds(data) {
-    var xMin = 1000000;
     var xMax = 0;
-    var yMin = 1000000;
     var yMax = 0;
     var heightPadding = 100;
     var widthPadding = 300;
@@ -123,13 +122,13 @@ var mapDrawer = function(data) {
       .style("height", yMax + heightPadding);
   }
 
-// makes points invisible when user starts zooming
+  // makes points invisible when user starts zooming
   map.on('zoomstart', function () {
     d3.select('#circleSVG').style('visibility', 'hidden');
   });
 
 
-// makes points visible again after user has finished zooming
+  // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     d3.select('#circleSVG').style('visibility', 'visible');
     calculateSVGBounds(hospitalData);
@@ -146,16 +145,12 @@ var initCircles = function(hospitalData){
 
   // project points using projectPoint() function
   circles = svg.selectAll('circle')
-  //.selectAll("div")
     .data(hospitalData)
     .enter()
     .append('circle')
     .style("fill-opacity", 0.7)
-    // radius range: 2.5, 3, 3.5, 4, 4.5
+    // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
     .attr("r", function(d){
-      // radius range: 2.5, 3, 3.5, 4, 4.5 better?
-      // now: range from 2 to 6
-      //console.log(d.EtMedL*(1/maxEtMedL)*10 + 2);
       if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
         return 10;
       }
@@ -184,26 +179,19 @@ var initCircles = function(hospitalData){
         .style("opacity", 0);
     });
 
-// adapt Leaflet’s API to fit D3 with custom geometric transformation
-// calculates x and y coordinate in pixels for given coordinates (wgs84)
-  /**
-   *
-   * @param x
-   * @param y
-   * @returns {*}
-   */
+  // adapt Leaflet’s API to fit D3 with custom geometric transformation
+  // calculates x and y coordinate in pixels for given coordinates (wgs84)
   function projectPoint(x, y) {
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
     return point;
   }
 
-// we have to calculate the width and the height of the svg element.
-// calculate the y max and x max value for all datapoints and add a padding. xmax is width and ymax is height of svg
-// todo: this function has to be changed that the bounds are calculated better
+  // we have to calculate the width and the height of the svg element.
+  // calculate the y max and x max value for all datapoints and add a padding.
+  // xmax is width and ymax is height of svg-layer
+  // todo: this function has to be changed that the bounds are calculated better
   function calculateSVGBounds(data) {
-    var xMin = 1000000;
     var xMax = 0;
-    var yMin = 1000000;
     var yMax = 0;
     var heightPadding = 100;
     var widthPadding = 300;
@@ -218,13 +206,13 @@ var initCircles = function(hospitalData){
       .style("height", yMax + heightPadding);
   }
 
-// makes points invisible when user starts zooming
+  // makes points invisible when user starts zooming
   map.on('zoomstart', function () {
     d3.select('#circleSVG').style('visibility', 'hidden');
   });
 
 
-// makes points visible again after user has finished zooming
+  // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     d3.select('#circleSVG').style('visibility', 'visible');
     calculateSVGBounds(hospitalData);
@@ -232,13 +220,18 @@ var initCircles = function(hospitalData){
       .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
       .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
   });
-}
+};
 
+
+/**
+ * Removes circles and all attributes that has been assigned to them.
+ */
 var removeCircles = function(){
   if(svg!=null && svg.selectAll!=null){
     svg.selectAll('circle').remove();
   }
 };
+
 
 /**
  * Updates map with new data
@@ -250,39 +243,34 @@ var removeCircles = function(){
  */
 var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
 
+  // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
-  //initData(data, type, num);
-  //console.log(hospitalData);
 
-  // even numbers of clicks draw the markers
+  // build up data array
+  // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
   if ((numUniSp % 2) === 0) {
-    //console.log('uni');
     initData(data, ["K111"]);
-  // uneven numbers of clicks remove the markers
   }
   if((numZentSp % 2) === 0){
     initData(data, ["K112"]);
-    //console.log('zent');
   }
   if((numGrundVers % 2) === 0){
-    //console.log('grund');
     initData(data, ["K121", "K122", "K123"]);
   }
   if((numPsychKl % 2) === 0){
-    //console.log('psych');
     initData(data, ["K211", "K212"]);
   }
   if((numRehaKl % 2) === 0){
     initData(data, ["K221"]);
-    //console.log('reha');
   }
   if((numSpezKl % 2) === 0){
-    //console.log('spez');
     initData(data, ["K231", "K232", "K233", "K234", "K235"]);
   }
+
+  // draw circles with the data that is build above
   initCircles(hospitalData);
 };
 
@@ -293,7 +281,6 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
  * @param type
  */
 function initData(data, type){
-  // store coordinates in new array
   for (var i = 0; i < data.length; i++){
     if(data[i].coordinates != null && data[i].coordinates.latitude!=null && data[i].coordinates.longitude!=null){
       var hospitalName = data[i].name;
@@ -352,25 +339,33 @@ function initData(data, type){
 //------------------------------------------------------
 // outsourced functions
 
-// functions for coloured markers
+/**
+ * Gives markers different color according to its type attribute
+ * @param d data which is displayed as a circle
+ * @returns {string} color of the marker (according to type)
+ */
 function returnColouredMarkers(d)  {
   if (d.Typ == "K111") // Universitätspitäler
-          return ('#a82a2a')
-        if (d.Typ == "K112") // Zentrumsspitäler
-          return ('#a89f2a')
-        if (d.Typ == "K121" || d.Typ == "K122" || d.Typ == "K123") // Grundversorgung
-          return ('#2ca82a')
-        if (d.Typ == "K211" || d.Typ == "K212") // Psychiatrische Kliniken
-          return ('#2a8ea8')
-        if (d.Typ == "K221") // Rehabilitationskliniken
-          return ('#2c2aa8')
-        if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
-          return ('#772aa8')
-        else
-          console.log(d)
-          return ('#d633ff');
+    return ('#a82a2a');
+  if (d.Typ == "K112") // Zentrumsspitäler
+    return ('#a89f2a');
+  if (d.Typ == "K121" || d.Typ == "K122" || d.Typ == "K123") // Grundversorgung
+    return ('#2ca82a');
+  if (d.Typ == "K211" || d.Typ == "K212") // Psychiatrische Kliniken
+    return ('#2a8ea8');
+  if (d.Typ == "K221") // Rehabilitationskliniken
+    return ('#2c2aa8');
+  if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
+    return ('#772aa8');
+  else
+    return ('#d633ff');
 }
 
+/**
+ * Gives markers different border color according to its type attribute
+ * @param d data which is displayed as a circle
+ * @returns {string} color of the border of the marker (according to type)
+ */
 function returnColouredBorders(d) {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a')
