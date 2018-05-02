@@ -1,3 +1,10 @@
+/**
+ * Contains logic of application
+ * Is responsible that the map is initialized correctly
+ * and the circles are drawn with the data provided.
+ */
+
+// variables that we need globally that are initialized in a function at one point
 var map;
 var div;
 var circles;
@@ -5,18 +12,137 @@ var hospitalData = [];
 var maxEtMedL = 0;
 var hospitalAttributes = [];
 var svg;
-var numUniSp = 0;
-var numZentSp = 0;
-var numGrundVers = 0;
-var numPsychKl = 0;
-var numRehaKl = 0;
-var numSpezKl = 0;
+
+/**
+ * Initializes map with the correct design.
+ * Draws circles from the provided data and implements zoom-function for these circles.
+ *
+ * @param data that sets where and how the hospitals are visualized as circles
+ *        contains coordinates, general information and attributes of a hospital
+ */
+var mapDrawer = function(data) {
+
+  /******* Initialize map and provided data *******/
+
+  // defines map and sets default view when page is loaded
+  map = L.map('mapid').setView([46.818188, 8.227512], 8);
+
+  // basic map using OpenStreetMap tiles with custom design using mapbox
+  L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    id: 'mapbox.streets'
+  }).addTo(map);
+
+  // defines data that is displayed as circles, since at first we want all types we give here "none"
+  // as none specific types have to be selected (see function initData)
+  var type = [];
+  type.push("none");
+
+  // initializes data so we can work with it for the visualisation (see function initData)
+  initData(data, type);
+
+
+  /******* markers and tooltip with D3 *******/
+
+  // add SVG element to leaflet's overlay pane (group layers)
+  svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
+
+  // calculates svg bounds for the first time
+  // on the svg-layer we implement the visualisation with D3
+  calculateSVGBounds(hospitalData);
+
+  // Define the div for the tooltip (used for mouseover functionality)
+  div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0.0);
+
+  // project points using projectPoint() function
+  circles = svg.selectAll('circle')
+    .data(hospitalData)
+    .enter()
+    .append('circle')
+    .style("fill-opacity", 0.7)
+    // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
+    .attr("r", function(d){
+      if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+        return 10;
+      }
+      else{
+        return (d.EtMedL*(1/maxEtMedL)*10 + 4);
+      }})
+    .attr('fill', function(d) {
+      return returnColouredMarkers(d);
+    })
+    .attr('stroke', function(d) {
+      return returnColouredBorders(d);
+    })
+    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+    .on("mouseover", function(d) {
+      div.transition()
+        .duration(1)
+        .style("opacity", .98);
+      div	.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 0) + "px");
+    })
+    .on("mouseout", function(d) {
+      div.transition()
+        .duration(500)
+        .style("opacity", 0);
+    });
+
+  // adapt Leaflet’s API to fit D3 with custom geometric transformation
+  // calculates x and y coordinate in pixels for given coordinates (wgs84)
+  function projectPoint(x, y) {
+    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+    return point;
+  }
+
+  // we have to calculate the width and the height of the svg element.
+  // calculate the y max and x max value for all datapoints and add a padding. xmax is width and ymax is height of svg
+  // todo: this function has to be changed that the bounds are calculated better
+  function calculateSVGBounds(data) {
+    var xMin = 1000000;
+    var xMax = 0;
+    var yMin = 1000000;
+    var yMax = 0;
+    var heightPadding = 100;
+    var widthPadding = 300;
+    data.forEach(function(d) {
+      xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
+      yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
+    });
+    svg
+      .style("left", 0)
+      .style("width", xMax + widthPadding)
+      .style("top", 0)
+      .style("height", yMax + heightPadding);
+  }
+
+// makes points invisible when user starts zooming
+  map.on('zoomstart', function () {
+    d3.select('#circleSVG').style('visibility', 'hidden');
+  });
+
+
+// makes points visible again after user has finished zooming
+  map.on('zoomend', function() {
+    d3.select('#circleSVG').style('visibility', 'visible');
+    calculateSVGBounds(hospitalData);
+    circles
+      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+  });
+};
 
 /**
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-
 
   // project points using projectPoint() function
   circles = svg.selectAll('circle')
@@ -60,6 +186,12 @@ var initCircles = function(hospitalData){
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
+  /**
+   *
+   * @param x
+   * @param y
+   * @returns {*}
+   */
   function projectPoint(x, y) {
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
     return point;
@@ -152,131 +284,6 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
     initData(data, ["K231", "K232", "K233", "K234", "K235"]);
   }
   initCircles(hospitalData);
-};
-
-/**
- * Initializes map for the first time
- * @param data
- */
-var mapDrawer = function(data) {
-
-  map = L.map('mapid').setView([46.818188, 8.227512], 8);
-
-// basic map using OpenStreetMap tiles with costume design using mapbox
-  L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
-    maxZoom: 18,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    id: 'mapbox.streets'
-  }).addTo(map);
-
-  var type = [];
-  type.push("none");
-  var num = 0;
-  initData(data, type);
-
-  /**
-   * markers and tooltip with D3
-   */
-    // add SVG element to leaflet's overlay pane (group layers)
-  svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
-
-// calculates svg bounds when we first open the map
-  calculateSVGBounds(hospitalData);
-
-// Define the div for the tooltip
-  div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0.0);
-
-    var tooltip = svg
-    .append("div")
-    .text("a simple tooltip");
-
-
-// project points using projectPoint() function
-  circles = svg.selectAll('circle')
-  //.selectAll("div")
-    .data(hospitalData)
-    .enter()
-    .append('circle')
-    .style("fill-opacity", 0.7)
-    // radius range: 2.5, 3, 3.5, 4, 4.5
-    .attr("r", function(d){
-      // radius range: 2.5, 3, 3.5, 4, 4.5 better?
-      // now: range from 2 to 6
-        //console.log(d.EtMedL*(1/maxEtMedL)*10 + 2);
-        if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-          return 10;
-        }
-        else{
-          return (d.EtMedL*(1/maxEtMedL)*10 + 4);
-        }})
-        .attr('fill', function(d) {
-         return returnColouredMarkers(d);
-        })
-        .attr('stroke', function(d) {
-          return returnColouredBorders(d);
-        })
-    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-    .on("mouseover", function(d) {
-      div.transition()
-        .duration(1)
-        .style("opacity", .98);
-      div	.html(d.name)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 0) + "px");
-    })
-    .on("mouseout", function(d) {
-      div.transition()
-        .duration(500)
-        .style("opacity", 0);
-    });
-
-// adapt Leaflet’s API to fit D3 with custom geometric transformation
-// calculates x and y coordinate in pixels for given coordinates (wgs84)
-  function projectPoint(x, y) {
-    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-    return point;
-  }
-
-// we have to calculate the width and the height of the svg element.
-// calculate the y max and x max value for all datapoints and add a padding. xmax is width and ymax is height of svg
-// todo: this function has to be changed that the bounds are calculated better
-  function calculateSVGBounds(data) {
-    var xMin = 1000000;
-    var xMax = 0;
-    var yMin = 1000000;
-    var yMax = 0;
-    var heightPadding = 100;
-    var widthPadding = 300;
-    data.forEach(function(d) {
-      xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
-      yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
-    });
-    svg
-      .style("left", 0)
-      .style("width", xMax + widthPadding)
-      .style("top", 0)
-      .style("height", yMax + heightPadding);
-  }
-
-// makes points invisible when user starts zooming
-  map.on('zoomstart', function () {
-    d3.select('#circleSVG').style('visibility', 'hidden');
-  });
-
-
-// makes points visible again after user has finished zooming
-  map.on('zoomend', function() {
-    d3.select('#circleSVG').style('visibility', 'visible');
-    calculateSVGBounds(hospitalData);
-    circles
-      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-  });
 };
 
 /**
