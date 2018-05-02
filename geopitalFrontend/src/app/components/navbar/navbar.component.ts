@@ -3,16 +3,18 @@ import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
 declare function updateMap(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
 
+/**
+ * Handles checkbox-events implemented in the html-file of this component.
+ * User can select or deselect a checkbox that contain the types of hospitals.
+ * Hospitals of a certain type must only be displayed when the according checkbox is selected.
+ */
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit{
-
-  constructor(private hospitalService: HospitalService) {
-
-  }
 
   private hospitalsList: Hospital[];
   private numUniSp: number = 0;
@@ -22,11 +24,23 @@ export class NavbarComponent implements OnInit{
   private numRehaKl: number = 0;
   private numSpezKl: number = 0;
 
+  constructor(private hospitalService: HospitalService) {
+
+  }
+
   ngOnInit() {
 
   }
 
-  // is called when checkbox-check is changed
+
+  /**
+   * Is called when a click-event occurs in checkbox (html of component).
+   * Defines hospital type which the user has selected or deselected.
+   * The number tells us whether the user has selected (even number) or deselected (uneven number) a type.
+   * Hospitals of a certain type must only be displayed when the according checkbox is selected.
+   * Function then calls updateMap() from mapInitializer.js in which the remaining logic is implemented.
+   * @param hospitalType hospitals from this type need to be displayed (if they are hidden) or hidden (if they are displayed)
+   */
   selectHospitalType(hospitalType){
 
     if (hospitalType == 'K111') {
@@ -34,8 +48,6 @@ export class NavbarComponent implements OnInit{
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
       }
@@ -45,8 +57,6 @@ export class NavbarComponent implements OnInit{
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
@@ -56,8 +66,6 @@ export class NavbarComponent implements OnInit{
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
@@ -67,8 +75,6 @@ export class NavbarComponent implements OnInit{
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
@@ -78,8 +84,6 @@ export class NavbarComponent implements OnInit{
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }
@@ -90,8 +94,6 @@ export class NavbarComponent implements OnInit{
       this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
         })
     }

@@ -1,10 +1,12 @@
-import {AfterViewChecked, Component, OnInit, Attribute} from '@angular/core';
-//declare function mapDrawer(hospitals, attributes): any;
+import {AfterViewChecked, Component, OnInit} from '@angular/core';
 declare function mapDrawer(data): any;
-declare function defineMap();
 import { HospitalService } from '../../services/hospital.service';
 import {Hospital} from "../../models/hospital.model";
 
+
+/**
+ * Loads data from backend with hospitalService and calls function for the further use of data.
+ */
 
 @Component({
   selector: 'app-maps',
@@ -14,22 +16,20 @@ import {Hospital} from "../../models/hospital.model";
 
 export class MapsComponent implements OnInit, AfterViewChecked {
 
+  private hospitalsList: Hospital[];
+
   constructor(private hospitalService: HospitalService) {
 
   }
 
-  private hospitalsList: Hospital[];
-
-
+  /**
+   * Loads all hospital data from backend with the help of hospitalService
+   * and gives it to the mapDrawer() function in mapInitializer.js
+   */
   ngOnInit() {
-
-   // load all hospital data from backend
-
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        //console.log(this.hospitalsList[0].attributes);
-        //defineMap();
         mapDrawer(this.hospitalsList);
       });
   }
