@@ -10,7 +10,6 @@ var div;
 var circles;
 var hospitalData = [];
 var maxEtMedL = 0;
-var hospitalAttributes = [];
 var svg;
 
 /**
@@ -22,7 +21,8 @@ var svg;
  */
 var mapDrawer = function(data) {
 
-  /******* Initialize map and provided data *******/
+  //------------------------------------------------------
+  // Initialize map and provided data
 
   // defines map and sets default view when page is loaded
   map = L.map('mapid').setView([46.818188, 8.227512], 8);
@@ -45,7 +45,8 @@ var mapDrawer = function(data) {
   initData(data, type);
 
 
-  /******* markers and tooltip with D3 *******/
+  //------------------------------------------------------
+  // markers and tooltip with D3
 
   // add SVG element to leaflet's overlay pane (group layers)
   svg = d3.select(map.getPanes().overlayPane).append("svg").attr('id', 'circleSVG');
@@ -235,11 +236,17 @@ var removeCircles = function(){
 
 /**
  * Updates map with new data
- * TODO: Split function so that circles are drawn in separate function
- * @param data
- * @param type
- * @param num: number of times checkbox was pressed --> since default is checked, even numbers (0,2,4,6)
- *             mean that this type should be displayed
+ * TODO: better implementation with type and not hardcoding
+ * @param data data that contains all the information of the hospitals (from backend)
+ * @param type describes type of hospital that should be shown
+ * For the next parameters: number of times checkbox was pressed
+ * --> since default is checked, even numbers (0,2,4,6) mean that this type should be displayed
+ * @param numUniSp
+ * @param numZentSp
+ * @param numGrundVers
+ * @param numPsychKl
+ * @param numRehaKl
+ * @param numSpezKl
  */
 var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
 
@@ -275,34 +282,45 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 };
 
 /**
- * Stores data in array for displaying it.
- * TODO: Build array with correct type, maybe split into a second function
- * @param data
- * @param type
+ * Stores data in array for displaying it. Builds up array with the important information.
+ * TODO: Improve function --> make it possible to select which attributes should be store in array (except for coordinates and name)
+ * @param data data from backend (JSON)
+ * @param type type of hospitals that should be displayed (improvement)
  */
 function initData(data, type){
   for (var i = 0; i < data.length; i++){
+
+    // stores name, coordinates (latitude, longitude), EtMedL attribute value
+    // and type of each hospita in a variable to save in array
     if(data[i].coordinates != null && data[i].coordinates.latitude!=null && data[i].coordinates.longitude!=null){
       var hospitalName = data[i].name;
       var latitude = data[i].coordinates.latitude;
       var longitude = data[i].coordinates.longitude;
 
+      // access attributes of hospital
       var attr = data[i].attributes;
+
+      // filters EtMedL attribute and saves it in variable
       var sizeResult = attr.filter(function( obj ) {
         return obj.code == "EtMedL";
       });
+      // saves value of EtMedL attribute in variable
       if(sizeResult[0]!=null && sizeResult[0].value!=null){
         var sizeAttribute = Number(sizeResult[0].value);
       }
 
+      // filters type attribute and saves it in variable
       var typResult = attr.filter(function ( obj ) {
         return obj.code == "Typ";
       });
-      var typAttribute = String(typResult[0].value)
-      //console.log(typAttribute);
+      // saves value of type attribute in variable
+      if(typResult[0]!=null && typResult[0].value!=null){
+        var typAttribute = String(typResult[0].value);
+      }
 
+      // store only hospitals with right attribute type in array
+      // type "none" stands for default value (all hospitals)
       for(var j = 0; j < type.length; j++){
-        // store only hospitals with right attribute type in array
         if(type[j]!="none"){
           if(typAttribute==type[j]){
             var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
@@ -317,7 +335,7 @@ function initData(data, type){
     }
   }
 
-  // get max value of EtMedL attribute
+  // get max value of EtMedL attribute (to calculate radius of circles)
   for(var i=0; i<hospitalData.length; i++){
     if(hospitalData[i]!=null && hospitalData[i].EtMedL!=null){
       if(hospitalData[i].EtMedL>maxEtMedL){
@@ -328,13 +346,8 @@ function initData(data, type){
       }
     }
   }
-
-  // store attributes in new array
-  for (var i = 0; i < data.length; i++){
-    var attributes = data[i].attributes;
-    hospitalAttributes.push(attributes);
-  }
 }
+
 
 //------------------------------------------------------
 // outsourced functions
