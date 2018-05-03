@@ -1,6 +1,4 @@
 .idea/
 .DS_Store
 geopitalBackend/node_modules/
-uploads/json/
-uploads/xlsx/
 *.secret
