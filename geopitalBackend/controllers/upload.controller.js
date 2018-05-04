@@ -2,6 +2,7 @@ var uploadService = require('../services/upload.service');
 var fs = require('fs');
 var convertExcel = require('excel-as-json').processFile;
 var excel2Json = require('node-excel-to-json');
+const attributeService = require('../services/attribute.service');
 
 // Saving the context of this module inside the _the variable
 _this = this;
@@ -68,4 +69,29 @@ saveUpload = async function(fileName, req){
 
 
     })
+}
+
+/*
+Upload Excel with new Attributes and store new Attributes
+ */
+exports.storeNewAttributes = async function(req, res){
+    try {
+        let file = req.files.newAttributesFile;
+        file.mv('../uploads/xlsx/' + file.name, function (err) {
+            if(err)
+                console.log('Move: '+err);
+            else {
+                convertExcel('../uploads/xlsx/' + file.name, null, null, function (err, data) {
+                    if (err)
+                        console.log('To Json: '+err);
+                    else
+                        attributeService.importAttributeType(data);
+                });
+            }
+        });
+    }
+    catch (e){
+        console.log(e);
+    }
+    res.redirect('/mvc/upload');
 }
