@@ -1,10 +1,10 @@
 
 <div class="nav-bar"><nav class="navbar navbar-expand-lg navbar-dark bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-<div class="collapse navbar-collapse" id="navbarColor01">
-  
+<div class="collapse navbar-collapse" id="navbarColor02">
+
     <h3>Grösse nach:</h3>
 <div class="container">
     <div class="dropdown">
@@ -12,11 +12,9 @@
           Variable:
         </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Link 1</a>
-          <a class="dropdown-item" href="#">Link 2</a>
-          <a class="dropdown-item" href="#">Link 3</a>
+          <a class="dropdown-item" href="#" *ngFor="let attribute of attributes">{{ attribute.de }}</a>
         </div>
-      </div> 
+      </div>
   </div>
 
 </div>
