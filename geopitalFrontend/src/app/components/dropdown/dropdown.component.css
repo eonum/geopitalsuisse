@@ -6,7 +6,7 @@
   float:right;
   margin-right:50px;
   margin-top:50px;
-  
+
 } */
 .nav-bar{
   height:200px;
@@ -63,6 +63,8 @@ font-size: 16px;
 padding: 14px 20px 12px 45px;
 border: none;
 border-bottom: 1px solid #ddd;
+  max-height:200px;
+  overflow:scroll;
 }
 
 /* The search field when it gets focus/clicked on */
@@ -77,6 +79,12 @@ border-bottom: 1px solid #ddd;
   margin-left: 50px;
   margin-top:50px;
 } */
+
+/* makes dropdown-menu scrollable */
+.dropdown-menu {
+  max-height:400px;
+  overflow-y:scroll;
+}
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
@@ -100,4 +108,4 @@ border-bottom: 1px solid #ddd;
 .dropdown-content a:hover {background-color: #f1f1f1}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {display:block;} 
+.show {display:block;}
