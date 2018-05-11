@@ -1,0 +1,15 @@
+.nav-bar{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height:400px;
+    width:300px;
+    z-index:5000;
+    float: right;;
+    margin-right:0px;
+    margin-bottom:-180px;
+  }
+
+  
+
+  

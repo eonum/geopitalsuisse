@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CharacteristicsService } from '../../services/characteristics.service';
 import { HospitalService } from '../../services/hospital.service';
-import { Characteristics } from '../../models/characteristics.model';
 import { Hospital } from '../../models/hospital.model';
+
 
 @Component({
   selector: 'app-characteristics',
@@ -11,24 +10,34 @@ import { Hospital } from '../../models/hospital.model';
 })
 export class CharacteristicsComponent implements OnInit {
 
-  constructor(
-    private characteristicService: CharacteristicsService,
-    private hospitalService: HospitalService
-  ) { }
-
-
-  public newHospitalCharacteristic: Characteristics = new Characteristics();
   characteristicsList: Hospital[];
+  private hospitalsList: Hospital[];
+  private attributes: any[] = [];
+  private coordinates: any[] = [];
 
-  ngOnInit() {
+  constructor(private hospitalService: HospitalService) {
 
-    this.hospitalService.getDummyData()
-    .subscribe(characteristics => {
-      //assign the todolist property to the proper http response
-      this.characteristicsList = characteristics
-      console.log(this.characteristicsList)
-    })
   }
+ 
+  ngOnInit() {
+    this.hospitalService.getAll()
+      .subscribe(hospitals => {
+        this.hospitalsList = hospitals;
+
+        // store name of attributes (de, it, fr) in array to display in dropdown
+        for(let i in this.hospitalsList){
+            var coor = this.hospitalsList[i].coordinates;
+            this.coordinates.push(coor);
+            console.log(this.coordinates)
+        }
+      });
+
+
+  }
+
+showCharacteristics(Coordinates): void {
+  console.log("function called")
+}
 
 
 showHp(): void {

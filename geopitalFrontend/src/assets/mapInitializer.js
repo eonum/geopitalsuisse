@@ -7,6 +7,7 @@
 // variables that we need globally that are initialized in a function at one point
 var map;
 var div;
+var div2;
 var circles;
 var hospitalData = [];
 var maxEtMedL = 0;
@@ -60,43 +61,12 @@ var mapDrawer = function(data) {
     .attr("class", "tooltip")
     .style("opacity", 0.0);
 
+    div2 = d3.select("body").append("div2")
+    .attr("class", "tooltip")
+    .style("opacity", 0.0);
   // project points using projectPoint() function
 
   initCircles(hospitalData)
-  // circles = svg.selectAll('circle')
-  //   .data(hospitalData)
-  //   .enter()
-  //   .append('circle')
-  //   .style("fill-opacity", 0.7)
-  //   // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
-  //   .attr("r", function(d){
-  //     if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-  //       return 10;
-  //     }
-  //     else{
-  //       return (d.EtMedL*(1/maxEtMedL)*10 + 4);
-  //     }})
-  //   .attr('fill', function(d) {
-  //     return returnColouredMarkers(d);
-  //   })
-  //   .attr('stroke', function(d) {
-  //     return returnColouredBorders(d);
-  //   })
-  //   .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-  //   .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-  //   .on("mouseover", function(d) {
-  //     div.transition()
-  //       .duration(1)
-  //       .style("opacity", .98);
-  //     div	.html(d.name)
-  //       .style("left", (d3.event.pageX) + "px")
-  //       .style("top", (d3.event.pageY - 0) + "px");
-  //   })
-  //   .on("mouseout", function(d) {
-  //     div.transition()
-  //       .duration(500)
-  //       .style("opacity", 0);
-  //   });
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -172,7 +142,7 @@ var initCircles = function(hospitalData){
       div.transition()
         .duration(1)
         .style("opacity", .98);
-      div	.html(d.name)
+      div.html(d.name)
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 0) + "px");
     })
@@ -180,7 +150,18 @@ var initCircles = function(hospitalData){
       div.transition()
         .duration(500)
         .style("opacity", 0);
+    })
+    .on("click", function(d) {
+      // showCharacteristics(d);
+        console.log("clicked")
+      div2.transition()
+        .duration(1)
+        .style("opacity", .98);
+      div2	.html(d.name)
+        // .style("left", (d3.event.pageX + 35) + "px")
+        // .style("top", (d3.event.pageY + 30) + "px");
     });
+
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
