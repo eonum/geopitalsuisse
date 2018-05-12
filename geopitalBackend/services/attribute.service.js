@@ -7,12 +7,17 @@ var fs = require('fs');
 Creates AttributeTypes from JSON file, field with empty codes will be groups,
 rows before the first group are ignored.
 */
-exports.importAttributeType = function(){
-    var obj = JSON.parse(fs.readFileSync('./data/kennzahlen.json', 'utf8'));
+exports.importAttributeType = function(obj){
     let group = '';
     obj.forEach(function(attributeType){
       if (!attributeType.Code) group = attributeType;
-      else saveAttributeType(group, attributeType);
+      else{
+          AttributeType.find({code: attributeType.Code}).exec(function(err, attType){
+              if(attType == ''){
+                  saveAttributeType(group, attributeType);
+              }
+          })
+      }
     })
 };
 /*

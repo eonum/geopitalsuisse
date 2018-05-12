@@ -21,7 +21,11 @@ block content
     if error
         p #{error}
 
-
+    form#atributeUpload(method="post" action="/mvc/upload/newAttributes" enctype="multipart/form-data")
+        label(for='newAttributes') Select a file to upload new attributes
+        input#newAttributes(type="file" name="newAttributesFile" accept="xls")
+        br
+        input(type="submit")
 
 
 
