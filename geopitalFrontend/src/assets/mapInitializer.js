@@ -161,7 +161,6 @@ var zoomLevel = map.getZoom();
         .style("opacity", 0);
     })
     .on("click", function(d) {
-        console.log("clicked")
       div2.transition()
         .duration(1)
         .style("opacity", .98);
@@ -207,7 +206,6 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
-  console.log("removeCircles called")
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
@@ -235,11 +233,6 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 
   // draw circles with the data that is build above
   initCircles(hospitalData);
-
-  // outsource function "updateCircles" not yet working
-  // function updateCircles() {
-  //   updateCircles(hospitalData, map);
-  // }
 };
 
 /**
