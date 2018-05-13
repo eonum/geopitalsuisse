@@ -56,7 +56,7 @@ var mapDrawer = function(data) {
   // on the svg-layer we implement the visualisation with D3
   calculateSVGBounds(hospitalData);
 
-  // Define the div for the tooltip (used for mouseover functionality)
+  // Define the div for the tooltips (used for mouseover and click functionality)
   div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0.0);
@@ -64,6 +64,7 @@ var mapDrawer = function(data) {
     div2 = d3.select("body").append("div2")
     .attr("class", "tooltip")
     .style("opacity", 0.0);
+
   // project points using projectPoint() function
 
   initCircles(hospitalData)
@@ -100,14 +101,22 @@ var mapDrawer = function(data) {
     d3.select('#circleSVG').style('visibility', 'hidden');
   });
 
-
   // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
-    d3.select('#circleSVG').style('visibility', 'visible');
-    calculateSVGBounds(hospitalData);
-    circles
-      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+   var zoomLevel = map.getZoom();
+   circles
+   .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
+   .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+   .attr("r", function(d){
+    if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+      return 10*zoomLevel*zoomLevel/100;
+    }
+    else{
+      return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
+    }})
+    
+   calculateSVGBounds(hospitalData);
+   d3.select('#circleSVG').style('visibility', 'visible');
   });
 };
 
@@ -115,7 +124,7 @@ var mapDrawer = function(data) {
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-
+var zoomLevel = map.getZoom();
   // project points using projectPoint() function
   circles = svg.selectAll('circle')
     .data(hospitalData)
@@ -125,10 +134,10 @@ var initCircles = function(hospitalData){
     // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
     .attr("r", function(d){
       if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-        return 10;
+        return 10*zoomLevel*zoomLevel/100;
       }
       else{
-        return (d.EtMedL*(1/maxEtMedL)*10 + 4);
+        return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
       }})
     .attr('fill', function(d) {
       return returnColouredMarkers(d);
@@ -152,59 +161,22 @@ var initCircles = function(hospitalData){
         .style("opacity", 0);
     })
     .on("click", function(d) {
-      // showCharacteristics(d);
         console.log("clicked")
       div2.transition()
         .duration(1)
         .style("opacity", .98);
       div2	.html(d.name)
-        // .style("left", (d3.event.pageX + 35) + "px")
-        // .style("top", (d3.event.pageY + 30) + "px");
     });
 
 
-  // adapt Leaflet’s API to fit D3 with custom geometric transformation
-  // calculates x and y coordinate in pixels for given coordinates (wgs84)
-  function projectPoint(x, y) {
-    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-    return point;
-  }
-
-  // we have to calculate the width and the height of the svg element.
-  // calculate the y max and x max value for all datapoints and add a padding.
-  // xmax is width and ymax is height of svg-layer
-  // todo: this function has to be changed that the bounds are calculated better
-  function calculateSVGBounds(data) {
-    var xMax = 0;
-    var yMax = 0;
-    var heightPadding = 100;
-    var widthPadding = 300;
-    data.forEach(function(d) {
-      xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
-      yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
-    });
-    svg
-      .style("left", 0)
-      .style("width", xMax + widthPadding)
-      .style("top", 0)
-      .style("height", yMax + heightPadding);
-  }
-
-  // makes points invisible when user starts zooming
-  map.on('zoomstart', function () {
-    d3.select('#circleSVG').style('visibility', 'hidden');
-  });
-
-
-  // makes points visible again after user has finished zooming
-  map.on('zoomend', function() {
-    d3.select('#circleSVG').style('visibility', 'visible');
-    calculateSVGBounds(hospitalData);
-    circles
-      .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-      .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-  });
 };
+
+// adapt Leaflet’s API to fit D3 with custom geometric transformation
+// calculates x and y coordinate in pixels for given coordinates (wgs84)
+function projectPoint(x, y) {
+  var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+  return point;
+}
 
 
 /**
@@ -235,6 +207,7 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
+  console.log("removeCircles called")
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
@@ -262,6 +235,11 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 
   // draw circles with the data that is build above
   initCircles(hospitalData);
+
+  // outsource function "updateCircles" not yet working
+  // function updateCircles() {
+  //   updateCircles(hospitalData, map);
+  // }
 };
 
 /**
