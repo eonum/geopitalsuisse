@@ -1,6 +1,7 @@
 import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
+import {Attributes} from "../../models/attributes.model";
 
 
 @Component({
@@ -11,26 +12,31 @@ import {Hospital} from "../../models/hospital.model";
 export class DropdownComponent implements OnInit {
 
   private hospitalsList: Hospital[];
+  private attributeName : Attributes[];
   private attributes: any[] = [];
 
 
   constructor(private hospitalService: HospitalService) {  }
 
   ngOnInit() {
-    this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
+    this.hospitalService.getAttributes()
+      .subscribe(attributes => {
+        this.attributeName = attributes;
 
-        // store name of attributes (de, it, fr) in array to display in dropdown
-        for(let i in this.hospitalsList){
-          for(let j in this.hospitalsList[i].attributes){
-            var attr = this.hospitalsList[i].attributes[j].name;
-            this.attributes.push(attr);
-          }
+        console.log(this.attributeName);
+
+        for(let i in this.attributeName){
+          var attr = this.attributeName[i].name.de;
+          this.attributes.push(attr);
         }
+
       });
 
 
+  }
+
+  selectedAttribute(){
+    console.log("selected an attribute");
   }
 
 

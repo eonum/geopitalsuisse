@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { Hospital} from '../models/hospital.model';
 import 'rxjs/add/operator/map';
+import {Attributes} from "../models/attributes.model";
 
 
 /**
@@ -28,6 +29,17 @@ export class HospitalService {
     .map(res => {
       return res['data'] as Hospital[];
     })
+  }
+
+  /**
+   * Gets all attributes which a hospital can have
+   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
+   */
+  getAttributes(): Observable<Attributes[]> {
+    return this.http.get<Attributes[]>('http://localhost:3000/' + 'api/attributes')
+      .map(res => {
+        return res['data'] as Attributes[];
+      })
   }
 
   /**
