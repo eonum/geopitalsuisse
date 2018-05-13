@@ -35,8 +35,9 @@ export class DropdownComponent implements OnInit {
 
   }
 
-  selectedAttribute(){
-    console.log("selected an attribute");
+  selectedAttribute(attribute){
+    console.log("selected attribute" + attribute);
+
   }
 
 

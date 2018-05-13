@@ -8,11 +8,11 @@
     <h3>Grösse nach:</h3>
 <div class="container">
     <div class="dropdown">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button id="attributeButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
           Variable:
         </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#" *ngFor="let attribute of attributes" (click)="selectedAttribute()">{{ attribute }}</a>
+          <a class="dropdown-item" href="#" *ngFor="let attribute of attributes" (click)="selectedAttribute(attribute)">{{ attribute }}</a>
         </div>
       </div>
   </div>
