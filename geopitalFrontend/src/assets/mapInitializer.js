@@ -24,14 +24,15 @@ var svg;
  */
 var mapDrawer = function(data) {
   // stores initially all data from all hospitals
-var data = data;
-console.log("data")
-console.log(data)
+  var data = data;
+  console.log("data")
+  console.log(data)
+
   //------------------------------------------------------
   // Initialize map and provided data
 
   // defines map and sets default view when page is loaded
-  map = L.map('mapid').setView([46.818188, 8.227512], 8);
+  map = L.map('mapid').setView([46.818188, 8.97512], 8);
 
   // basic map using OpenStreetMap tiles with custom design using mapbox
   L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
@@ -113,7 +114,7 @@ console.log(data)
    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
    .attr("r", function(d) {return getCircleRadius(d)})
-    
+
    calculateSVGBounds(hospitalData);
    d3.select('#circleSVG').style('visibility', 'visible');
   });
@@ -123,7 +124,7 @@ console.log(data)
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-// var zoomLevel = map.getZoom();
+  // var zoomLevel = map.getZoom();
   // project points using projectPoint() function
   circles = svg.selectAll('circle')
     .data(hospitalData)
@@ -180,8 +181,8 @@ function getHospitalAddress(clickedHospital) {
   console.log("clickedHospitalCharacters")
   console.log(hospitalChar)
 
-  var hospitalAddress = hospitalChar[0].address.street + " " 
-  + hospitalChar[0].address.streetNumber + "<br/>" 
+  var hospitalAddress = hospitalChar[0].address.street + " "
+  + hospitalChar[0].address.streetNumber + "<br/>"
   + hospitalChar[0].address.plz + " "
   + hospitalChar[0].address.city;
   console.log("hospitalAddress:")
@@ -263,7 +264,7 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 function initData(data, type){
   // initially store all hospital data in global variable
   allHospitalData = data;
-  
+
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), EtMedL attribute value
