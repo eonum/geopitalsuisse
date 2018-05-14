@@ -1,13 +1,14 @@
+<div class="nav-bar-attributes">
 
-<div class="nav-bar2">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+  <nav id="dropdown-container" class="navbar navbar-expand-lg navbar-dark bg-light">
+    <div id="attributes">
 
-    <div id="navbarColor02">
       <h3>Attributauswahl:</h3>
 
-      <div class="container" style="width:300px;">
+        <!-- align dropdowns in group next to each other -->
         <div class="btn-group" style="text-align: center;">
-          <!-- first dropdown -->
+
+          <!-- first dropdown with numeric attributes -->
           <div id="numAttr" class="dropdown" style="padding:5px;">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 1. Attribut:
@@ -17,7 +18,7 @@
               </div>
           </div>
 
-          <!-- second dropdown -->
+          <!-- second dropdown with categorial attributes -->
           <div id="katAttr" class="dropdown" style="padding:5px;">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               2. Attribut:
@@ -26,8 +27,10 @@
               <a class="dropdown-item" href="#" *ngFor="let attribute of attributes" (click)="selectedAttribute(attribute)">{{ attribute.name.it }}</a>
             </div>
           </div>
+
         </div>
-      </div>
+
     </div>
   </nav>
+
 </div>
