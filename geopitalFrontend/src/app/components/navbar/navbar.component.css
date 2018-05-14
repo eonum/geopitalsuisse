@@ -1,11 +1,12 @@
 .nav-bar{
-  height:200px;
+  height:235px;
   width:300px;
   position:relative;
   z-index:5000;
   float:right;
   margin-right:0px;
   margin-top:0px;
+  border: 1px solid #f1f1f1;
 }
 
 /* check-boxes */

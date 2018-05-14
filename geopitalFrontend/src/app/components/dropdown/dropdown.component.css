@@ -8,22 +8,23 @@
   margin-top:50px;
 
 } */
-.nav-bar{
-  height:200px;
+.nav-bar2{
+  height:130px;
   width:300px;
   position:relative;
   z-index:5000;
-  float:left;
-  margin-left:50px;
-  margin-top:50px;
+  float:right;
+  margin-right:0px;
+  margin-top:0px;
+  border: 1px solid #f1f1f1;
+}
+.collapse navbar-collapse{
+  position:relative;
 }
 .dropdown {
   position: relative;
   display: inline-block;
   z-index:5000;
-  margin-right:50px;
-  margin-left: 50px;
-  margin-top:50px;
 }
 .container {
   display: block;
