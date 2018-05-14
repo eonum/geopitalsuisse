@@ -20,7 +20,6 @@ function getCircleColour(d) {
     else
       return ('#d633ff');
   }
-  export default getCircleColour;
   
   /**
    * Gives markers different border color according to its type attribute
