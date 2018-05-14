@@ -4,12 +4,16 @@
  * and the circles are drawn with the data provided.
  */
 
+
+
 // variables that we need globally that are initialized in a function at one point
 var map;
+var allHospitalData; // initialized in function "initData"
 var div;
 var div2;
 var circles;
 var hospitalData = [];
+var data = [];
 var maxEtMedL = 0;
 var svg;
 
@@ -21,7 +25,10 @@ var svg;
  *        contains coordinates, general information and attributes of a hospital
  */
 var mapDrawer = function(data) {
-
+  // stores initially all data from all hospitals
+var data = data;
+console.log("data")
+console.log(data)
   //------------------------------------------------------
   // Initialize map and provided data
 
@@ -61,7 +68,7 @@ var mapDrawer = function(data) {
     .attr("class", "tooltip")
     .style("opacity", 0.0);
 
-    div2 = d3.select("body").append("div2")
+  div2 = d3.select("body").append("div2")
     .attr("class", "tooltip")
     .style("opacity", 0.0);
 
@@ -107,13 +114,7 @@ var mapDrawer = function(data) {
    circles
    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
-   .attr("r", function(d){
-    if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-      return 10*zoomLevel*zoomLevel/100;
-    }
-    else{
-      return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
-    }})
+   .attr("r", function(d) {return getCircleRadius(d)})
     
    calculateSVGBounds(hospitalData);
    d3.select('#circleSVG').style('visibility', 'visible');
@@ -124,7 +125,7 @@ var mapDrawer = function(data) {
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-var zoomLevel = map.getZoom();
+// var zoomLevel = map.getZoom();
   // project points using projectPoint() function
   circles = svg.selectAll('circle')
     .data(hospitalData)
@@ -133,20 +134,20 @@ var zoomLevel = map.getZoom();
     .style("fill-opacity", 0.7)
     // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
     .attr("r", function(d){
-      if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-        return 10*zoomLevel*zoomLevel/100;
-      }
-      else{
-        return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
-      }})
+      return getCircleRadius(d);
+    })
     .attr('fill', function(d) {
-      return returnColouredMarkers(d);
+      return getCircleColour(d);
     })
     .attr('stroke', function(d) {
-      return returnColouredBorders(d);
+      return getCircleBorderColour(d);
     })
-    .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-    .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+    .attr("cx", function(d) {
+      return projectPoint(d.x, d.y).x;
+    })
+    .attr("cy", function(d) {
+      return projectPoint(d.x, d.y).y;
+    })
     .on("mouseover", function(d) {
       div.transition()
         .duration(1)
@@ -160,15 +161,43 @@ var zoomLevel = map.getZoom();
         .duration(500)
         .style("opacity", 0);
     })
+    // .on("click", function(d) {
+    //   div2.transition()
+    //     .duration(1)
+    //     .style("opacity", .98);
+    //     console.log("d")
+    //     console.log(d)
+    //   div2.html(d.name + "\n" + d.EtMedL + "\n" + d.Typ)
+    //  });
     .on("click", function(d) {
-      div2.transition()
+      return showAttributes(d);
+     })
+};
+
+function showAttributes(clickedHospital) {
+  console.log(clickedHospital);
+  var hospitalAddress = getHospitalAddress(clickedHospital);
+  div2.transition()
         .duration(1)
         .style("opacity", .98);
-      div2	.html(d.name)
-    });
+  div2.html(clickedHospital.name + "\n" + hospitalAddress)
+}
 
+function getHospitalAddress(clickedHospital) {
+  var hospitalChar = allHospitalData.filter(function( obj ) {
+    return obj.name == clickedHospital.name;
+  })
+  console.log("clickedHospitalCharacters")
+  console.log(hospitalChar)
 
-};
+  var hospitalAddress = hospitalChar[0].address.street + " " 
+  + hospitalChar[0].address.streetNumber + "\n" 
+  + hospitalChar[0].address.plz + " "
+  + hospitalChar[0].address.city;
+  console.log("hospitalAddress:")
+  console.log(hospitalAddress)
+  return hospitalAddress;
+}
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -242,6 +271,9 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
  * @param type type of hospitals that should be displayed (improvement)
  */
 function initData(data, type){
+  // initially store all hospital data in global variable
+  allHospitalData = data;
+  
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), EtMedL attribute value
@@ -306,12 +338,12 @@ function initData(data, type){
 //------------------------------------------------------
 // outsourced functions
 
-/**
- * Gives markers different color according to its type attribute
- * @param d data which is displayed as a circle
- * @returns {string} color of the marker (according to type)
- */
-function returnColouredMarkers(d)  {
+// /**
+//  * Gives markers different color according to its type attribute
+//  * @param d data which is displayed as a circle
+//  * @returns {string} color of the marker (according to type)
+//  */
+function getCircleColour(d)  {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a');
   if (d.Typ == "K112") // Zentrumsspitäler
@@ -328,12 +360,12 @@ function returnColouredMarkers(d)  {
     return ('#d633ff');
 }
 
-/**
- * Gives markers different border color according to its type attribute
- * @param d data which is displayed as a circle
- * @returns {string} color of the border of the marker (according to type)
- */
-function returnColouredBorders(d) {
+// /**
+//  * Gives markers different border color according to its type attribute
+//  * @param d data which is displayed as a circle
+//  * @returns {string} color of the border of the marker (according to type)
+//  */
+function getCircleBorderColour(d) {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a')
   if (d.Typ == "K112") // Zentrumsspitäler
@@ -348,4 +380,14 @@ function returnColouredBorders(d) {
     return ('#772aa8')
   else
     return ('#d633ff');
+}
+
+function getCircleRadius(d) {
+  var zoomLevel = map.getZoom();
+  if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+    return 10*zoomLevel*zoomLevel/100;
+  }
+  else{
+    return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
+  }
 }
