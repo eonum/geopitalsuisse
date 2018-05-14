@@ -4,8 +4,6 @@
  * and the circles are drawn with the data provided.
  */
 
-
-
 // variables that we need globally that are initialized in a function at one point
 var map;
 var allHospitalData; // initialized in function "initData"
@@ -161,14 +159,6 @@ var initCircles = function(hospitalData){
         .duration(500)
         .style("opacity", 0);
     })
-    // .on("click", function(d) {
-    //   div2.transition()
-    //     .duration(1)
-    //     .style("opacity", .98);
-    //     console.log("d")
-    //     console.log(d)
-    //   div2.html(d.name + "\n" + d.EtMedL + "\n" + d.Typ)
-    //  });
     .on("click", function(d) {
       return showAttributes(d);
      })
@@ -180,7 +170,7 @@ function showAttributes(clickedHospital) {
   div2.transition()
         .duration(1)
         .style("opacity", .98);
-  div2.html(clickedHospital.name + "\n" + hospitalAddress)
+  div2.html(clickedHospital.name + "<br/>" + hospitalAddress)
 }
 
 function getHospitalAddress(clickedHospital) {
@@ -191,7 +181,7 @@ function getHospitalAddress(clickedHospital) {
   console.log(hospitalChar)
 
   var hospitalAddress = hospitalChar[0].address.street + " " 
-  + hospitalChar[0].address.streetNumber + "\n" 
+  + hospitalChar[0].address.streetNumber + "<br/>" 
   + hospitalChar[0].address.plz + " "
   + hospitalChar[0].address.city;
   console.log("hospitalAddress:")
