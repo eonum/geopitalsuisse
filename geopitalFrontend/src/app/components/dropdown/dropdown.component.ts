@@ -26,7 +26,7 @@ export class DropdownComponent implements OnInit {
         console.log(this.attributeName);
 
         for(let i in this.attributeName){
-          var attr = this.attributeName[i].name.de;
+          var attr = this.attributeName[i];
           this.attributes.push(attr);
         }
 
@@ -36,7 +36,7 @@ export class DropdownComponent implements OnInit {
   }
 
   selectedAttribute(attribute){
-    console.log("selected attribute" + attribute);
+    console.log("selected attribute" + attribute.code);
 
   }
 
