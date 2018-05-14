@@ -1,3 +1,5 @@
+// not yet working, TODO: import/export of functions
+
 
 /**
  * Gives markers different color according to its type attribute
