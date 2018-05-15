@@ -15,8 +15,10 @@ export class CharacteristicsComponent implements OnInit {
   private hospitalsList: Hospital[];
   private attributes: any[] = [];
   private coordinates: any[] = [];
-  private charHospital5: any = [];
+  //temporary data with hospital 5 (Inselspital) for dummy-steckbrief
   private hospital5: any = [];
+  private addressHospital5: any = [];
+  private charHospital5: any = [];
 
   constructor(private hospitalService: HospitalService) {
 
@@ -29,8 +31,10 @@ export class CharacteristicsComponent implements OnInit {
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
 
-        // temp variable for dummy list of hospital 5 (Inselspital)
+        // temp variable for dummy steckbrief with hospital 5 (Inselspital)
         this.hospital5 = this.hospitalsList[5];
+        // temp variable for dummy steckbrief with hospital 5 (Inselspital)
+        this.addressHospital5 = this.hospitalsList[5].address;
         // store all attribute-names (de) and values from hospitalList[5] in array
         this.charHospital5 = this.hospitalsList[5].attributes;
         
