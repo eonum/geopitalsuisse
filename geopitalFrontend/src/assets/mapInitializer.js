@@ -12,7 +12,9 @@ var div2;
 var circles;
 var hospitalData = [];
 var data = [];
+var allAttr = [];
 var maxEtMedL = 0;
+var maxAttr = 0;
 var svg;
 
 /**
@@ -23,10 +25,6 @@ var svg;
  *        contains coordinates, general information and attributes of a hospital
  */
 var mapDrawer = function(data) {
-  // stores initially all data from all hospitals
-  var data = data;
-  console.log("data")
-  console.log(data)
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -162,15 +160,11 @@ var initCircles = function(hospitalData){
     })
     .on("click", function(d) {
       // return showAttributes(d);
-      return callCharComponent(d);
      })
 };
 
-function callCharComponent(clickedHospital) {
-console.log("---------------------------------")
-}
-
-
+//------------------------------------------------
+// functions for showing characteristics with tooltip (will probably be removed)
 function showAttributes(clickedHospital) {
   console.log(clickedHospital);
   var hospitalAddress = getHospitalAddress(clickedHospital);
@@ -195,6 +189,7 @@ function getHospitalAddress(clickedHospital) {
   console.log(hospitalAddress)
   return hospitalAddress;
 }
+//------------------------------------------------
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -262,6 +257,21 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
 };
 
 /**
+ * Updates radius of circles according selected numerical attribute
+ * @param selectedAttr selected numerical attribute
+ */
+var updateCircleRadius = function(selectedAttr) {
+  console.log("attribute in mapinitializer")
+  console.log(selectedAttr)
+  // before calculation of the new radius we need to remove the circles
+  //removeCircles();
+
+  // we calculate the new radius for the circles
+  calculateNewRadius(selectedAttr);
+
+}
+
+/**
  * Stores data in array for displaying it. Builds up array with the important information.
  * TODO: Improve function --> make it possible to select which attributes should be store in array (except for coordinates and name)
  * @param data data from backend (JSON)
@@ -274,7 +284,7 @@ function initData(data, type){
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), EtMedL attribute value
-    // and type of each hospita in a variable to save in array
+    // and type of each hospital in a variable to save in array
     if(data[i].coordinates != null && data[i].coordinates.latitude!=null && data[i].coordinates.longitude!=null){
       var hospitalName = data[i].name;
       var latitude = data[i].coordinates.latitude;
@@ -378,7 +388,7 @@ function getCircleBorderColour(d) {
   else
     return ('#d633ff');
 }
-
+// default size of circles referred to attribute "EtMedL"
 function getCircleRadius(d) {
   var zoomLevel = map.getZoom();
   if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
@@ -387,4 +397,39 @@ function getCircleRadius(d) {
   else{
     return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
   }
+}
+
+
+function calculateNewRadius(selectedAttr) {
+  console.log("selected attribute in function:")
+  console.log(selectedAttr)
+
+    // get attributes of all hospitals
+    for (var i=0; i<allHospitalData.length; i++) {
+      var attr = allHospitalData[i].attributes;
+      this.allAttr.push(attr);
+    }
+    console.log("allhospitaldata attributes in function:")
+    console.log(allAttr)
+
+    // filter selected attribute and saves it in variable
+    
+    //approach 1:
+    // let result = allAttr.filter(val => {
+    //   return val === selectedAttr.code;
+    // });
+
+    //approach 2:
+    // var sizeResult = allAttr.filter(function( obj ) {
+    //   return obj.code == selectedAttr.code;
+    // });
+    // console.log("filtered attr:")
+    // console.log(result)
+    // saves value of filtered attribute in variable
+    // if(sizeResult[0]!=null && sizeResult[0].value!=null){
+    //   var sizeAttribute = Number(sizeResult[0].value);
+    // }
+    // console.log("filtered in function:")
+    // console.log(sizeAttribute)
+
 }
