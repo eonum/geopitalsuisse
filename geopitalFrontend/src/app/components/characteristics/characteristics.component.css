@@ -1,5 +1,5 @@
 #char-container{
-    height:270px;
+    height:250px;
     width:300px;
     position:relative;
     z-index:4000;
@@ -10,30 +10,8 @@
   }
   
 #characteristics{
-  /* relative to height of char-container */
-    max-height:300px;
-}
-  
-/* .dropdown {
-    position: relative;
-    display: inline-block;
-    z-index:5000;
-} */
-  
-.container {
-    display: block;
-    position: relative;
-    margin-bottom: 0px;
-    cursor: pointer;
-    font-size: 16px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    padding-top:0px;
-    padding-left: 0px;
-    padding-right: 0px;
-    
+  /* relative to height of char-container (?)*/
+    max-height:250px;
 }
 
 .table-wrapper {
@@ -46,9 +24,10 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  padding-top:0px;
+  /* padding-top:0px;
+  padding-bottom: 0px;
   padding-left: 0px;
-  padding-right: 0px;
+  padding-right: 0px; */
   max-height:150px;
   overflow-y:scroll;
   -ms-overflow-style: -ms-autohiding-scrollbar;

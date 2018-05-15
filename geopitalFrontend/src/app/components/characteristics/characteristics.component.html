@@ -1,10 +1,9 @@
 <div class="nav-bar-characteristics">
   <nav id="char-container" class="navbar navbar-expand-lg navbar-dark bg-light">
   
-  <!-- <div class="collapse navbar-collapse" id="navbarColor01"> -->
     <div id="characteristics">
-      <!-- <div class="container"> -->
-          <h4>{{ hospitalsList[0].name }}</h4>
+       <!-- temporary titel for dummy-steckbrief with hospital5 (Inselspital) -->
+          <h4>{{ hospital5.name }}</h4>
           <div class="table-wrapper">
           <table class="table table-responsive-md">
             <thead class="mdb-color lighten-4">
@@ -17,35 +16,18 @@
             <tbody>
               <tr>
                 <td>Adresse:</td>
-                <td>{{ hospitalsList[0].address.street }} {{ hospitalsList[0].address.streetNumber }} <br>
-                    {{ hospitalsList[0].address.plz }} {{ hospitalsList[0].address.city }}</td>
-                
+                <!-- temporary address for dummy-steckbrief with hospital5 (Inselspital) -->
+                <td>{{ hospital5.address.street }} {{ hospital5.address.streetNumber }} <br>
+                    {{ hospital5.address.plz }} {{ hospital5.address.city }}</td>
               </tr>
-              <tr>
-                <td>{{ hospitalsList[0].attributes[0].name.de}}:</td>
-                <td>{{ hospitalsList[0].attributes[0].value}}</td>
-                
-              </tr>
-              <tr>
-                <td>July</td>
-                <td>Dooley</td>
-                
-              </tr>
-              <tr>
-                  <td>July</td>
-                  <td>Dooley</td>
-                  
+             <!-- temporary characteristics for dummy-steckbrief with hospital5 (Inselspital) -->
+              <tr *ngFor="let character5 of charHospital5">
+                  <td >{{ character5.name.de }}:</td>
+                  <td> {{ character5.value }}</td>
                 </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    
-                  </tr>
             </tbody>
           </table>
         </div>
-        <!-- </div> -->
-
   </div>
 </nav>
 </div>

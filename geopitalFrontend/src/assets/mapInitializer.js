@@ -162,8 +162,14 @@ var initCircles = function(hospitalData){
     })
     .on("click", function(d) {
       // return showAttributes(d);
+      return callCharComponent(d);
      })
 };
+
+function callCharComponent(clickedHospital) {
+console.log("---------------------------------")
+}
+
 
 function showAttributes(clickedHospital) {
   console.log(clickedHospital);
