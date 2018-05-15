@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { HospitalService } from '../../services/hospital.service';
 import { Hospital } from '../../models/hospital.model';
+declare function showCharacteristics();
 
 
 @Component({
@@ -28,20 +29,13 @@ export class CharacteristicsComponent implements OnInit {
         for(let i in this.hospitalsList){
             var coor = this.hospitalsList[i].coordinates;
             this.coordinates.push(coor);
-            console.log(this.coordinates)
         }
+        console.log("hospitals in charComponent")
+        console.log(this.hospitalsList)
+        console.log("coordinates in charComponent")
+        console.log(this.coordinates)
       });
-
-
   }
 
-showCharacteristics(Coordinates): void {
-  console.log("function called")
-}
-
-
-showHp(): void {
-console.log(this.characteristicsList);
-}
-
+  
 }
