@@ -161,7 +161,7 @@ var initCircles = function(hospitalData){
         .style("opacity", 0);
     })
     .on("click", function(d) {
-      return showAttributes(d);
+      // return showAttributes(d);
      })
 };
 
