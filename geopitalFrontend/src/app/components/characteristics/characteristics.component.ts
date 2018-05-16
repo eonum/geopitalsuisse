@@ -18,7 +18,7 @@ export class CharacteristicsComponent implements OnInit {
   constructor(private hospitalService: HospitalService) {
 
   }
- 
+
   ngOnInit() {
     this.hospitalService.getAll()
       .subscribe(hospitals => {
@@ -26,7 +26,7 @@ export class CharacteristicsComponent implements OnInit {
 
         // store name of attributes (de, it, fr) in array to display in dropdown
         for(let i in this.hospitalsList){
-            var coor = this.hospitalsList[i].coordinates;
+            var coor = [{latitude: this.hospitalsList[i].latitude, longitude: this.hospitalsList[i].longitude}] ;
             this.coordinates.push(coor);
             console.log(this.coordinates)
         }

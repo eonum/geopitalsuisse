@@ -25,9 +25,10 @@ export class HospitalService {
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/all/data')
+    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospitals')
     .map(res => {
-      return res['data'] as Hospital[];
+      return res as Hospital[]
+
     })
   }
 
@@ -36,9 +37,9 @@ export class HospitalService {
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getAttributes(): Observable<Attributes[]> {
-    return this.http.get<Attributes[]>('http://localhost:3000/' + 'api/attributes')
+    return this.http.get<Attributes[]>('http://localhost:3000/' + 'api/attributeTypes')
       .map(res => {
-        return res['data'] as Attributes[];
+        return res['attribute_types_string'] as Attributes[];
       })
   }
 

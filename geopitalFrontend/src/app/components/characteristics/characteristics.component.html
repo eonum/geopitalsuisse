@@ -14,24 +14,23 @@
                 <th></th>
                 <th></th>
               </tr>
-               
+
               </thead>
             <tbody>
               <tr>
                 <td>Adresse:</td>
-                <td>{{ hospitalsList[0].address.street }} {{ hospitalsList[0].address.streetNumber }} <br>
-                    {{ hospitalsList[0].address.plz }} {{ hospitalsList[0].address.city }}</td>
-                
+                <td>{{ hospitalsList[0].streetAndNumber}} <br>
+                    {{ hospitalsList[0].plzAndCity }}</td>
+
               </tr>
               <tr>
-                <td>{{ hospitalsList[0].attributes[0].name.de}}:</td>
-                <td>{{ hospitalsList[0].attributes[0].value}}</td>
-                
+                <td>{{ hospitalsList[0].hospital_attributes[0].value}}</td>
+
               </tr>
               <tr>
                 <td>July</td>
                 <td>Dooley</td>
-                
+
               </tr>
             </tbody>
           </table>

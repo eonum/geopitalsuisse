@@ -23,10 +23,8 @@ export class DropdownComponent implements OnInit {
       .subscribe(attributes => {
         this.attributeName = attributes;
 
-        console.log(this.attributeName);
-
         for(let i in this.attributeName){
-          var attr = this.attributeName[i].name.de;
+          var attr = this.attributeName[i].nameDE;
           this.attributes.push(attr);
         }
 

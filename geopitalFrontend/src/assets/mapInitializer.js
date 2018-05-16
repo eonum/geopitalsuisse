@@ -114,7 +114,7 @@ var mapDrawer = function(data) {
     else{
       return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
     }})
-    
+
    calculateSVGBounds(hospitalData);
    d3.select('#circleSVG').style('visibility', 'visible');
   });
@@ -246,13 +246,13 @@ function initData(data, type){
 
     // stores name, coordinates (latitude, longitude), EtMedL attribute value
     // and type of each hospita in a variable to save in array
-    if(data[i].coordinates != null && data[i].coordinates.latitude!=null && data[i].coordinates.longitude!=null){
+    if(data[i].latitude!=null && data[i].longitude!=null){
       var hospitalName = data[i].name;
-      var latitude = data[i].coordinates.latitude;
-      var longitude = data[i].coordinates.longitude;
+      var latitude = data[i].latitude;
+      var longitude = data[i].longitude;
 
       // access attributes of hospital
-      var attr = data[i].attributes;
+      var attr = data[i].hospital_attributes;
 
       // filters EtMedL attribute and saves it in variable
       var sizeResult = attr.filter(function( obj ) {
