@@ -42,6 +42,6 @@ export class DropdownComponent implements OnInit {
    * @param attribute selected attribute from dropdown
    */
   selectedAttribute(attribute){
-    console.log("selected attribute" + attribute.code);
+    console.log("selected attribute" + attribute.nameDE);
   }
 }

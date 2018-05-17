@@ -27,7 +27,6 @@ export class HospitalComponent implements OnInit {
   ngOnInit() {
     this.hospitalService.getDummyData()
       .subscribe(hospitals => {
-        console.log(hospitals);
         this.hospitalList = hospitals;
       });
   }

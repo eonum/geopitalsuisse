@@ -16,9 +16,13 @@
             <tbody>
               <tr>
                 <td>Adresse:</td>
-                <!-- temporary address for dummy-steckbrief with hospital5 (Inselspital) -->
-                <td id="address">{{ addressHospital5.street }} {{ addressHospital5.streetNumber }} <br>
-                    {{ addressHospital5.plz }} {{ addressHospital5.city }}</td>
+                <td>{{ hospitalsList[0].streetAndNumber}} <br>
+                    {{ hospitalsList[0].plzAndCity }}</td>
+
+              </tr>
+              <tr>
+                <td>{{ hospitalsList[0].hospital_attributes[0].value}}</td>
+
               </tr>
              <!-- temporary characteristics for dummy-steckbrief with hospital5 (Inselspital) -->
               <tr *ngFor="let character5 of charHospital5">
