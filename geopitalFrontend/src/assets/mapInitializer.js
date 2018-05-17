@@ -167,7 +167,12 @@ var initCircles = function(hospitalData){
 };
 
 function callCharComponent(clickedHospital) {
-  document.getElementById('testaddress').innerHTML = "test";
+  console.log("clickedHospital");
+  console.log(clickedHospital);
+  //document.getElementById('testaddress').innerHTML = "test";
+  document.getElementById('testName').innerHTML = clickedHospital.name;
+
+  
 }
 
 

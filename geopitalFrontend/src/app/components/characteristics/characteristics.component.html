@@ -3,7 +3,7 @@
 
     <div id="characteristics">
        <!-- temporary titel for dummy-steckbrief with hospital5 (Inselspital) -->
-          <h4>{{ hospital5.name }}</h4>
+          <h4 id="testName">{{ hospital5.name }}</h4>
           <div class="table-wrapper">
           <table class="table table-responsive-md">
             <thead class="mdb-color lighten-4">
@@ -17,12 +17,12 @@
               <tr>
                 <td>Adresse:</td>
                 <!-- temporary address for dummy-steckbrief with hospital5 (Inselspital) -->
-                <td id="testaddress">{{ addressHospital5.street }} {{ addressHospital5.streetNumber }} <br>
+                <td id="address">{{ addressHospital5.street }} {{ addressHospital5.streetNumber }} <br>
                     {{ addressHospital5.plz }} {{ addressHospital5.city }}</td>
               </tr>
              <!-- temporary characteristics for dummy-steckbrief with hospital5 (Inselspital) -->
               <tr *ngFor="let character5 of charHospital5">
-                  <td >{{ character5.name.de }}:</td>
+                  <td id="testName">{{ character5.name.de }}:</td>
                   <td> {{ character5.value }}</td>
                 </tr>
             </tbody>
