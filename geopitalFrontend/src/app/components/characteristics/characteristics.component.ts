@@ -30,11 +30,10 @@ export class CharacteristicsComponent implements OnInit {
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-
         // temp variable for dummy steckbrief with hospital 5 (Inselspital)
         this.hospital5 = this.hospitalsList[5];
         // temp variable for dummy steckbrief with hospital 5 (Inselspital)
-        this.addressHospital5 = this.hospitalsList[5].streetAndNumber;
+        this.addressHospital5 = this.hospitalsList[5];
         // store all attribute-names (de) and values from hospitalList[5] in array
         this.charHospital5 = this.hospitalsList[5].hospital_attributes;
 

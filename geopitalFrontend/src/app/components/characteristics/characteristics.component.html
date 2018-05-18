@@ -4,7 +4,7 @@
     <div id="characteristics">
        <!-- temporary titel for dummy-steckbrief with hospital5 (Inselspital) -->
           <h4 id="testName">{{ hospital5.name }}</h4>
-          <div class="table-wrapper">
+          <div class="table-wrapper" ng-If = "hospitalsList?">
           <table class="table table-responsive-md">
             <thead class="mdb-color lighten-4">
               <tr>
@@ -16,17 +16,14 @@
             <tbody>
               <tr>
                 <td>Adresse:</td>
-                <td>{{ hospitalsList[0].streetAndNumber}} <br>
-                    {{ hospitalsList[0].plzAndCity }}</td>
+                <td>{{ addressHospital5.streetAndNumber}} <br>
+                    {{ addressHospital5.plzAndCity }}</td>
 
               </tr>
-              <tr>
-                <td>{{ hospitalsList[0].hospital_attributes[0].value}}</td>
 
-              </tr>
              <!-- temporary characteristics for dummy-steckbrief with hospital5 (Inselspital) -->
               <tr *ngFor="let character5 of charHospital5">
-                  <td id="testName">{{ character5.name.de }}:</td>
+                  <td id="testName">{{ character5.nameDE }}:</td>
                   <td> {{ character5.value }}</td>
                 </tr>
             </tbody>
