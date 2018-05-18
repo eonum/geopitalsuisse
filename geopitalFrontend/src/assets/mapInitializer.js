@@ -6,12 +6,11 @@
 
 // variables that we need globally that are initialized in a function at one point
 var map;
-var allHospitalData; // initialized in function "initData"
+var allHospitalData; // initialized in function mapDrawer
 var div;
 var div2;
 var circles;
 var hospitalData = [];
-var data = [];
 var maxEtMedL = 0;
 var svg;
 
@@ -23,10 +22,11 @@ var svg;
  *        contains coordinates, general information and attributes of a hospital
  */
 var mapDrawer = function(data) {
+
   // stores initially all data from all hospitals
-  var data = data;
+  allHospitalData = data;
   console.log("data")
-  console.log(data)
+  console.log(allHospitalData)
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -131,7 +131,6 @@ var initCircles = function(hospitalData){
     .enter()
     .append('circle')
     .style("fill-opacity", 0.7)
-    // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
     .attr("r", function(d){
       return getCircleRadius(d);
     })
@@ -148,17 +147,10 @@ var initCircles = function(hospitalData){
       return projectPoint(d.x, d.y).y;
     })
     .on("mouseover", function(d) {
-      div.transition()
-        .duration(1)
-        .style("opacity", .98);
-      div.html(d.name)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 0) + "px");
+      return showTooltip(d);
     })
     .on("mouseout", function(d) {
-      div.transition()
-        .duration(500)
-        .style("opacity", 0);
+      return removeTooltip(d);
     })
     .on("click", function(d) {
       // return showAttributes(d);
@@ -167,39 +159,73 @@ var initCircles = function(hospitalData){
 };
 
 function callCharComponent(clickedHospital) {
-  console.log("clickedHospital");
-  console.log(clickedHospital);
-  //document.getElementById('testaddress').innerHTML = "test";
-  document.getElementById('testName').innerHTML = clickedHospital.name;
+  // console.log("clickedHospital");
+  // console.log(clickedHospital);
+  var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
+  // console.log("data for clickedHospital");
+  // console.log(clickedHospitalData);
+  // console.log("data-code-array")
+  // console.log(clickedHospitalData.hospital_attributes[0].code)
+  // console.log(clickedHospitalData.hospital_attributes[1].code)
+  document.getElementById('hospitalName').innerHTML = clickedHospital.name;
+  // document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
+  // + clickedHospitalData.zipCodeAndCity;
 
+  // temporary hardcoded version, to be exchanged with loop (see below)
+  document.getElementById("hospitalAttrCode0").innerHTML = clickedHospitalData.hospital_attributes[0].code;
+  document.getElementById("hospitalAttrValue0").innerHTML = clickedHospitalData.hospital_attributes[0].value;
+  document.getElementById("hospitalAttrCode1").innerHTML = clickedHospitalData.hospital_attributes[1].code;
+  document.getElementById("hospitalAttrValue1").innerHTML = clickedHospitalData.hospital_attributes[1].value;
+  document.getElementById("hospitalAttrCode2").innerHTML = clickedHospitalData.hospital_attributes[2].code;
+  document.getElementById("hospitalAttrValue2").innerHTML = clickedHospitalData.hospital_attributes[2].value;
+  document.getElementById("hospitalAttrCode3").innerHTML = clickedHospitalData.hospital_attributes[3].code;
+  document.getElementById("hospitalAttrValue3").innerHTML = clickedHospitalData.hospital_attributes[3].value;
+
+  /* under construction: loop for all attributes */
+  //var hospitalAttIds = builIdArray(clickedHospitalData.hospital_attributes);
+  // console.log("hospitalattr for loop");
+  // console.log(hospitalAttIds);
+
+  // for(var i=0; i<2; i++) {
+  //   // pick the first element of code-names for loop through getElementById
+  //   var hospitalAttrCode = hospitalAttIds.slice(0,1);  
+  //   console.log("hospitalattrcode i: ")
+  //   console.log(hospitalAttrCode);
+ 
+    //var hospitalAttrCode = "hospitalAttrCode";
+    // var hospitalAttrValue = "hospitalAttrValue";
+    // document.getElementById(hospitalAttrCode).innerHTML = clickedHospitalData.hospital_attributes[i].code;
+    // document.getElementById(hospitalAttrValue).innerHTML = clickedHospitalData.hospital_attributes[0].value;
+    // // remove first element of code-names
+    // hospitalAttIds.shift();
+
+  // }
+  
 
 }
 
-
-function showAttributes(clickedHospital) {
-  console.log(clickedHospital);
-  var hospitalAddress = getHospitalAddress(clickedHospital);
-  div2.transition()
-        .duration(1)
-        .style("opacity", .98);
-  div2.html(clickedHospital.name + "<br/>" + hospitalAddress)
-}
-
-function getHospitalAddress(clickedHospital) {
-  var hospitalChar = allHospitalData.filter(function( obj ) {
+// returns an array with all data of the clicked hospital
+function getAllDataForClickedHospital(clickedHospital) {
+  var attr = allHospitalData;
+  // finds array according to clickedHospital
+  var attrResult = attr.find(function( obj ) {
     return obj.name == clickedHospital.name;
-  })
-  console.log("clickedHospitalCharacters")
-  console.log(hospitalChar)
-
-  var hospitalAddress = hospitalChar[0].address.street + " "
-  + hospitalChar[0].address.streetNumber + "<br/>"
-  + hospitalChar[0].address.plz + " "
-  + hospitalChar[0].address.city;
-  console.log("hospitalAddress:")
-  console.log(hospitalAddress)
-  return hospitalAddress;
+  });
+  return attrResult;
 }
+
+// returns an array with an id-array for the loop through getElementById
+function builIdArray(hospitalAttributes) {
+  var idArray = [];
+  var count;
+  for (var i=0; i<hospitalAttributes.length; i++) {
+    count = i;
+    var id = 'hospitalAttrCode' + i;
+    idArray.push(id);
+  }
+  return idArray;
+}
+
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -273,8 +299,6 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
  * @param type type of hospitals that should be displayed (improvement)
  */
 function initData(data, type){
-  // initially store all hospital data in global variable
-  allHospitalData = data;
 
   for (var i = 0; i < data.length; i++){
 
@@ -338,7 +362,22 @@ function initData(data, type){
 
 
 //------------------------------------------------------
-// outsourced functions
+// outsourced functions for initCircles
+
+// /**
+//  * Gives markers different radius according to the numerical attribute
+//  * @param d data which is displayed as a circle
+//  * @returns {number} radius of the marker (according numerical attribute)
+//  */
+function getCircleRadius(d) {
+  var zoomLevel = map.getZoom();
+  if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+    return 10*zoomLevel*zoomLevel/100;
+  }
+  else{
+    return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
+  }
+}
 
 // /**
 //  * Gives markers different color according to its type attribute
@@ -384,12 +423,26 @@ function getCircleBorderColour(d) {
     return ('#d633ff');
 }
 
-function getCircleRadius(d) {
-  var zoomLevel = map.getZoom();
-  if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-    return 10*zoomLevel*zoomLevel/100;
-  }
-  else{
-    return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
-  }
+
+// /**
+//  * Displays tooltip when hovering over a marker
+//  * @param d data which is displayed as a circle
+//  */
+function showTooltip(d) {
+  div.transition()
+        .duration(1)
+        .style("opacity", .98);
+      div.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 0) + "px");
+}
+
+// /**
+//  * Let's the tooltip disappear when hovering out of a marker
+//  * @param d data which is displayed as a circle
+//  */
+function removeTooltip(d) {
+  div.transition()
+        .duration(500)
+        .style("opacity", 0);
 }
