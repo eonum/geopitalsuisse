@@ -2,6 +2,7 @@ import {Component, OnInit } from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
 import {Attributes} from "../../models/attributes.model";
+declare function updateCircles(attribute): any;;
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.
@@ -17,7 +18,7 @@ export class DropdownComponent implements OnInit {
   private hospitalsList: Hospital[];
   private attributeName : Attributes[];
   private attributes: any[] = [];
-
+  private attribute: any;
 
   constructor(private hospitalService: HospitalService) {  }
 
@@ -42,6 +43,8 @@ export class DropdownComponent implements OnInit {
    * @param attribute selected attribute from dropdown
    */
   selectedAttribute(attribute){
-    console.log("selected attribute" + attribute.code);
+    console.log("selected attribute: " + attribute.code);
+    updateCircles(attribute);
   }
+
 }

@@ -11,7 +11,8 @@ var div;
 var div2;
 var circles;
 var hospitalData = [];
-var data = [];
+// var initialNumAttr = "EtMedL"
+// var currentNumAttr;
 var maxEtMedL = 0;
 var svg;
 
@@ -23,10 +24,9 @@ var svg;
  *        contains coordinates, general information and attributes of a hospital
  */
 var mapDrawer = function(data) {
-  // stores initially all data from all hospitals
-  var data = data;
-  console.log("data")
-  console.log(data)
+
+  // initially store all hospital data in global variable
+  allHospitalData = data;
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -72,7 +72,8 @@ var mapDrawer = function(data) {
     .style("opacity", 0.0);
 
   // project points using projectPoint() function
-
+  
+  // initial circles with all data and initial size according numerical attribute
   initCircles(hospitalData)
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
@@ -124,6 +125,8 @@ var mapDrawer = function(data) {
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
+  console.log("hospitaldata in initcircles")
+  console.log(hospitalData)
   // var zoomLevel = map.getZoom();
   // project points using projectPoint() function
   circles = svg.selectAll('circle')
@@ -131,7 +134,6 @@ var initCircles = function(hospitalData){
     .enter()
     .append('circle')
     .style("fill-opacity", 0.7)
-    // calculates radius of circles dynamically by the attribute "EtMedL" (default visualisation)
     .attr("r", function(d){
       return getCircleRadius(d);
     })
@@ -148,17 +150,10 @@ var initCircles = function(hospitalData){
       return projectPoint(d.x, d.y).y;
     })
     .on("mouseover", function(d) {
-      div.transition()
-        .duration(1)
-        .style("opacity", .98);
-      div.html(d.name)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 0) + "px");
+      return showTooltip(d);
     })
     .on("mouseout", function(d) {
-      div.transition()
-        .duration(500)
-        .style("opacity", 0);
+      return removeTooltip();
     })
     .on("click", function(d) {
       // return showAttributes(d);
@@ -167,13 +162,54 @@ var initCircles = function(hospitalData){
 };
 
 function callCharComponent(clickedHospital) {
-  console.log("clickedHospital");
-  console.log(clickedHospital);
-  //document.getElementById('testaddress').innerHTML = "test";
-  document.getElementById('testName').innerHTML = clickedHospital.name;
+  // get all data according to clicked hospital
+  var clickedHospitalData = getAllAttrForClickedHospital(clickedHospital);
+  console.log("clickedhospitaldata")
+  console.log(clickedHospitalData)
 
-  
+  document.getElementById('testName').innerHTML = clickedHospitalData.name;
+  //document.getElementById('testAddress').innerHTML = clickedHospitalData.address.city;
+ //getElementsByIds("testName testAddress", clickedHospital); 
 }
+function getElementsByIds(ids, clickedHospital) {
+  var idList = ids.split(" ");
+  console.log("idList")
+  console.log(idList);
+  var results = [], item;
+  for (var i=0; i<idList.length; i++) {
+    item = document.getElementById(idList[i]).innerHTML = getCharText(idList[i], clickedHospital);
+    if (item) {
+      results.push(item);
+    }
+  }
+  return results;
+}
+
+function getCharText(id, clickedHospital) {
+  console.log("id in textfunction")
+  console.log(id);
+  console.log("clickedhospital in textfunction")
+  console.log(clickedHospital)
+  if (id == "testName") {
+    return clickedHospital.name;
+  } else {
+    return clickedHospital.Typ;
+  }
+  // if (id == "testAddress") {
+  //   return "TESTADDRESS";
+  // }
+}
+
+// returns an array with all data of clicked hospital
+function getAllAttrForClickedHospital(clickedhospital) {
+  var attr = allHospitalData;
+  // finds array according to clickedHospital
+  var attrResult = attr.find(function( obj ) {
+    return obj.name == clickedhospital.name;
+  });
+  return attrResult;
+}
+
 
 
 function showAttributes(clickedHospital) {
@@ -189,15 +225,10 @@ function getHospitalAddress(clickedHospital) {
   var hospitalChar = allHospitalData.filter(function( obj ) {
     return obj.name == clickedHospital.name;
   })
-  console.log("clickedHospitalCharacters")
-  console.log(hospitalChar)
-
   var hospitalAddress = hospitalChar[0].address.street + " "
   + hospitalChar[0].address.streetNumber + "<br/>"
   + hospitalChar[0].address.plz + " "
   + hospitalChar[0].address.city;
-  console.log("hospitalAddress:")
-  console.log(hospitalAddress)
   return hospitalAddress;
 }
 
@@ -262,7 +293,7 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
     initData(data, ["K231", "K232", "K233", "K234", "K235"]);
   }
 
-  // draw circles with the data that is build above
+  // draw circles with the data that is build above and the current circle radius
   initCircles(hospitalData);
 };
 
@@ -272,14 +303,13 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
  * @param data data from backend (JSON)
  * @param type type of hospitals that should be displayed (improvement)
  */
-function initData(data, type){
-  // initially store all hospital data in global variable
-  allHospitalData = data;
+
+  function initData(data, type){
 
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), EtMedL attribute value
-    // and type of each hospita in a variable to save in array
+    // and type of each hospital in a variable to save in array
     if(data[i].coordinates != null && data[i].coordinates.latitude!=null && data[i].coordinates.longitude!=null){
       var hospitalName = data[i].name;
       var latitude = data[i].coordinates.latitude;
@@ -337,14 +367,76 @@ function initData(data, type){
 }
 
 
-//------------------------------------------------------
-// outsourced functions
+var updateCircles = function(numericalAttribute) {
+  currentNumAttr = numericalAttribute;
+  console.log("attribute in mapinit");
+  console.log(currentNumAttr);
+  // removeCircles();
 
-// /**
-//  * Gives markers different color according to its type attribute
-//  * @param d data which is displayed as a circle
-//  * @returns {string} color of the marker (according to type)
-//  */
+  // var newHospitalData = [];
+  // for (var i = 0; i < allHospitalData.length; i++){
+
+  //   // stores name, coordinates (latitude, longitude), current attribute value
+  //   // and type of each hospital in a variable to save in array
+  //   if(allHospitalData[i].coordinates != null && allHospitalData[i].coordinates.latitude!=null 
+  //     && allHospitalData[i].coordinates.longitude!=null){
+  //     var hospitalName = allHospitalData[i].name;
+  //     var latitude = allHospitalData[i].coordinates.latitude;
+  //     var longitude = allHospitalData[i].coordinates.longitude;
+
+  //     // access attributes of hospital
+  //     var attr = allHospitalData[i].attributes;
+
+  //     // filters current attribute and saves it in variable
+  //     var sizeResult = attr.filter(function( obj ) {
+  //       return obj.code == currentNumAttr.code;
+  //     });
+  //     // saves value of current attribute in variable
+  //     if(sizeResult[0]!=null && sizeResult[0].value!=null){
+  //       var sizeAttribute = Number(sizeResult[0].value);
+  //     }
+
+  //     var newCoordinates = {x: longitude, y: latitude, name:hospitalName, AnzStand: sizeAttribute};
+  //     newHospitalData.push(newCoordinates);
+  //   }
+  //   console.log("hospitaldata after loop")
+  //   console.log(newHospitalData)
+
+  //   initCircles(newHospitalData)
+  // }
+}
+
+
+
+//------------------------------------------------------
+// outsourced functions from initCircles
+
+/**
+ * Gives markers different radius sizes according to its default numerical attribute (EtMedL)
+ * @param d data which is displayed as a circle
+ * @returns {number} default radius of the circles according to the attribute "EtMedL"
+ */
+function getCircleRadius(d) {
+  var zoomLevel = map.getZoom();
+  if(d.EtMedL!=null) {
+    if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+      return 10*zoomLevel*zoomLevel/100;
+    }
+    else{
+      return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
+    }
+  }
+  if(d.AnzStand!=null) {
+    return d.AnzStand*zoomLevel*zoomLevel/100+2;
+  }
+  
+}
+
+/**
+ * Gives markers different color according to its type attribute
+ * @param d data which is displayed as a circle
+ * @returns {string} color of the marker (according to type)
+ */
 function getCircleColour(d)  {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a');
@@ -362,11 +454,11 @@ function getCircleColour(d)  {
     return ('#d633ff');
 }
 
-// /**
-//  * Gives markers different border color according to its type attribute
-//  * @param d data which is displayed as a circle
-//  * @returns {string} color of the border of the marker (according to type)
-//  */
+/**
+ * Gives markers different border color according to its type attribute
+ * @param d data which is displayed as a circle
+ * @returns {string} color of the border of the marker (according to type)
+ */
 function getCircleBorderColour(d) {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a')
@@ -384,12 +476,25 @@ function getCircleBorderColour(d) {
     return ('#d633ff');
 }
 
-function getCircleRadius(d) {
-  var zoomLevel = map.getZoom();
-  if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
-    return 10*zoomLevel*zoomLevel/100;
-  }
-  else{
-    return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
-  }
+
+/**
+ * Let's appear a tooltip with the name of the hospital, when hovering over a marker
+ * @param d data which is displayed as a circle
+ */
+function showTooltip(d) {
+  div.transition()
+        .duration(1)
+        .style("opacity", .98);
+      div.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 0) + "px");
+}
+/**
+ * Let's disappear a tooltip with the name of the hospital, when hovering out of a marker
+ * @param d data which is displayed as a circle
+ */
+function removeTooltip() {
+  div.transition()
+        .duration(500)
+        .style("opacity", 0);
 }
