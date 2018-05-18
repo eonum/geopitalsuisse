@@ -18,6 +18,7 @@
   display: block;
   position: relative;
   margin-bottom: 0px;
+  margin-right: 0px;
   cursor: pointer;
   font-size: 16px;
   -webkit-user-select: none;

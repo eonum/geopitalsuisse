@@ -12,6 +12,7 @@ var div2;
 var circles;
 var hospitalData = [];
 var maxEtMedL = 0;
+var currentNumAttribute;
 var svg;
 
 /**
@@ -153,55 +154,60 @@ var initCircles = function(hospitalData){
       return removeTooltip(d);
     })
     .on("click", function(d) {
-      // return showAttributes(d);
       return callCharComponent(d);
      })
 };
 
+// support the CharacteristicsComponent with necessary data to show in characteristics(Steckbrief)
 function callCharComponent(clickedHospital) {
   // console.log("clickedHospital");
   // console.log(clickedHospital);
+  // console.log("currentNumAttribute")
+  // console.log(currentNumAttribute)
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
   // console.log("data for clickedHospital");
   // console.log(clickedHospitalData);
   // console.log("data-code-array")
   // console.log(clickedHospitalData.hospital_attributes[0].code)
   // console.log(clickedHospitalData.hospital_attributes[1].code)
-  document.getElementById('hospitalName').innerHTML = clickedHospital.name;
-  // document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
-  // + clickedHospitalData.zipCodeAndCity;
 
-  // temporary hardcoded version, to be exchanged with loop (see below)
-  document.getElementById("hospitalAttrCode0").innerHTML = clickedHospitalData.hospital_attributes[0].code;
-  document.getElementById("hospitalAttrValue0").innerHTML = clickedHospitalData.hospital_attributes[0].value;
-  document.getElementById("hospitalAttrCode1").innerHTML = clickedHospitalData.hospital_attributes[1].code;
-  document.getElementById("hospitalAttrValue1").innerHTML = clickedHospitalData.hospital_attributes[1].value;
-  document.getElementById("hospitalAttrCode2").innerHTML = clickedHospitalData.hospital_attributes[2].code;
-  document.getElementById("hospitalAttrValue2").innerHTML = clickedHospitalData.hospital_attributes[2].value;
-  document.getElementById("hospitalAttrCode3").innerHTML = clickedHospitalData.hospital_attributes[3].code;
-  document.getElementById("hospitalAttrValue3").innerHTML = clickedHospitalData.hospital_attributes[3].value;
-
-  /* under construction: loop for all attributes */
-  //var hospitalAttIds = builIdArray(clickedHospitalData.hospital_attributes);
-  // console.log("hospitalattr for loop");
-  // console.log(hospitalAttIds);
-
-  // for(var i=0; i<2; i++) {
-  //   // pick the first element of code-names for loop through getElementById
-  //   var hospitalAttrCode = hospitalAttIds.slice(0,1);  
-  //   console.log("hospitalattrcode i: ")
-  //   console.log(hospitalAttrCode);
- 
-    //var hospitalAttrCode = "hospitalAttrCode";
-    // var hospitalAttrValue = "hospitalAttrValue";
-    // document.getElementById(hospitalAttrCode).innerHTML = clickedHospitalData.hospital_attributes[i].code;
-    // document.getElementById(hospitalAttrValue).innerHTML = clickedHospitalData.hospital_attributes[0].value;
-    // // remove first element of code-names
-    // hospitalAttIds.shift();
-
-  // }
+  /*  filter only the current numerical attribute from clicked hospital */ 
+  if (currentNumAttribute != null) {
+    var sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
+      return obj.code == currentNumAttribute.code;
+    });
+  } else {
+    sizeResult = 0;
+  }
   
+  // console.log("only current attr from clicked hospital")
+  // console.log(sizeResult)
 
+  document.getElementById('hospitalName').innerHTML = clickedHospital.name;
+  document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
+  + clickedHospitalData.zipCodeAndCity;
+
+  // displays the values of the current numerical and categorical attribute of clicked hospital
+  document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
+  document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
+}
+
+// returns the name (DE) of the chosen numerical attribute
+function returnNumCode(attributeArray) {
+  if (attributeArray.code != null) {
+    return currentNumAttribute.nameDE;
+  } else {
+    return "";
+  }
+}
+
+// returns the value of the chosen numerical attribute
+function returnNumValue(attributeArray) {
+  if (attributeArray.value != null) {
+    return attributeArray.value;
+  } else {
+    return "";
+  }
 }
 
 // returns an array with all data of the clicked hospital
@@ -359,6 +365,18 @@ function initData(data, type){
     }
   }
 }
+
+/**
+ * Updates the current numerical attribute for characteristics (Steckbrief)
+ * TODO: calculate new circle radius for current numerical attribute
+ * @param numericalAttribute selected current numerical Attribute from Dropdown1
+ */
+var updateCircles = function(numericalAttribute) {
+  currentNumAttribute = numericalAttribute;
+  console.log("attribute in mapinit");
+  console.log(currentNumAttribute);
+}
+
 
 
 //------------------------------------------------------
