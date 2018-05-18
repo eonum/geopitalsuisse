@@ -25,7 +25,7 @@ export class HospitalService {
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospitals')
+    return this.http.get<Hospital[]>('https://geopital.herokuapp.com/' + 'api/hospitals')
     .map(res => {
       return res as Hospital[]
 
@@ -37,7 +37,7 @@ export class HospitalService {
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getAttributes(): Observable<Attributes[]> {
-    return this.http.get<Attributes[]>('http://localhost:3000/' + 'api/attributeTypes')
+    return this.http.get<Attributes[]>('https://geopital.herokuapp.com/' + 'api/attributeTypes')
       .map(res => {
         return res['attribute_types_string'] as Attributes[];
       })
@@ -54,4 +54,3 @@ export class HospitalService {
       })
   }
 }
-
