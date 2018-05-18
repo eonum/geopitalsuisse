@@ -165,12 +165,7 @@ function callCharComponent(clickedHospital) {
   // console.log("currentNumAttribute")
   // console.log(currentNumAttribute)
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
-  // console.log("data for clickedHospital");
-  // console.log(clickedHospitalData);
-  // console.log("data-code-array")
-  // console.log(clickedHospitalData.hospital_attributes[0].code)
-  // console.log(clickedHospitalData.hospital_attributes[1].code)
-
+  
   /*  filter only the current numerical attribute from clicked hospital */ 
   if (currentNumAttribute != null) {
     var sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
@@ -180,16 +175,21 @@ function callCharComponent(clickedHospital) {
     sizeResult = 0;
   }
   
-  // console.log("only current attr from clicked hospital")
-  // console.log(sizeResult)
+  console.log("only current attr from clicked hospital")
+  console.log(sizeResult)
 
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
   document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
   + clickedHospitalData.zipCodeAndCity;
-
+if (sizeResult != null) {
   // displays the values of the current numerical and categorical attribute of clicked hospital
   document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
   document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
+} else {
+  document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
+  document.getElementById('hospitalAttrValue0').innerHTML = "Keine Angaben";
+}
+  
 }
 
 // returns the name (DE) of the chosen numerical attribute
