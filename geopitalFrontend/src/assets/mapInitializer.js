@@ -277,25 +277,27 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
 
+  var code = "EtMedL";
+
   // build up data array
   // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
   if ((numUniSp % 2) === 0) {
-    initData(data, ["K111"]);
+    initData(data, ["K111"], code);
   }
   if((numZentSp % 2) === 0){
-    initData(data, ["K112"]);
+    initData(data, ["K112"], code);
   }
   if((numGrundVers % 2) === 0){
-    initData(data, ["K121", "K122", "K123"]);
+    initData(data, ["K121", "K122", "K123"], code);
   }
   if((numPsychKl % 2) === 0){
-    initData(data, ["K211", "K212"]);
+    initData(data, ["K211", "K212"], code);
   }
   if((numRehaKl % 2) === 0){
-    initData(data, ["K221"]);
+    initData(data, ["K221"], code);
   }
   if((numSpezKl % 2) === 0){
-    initData(data, ["K231", "K232", "K233", "K234", "K235"]);
+    initData(data, ["K231", "K232", "K233", "K234", "K235"], code);
   }
 
   // draw circles with the data that is build above
