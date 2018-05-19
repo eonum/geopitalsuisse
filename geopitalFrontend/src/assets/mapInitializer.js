@@ -6,7 +6,7 @@
 
 // variables that we need globally that are initialized in a function at one point
 var map;
-var allHospitalData; // initialized in function mapDrawer
+var allHospitalData; // initialized in function mapDrawer, contains all hospital data
 var div;
 var div2;
 var circles;
@@ -27,8 +27,8 @@ var mapDrawer = function(data) {
 
   // stores initially all data from all hospitals
   allHospitalData = data;
-  console.log("data")
-  console.log(allHospitalData)
+  console.log("data");
+  console.log(allHospitalData);
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -166,8 +166,8 @@ function callCharComponent(clickedHospital) {
   // console.log("currentNumAttribute")
   // console.log(currentNumAttribute)
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
-  
-  /*  filter only the current numerical attribute from clicked hospital */ 
+
+  /*  filter only the current numerical attribute from clicked hospital */
   if (currentNumAttribute != null) {
     var sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
       return obj.code == currentNumAttribute.code;
@@ -175,12 +175,12 @@ function callCharComponent(clickedHospital) {
   } else {
     sizeResult = 0;
   }
-  
+
   console.log("only current attr from clicked hospital")
   console.log(sizeResult)
 
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
-  document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
+  document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
   + clickedHospitalData.zipCodeAndCity;
   if (sizeResult != null) {
   // displays the values of the current numerical and categorical attribute of clicked hospital
@@ -190,7 +190,7 @@ function callCharComponent(clickedHospital) {
     document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
     document.getElementById('hospitalAttrValue0').innerHTML = "Keine Angaben";
   }
-  
+
 }
 
 // returns the name (DE) of the chosen numerical attribute

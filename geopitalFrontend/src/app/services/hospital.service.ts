@@ -36,7 +36,7 @@ export class HospitalService {
    * Gets all attributes which a hospital can have
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
-  getCategorialAttributes(): Observable<Attributes[]> {
+  getCategoricalAttributes(): Observable<Attributes[]> {
     return this.http.get<Attributes[]>('https://geopital.herokuapp.com/' + 'api/attributeTypes')
       .map(res => {
         return res['attribute_types_string'] as Attributes[];

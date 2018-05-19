@@ -1,7 +1,5 @@
 import {Component, OnInit } from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
-import {Hospital} from "../../models/hospital.model";
-import {Attributes} from "../../models/attributes.model";
 declare function updateCircleRadius(attribute): any;
 declare function updateCircleShape(attribute): any;
 
@@ -16,9 +14,7 @@ declare function updateCircleShape(attribute): any;
 })
 export class DropdownComponent implements OnInit {
 
-  private hospitalsList: Hospital[];
-  private attributeName : Attributes[];
-  private categorialAttributes: any[] = [];
+  private categoricalAttributes: any[] = [];
   private numericalAttributes: any[] = [];
 
 
@@ -26,31 +22,25 @@ export class DropdownComponent implements OnInit {
 
   /**
    * Is called on init and loads the attribute-array from the backend.
+   * The attributes are stored in two arrays, one that contains all the
+   * numerical and the other that contains all categorical attributes
    * The attributes are then displayed in the html.
    */
   ngOnInit() {
-    this.hospitalService.getCategorialAttributes()
+    this.hospitalService.getCategoricalAttributes()
       .subscribe(attributes => {
-        this.attributeName = attributes;
+        this.categoricalAttributes = attributes;
 
-        for(let i in this.attributeName){
-          var attr = this.attributeName[i];
-          this.categorialAttributes.push(attr);
-        }
-        console.log("attributes in dropdowncomp")
-        console.log(attributes)
+        console.log("categorical attributes in dropdowncomp");
+        console.log(this.categoricalAttributes);
       });
 
       this.hospitalService.getNumericalAttributes()
       .subscribe(attributes => {
-        this.attributeName = attributes;
+        this.numericalAttributes = attributes;
 
-        for(let i in this.attributeName){
-          var attr = this.attributeName[i];
-          this.numericalAttributes.push(attr);
-        }
-        console.log("numerical attributes in dropdowncomp")
-        console.log(this.numericalAttributes)
+        console.log("numerical attributes in dropdowncomp");
+        console.log(this.numericalAttributes);
       });
   }
 
