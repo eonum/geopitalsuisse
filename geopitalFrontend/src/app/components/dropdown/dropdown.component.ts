@@ -2,7 +2,8 @@ import {Component, OnInit } from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
 import {Attributes} from "../../models/attributes.model";
-declare function updateCircles(attribute): any;
+declare function updateCircleRadius(attribute): any;
+declare function updateCircleShape(attribute): any;
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.
@@ -17,7 +18,8 @@ export class DropdownComponent implements OnInit {
 
   private hospitalsList: Hospital[];
   private attributeName : Attributes[];
-  private attributes: any[] = [];
+  private categorialAttributes: any[] = [];
+  private numericalAttributes: any[] = [];
 
 
   constructor(private hospitalService: HospitalService) {  }
@@ -27,14 +29,28 @@ export class DropdownComponent implements OnInit {
    * The attributes are then displayed in the html.
    */
   ngOnInit() {
-    this.hospitalService.getAttributes()
+    this.hospitalService.getCategorialAttributes()
       .subscribe(attributes => {
         this.attributeName = attributes;
 
         for(let i in this.attributeName){
           var attr = this.attributeName[i];
-          this.attributes.push(attr);
+          this.categorialAttributes.push(attr);
         }
+        console.log("attributes in dropdowncomp")
+        console.log(attributes)
+      });
+
+      this.hospitalService.getNumericalAttributes()
+      .subscribe(attributes => {
+        this.attributeName = attributes;
+
+        for(let i in this.attributeName){
+          var attr = this.attributeName[i];
+          this.numericalAttributes.push(attr);
+        }
+        console.log("numerical attributes in dropdowncomp")
+        console.log(this.numericalAttributes)
       });
   }
 
@@ -42,8 +58,13 @@ export class DropdownComponent implements OnInit {
    * Function is called when user selects an attribute in the dropdown from the html.
    * @param attribute selected attribute from dropdown
    */
-  selectedAttribute(attribute){
-    console.log("selected attribute" + attribute.nameDE);
-    updateCircles(attribute);
+  selectedNumAttribute(numericalAttribute){
+    console.log("selected attribute" + numericalAttribute.nameDE);
+    updateCircleRadius(numericalAttribute);
+  }
+
+  selectedCatAttribute(categorialAttribute) {
+    console.log("selectec categorial attribute:" + categorialAttribute.nameDE)
+    updateCircleShape(categorialAttribute);
   }
 }

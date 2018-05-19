@@ -13,6 +13,7 @@ var circles;
 var hospitalData = [];
 var maxEtMedL = 0;
 var currentNumAttribute;
+var currentCatAttribute;
 var svg;
 
 /**
@@ -181,14 +182,14 @@ function callCharComponent(clickedHospital) {
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
   document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
   + clickedHospitalData.zipCodeAndCity;
-if (sizeResult != null) {
+  if (sizeResult != null) {
   // displays the values of the current numerical and categorical attribute of clicked hospital
-  document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
-  document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
-} else {
-  document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
-  document.getElementById('hospitalAttrValue0').innerHTML = "Keine Angaben";
-}
+    document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
+    document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
+  } else {
+    document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
+    document.getElementById('hospitalAttrValue0').innerHTML = "Keine Angaben";
+  }
   
 }
 
@@ -368,13 +369,28 @@ function initData(data, type){
 
 /**
  * Updates the current numerical attribute for characteristics (Steckbrief)
+ * and initializes the change of circles' radius according to the chosen
+ * numerical attribute
  * TODO: calculate new circle radius for current numerical attribute
- * @param numericalAttribute selected current numerical Attribute from Dropdown1
+ * @param numericalAttribute selected numerical Attribute from Dropdown1
  */
-var updateCircles = function(numericalAttribute) {
+var updateCircleRadius = function(numericalAttribute) {
   currentNumAttribute = numericalAttribute;
   console.log("attribute in mapinit");
   console.log(currentNumAttribute);
+}
+
+/**
+ * Updates the current categorical attribute for characteristics (Steckbrief)
+ * and initializes the change of markers' shapes according to the chosen
+ * categorial attribute
+ * TODO: new markers shape for current categorial attribute
+ * @param categoricalAttribute selected categorical Attribute from Dropdown2
+ */
+var updateCircleShape = function(categoricalAttribute) {
+  currentCatAttribute = categoricalAttribute;
+  console.log("cat attribute in mapinit");
+  console.log(currentCatAttribute);
 }
 
 
