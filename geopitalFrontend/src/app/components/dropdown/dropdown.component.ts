@@ -31,17 +31,11 @@ export class DropdownComponent implements OnInit {
     this.characteristicsService.getCategoricalAttributes()
       .subscribe(attributes => {
         this.categoricalAttributes = attributes;
-
-        console.log("categorical attributes in dropdowncomp");
-        console.log(this.categoricalAttributes);
       });
 
-      this.characteristicsService.getNumericalAttributes()
+    this.characteristicsService.getNumericalAttributes()
       .subscribe(attributes => {
         this.numericalAttributes = attributes;
-
-        console.log("numerical attributes in dropdowncomp");
-        console.log(this.numericalAttributes);
       });
   }
 
@@ -50,12 +44,10 @@ export class DropdownComponent implements OnInit {
    * @param attribute selected attribute from dropdown
    */
   selectedNumAttribute(numericalAttribute){
-    console.log("selected attribute" + numericalAttribute.nameDE);
     updateCircleRadius(numericalAttribute);
   }
 
   selectedCatAttribute(categorialAttribute) {
-    console.log("selectec categorial attribute:" + categorialAttribute.nameDE)
     updateCircleShape(categorialAttribute);
   }
 }

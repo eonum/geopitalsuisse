@@ -1,5 +1,5 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
-declare function mapDrawer(data): any;
+declare function mapDrawer(hospitals, numAttributes, catAttributes): any;
 import { HospitalService } from '../../services/hospital.service';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import {Hospital} from "../../models/hospital.model";
@@ -20,6 +20,7 @@ export class MapsComponent implements OnInit, AfterViewChecked {
 
   private hospitalsList: Hospital[];
   private numericalAttributes: any;
+  private categoricalAttributes: any;
 
   constructor(
     private hospitalService: HospitalService,
@@ -47,10 +48,15 @@ export class MapsComponent implements OnInit, AfterViewChecked {
         }
       });
 
+    this.characteristicsService.getCategoricalAttributes()
+      .subscribe(attributes => {
+        this.categoricalAttributes = attributes;
+      })
+
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;
-        mapDrawer(this.hospitalsList);
+        mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
       });
   }
 

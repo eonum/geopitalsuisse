@@ -18,9 +18,10 @@ var code; // size attribute that defines radius of a circle (default "EdMedL")
 var maxRadius = 0; // maximal value of the size attribute that defines the radius
 
 // hard code because it does not work yet in maps component
-var defaultAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
+var defaultNumAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
   nameFR:"Produits des hospitalisations et soins", nameIT: "Ricavi per degenze e cure"};
 
+// var defaultCatAttribute = {code: "Typ", category: "string", nameDE:}
 /**
  * Initializes map with the correct design.
  * Draws circles from the provided data and implements zoom-function for these circles.
@@ -28,20 +29,24 @@ var defaultAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus med
  * @param data that sets where and how the hospitals are visualized as circles
  *        contains coordinates, general information and attributes of a hospital
  */
-var mapDrawer = function(data) {
+var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // stores initially all data from all hospitals and sets the default values
-  // of the numerical and categorical attributes
-  allHospitalData = data;
-  currentNumAttribute = "EtMedL";
-  currentCatAttribute = "Typ";
-  
-  console.log("data");
-  console.log(allHospitalData);
+  // of the numerical (EtMedL) and categorical (Typ) attributes
+  allHospitalData = hospitals;
+
+  currentNumAttribute = numAttributes.find(function ( obj ) {
+    return obj.code == "EtMedL";
+  })
+
+  currentCatAttribute = catAttributes.find(function ( obj ) {
+    return obj.code == "Typ";
+  })
 
   // sets size attribute to the default value (EtMedL)
   // prov. solution TODO: set attribute in maps component
-  setNumAttribute(defaultAttribute);
+  setNumAttribute(defaultNumAttribute);
+  //setCatAttribute(defaultCatAttribute);
   console.log(getNumAttribute());
 
   code = getNumAttribute().code;
@@ -67,7 +72,7 @@ var mapDrawer = function(data) {
   type.push("none");
 
   // initializes data so we can work with it for the visualisation (see function initData)
-  initData(data, type, code);
+  initData(hospitals, type, code);
 
 
   //------------------------------------------------------
@@ -103,12 +108,12 @@ var mapDrawer = function(data) {
   // calculate the y max and x max value for all datapoints and add a padding.
   // xmax is width and ymax is height of svg-layer
   // todo: this function has to be changed that the bounds are calculated better
-  function calculateSVGBounds(data) {
+  function calculateSVGBounds(hospitals) {
     var xMax = 0;
     var yMax = 0;
     var heightPadding = 100;
     var widthPadding = 300;
-    data.forEach(function(d) {
+    hospitals.forEach(function(d) {
       xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
       yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
     });
@@ -174,10 +179,6 @@ var initCircles = function(hospitalData){
 
 // support the CharacteristicsComponent with necessary data to show in characteristics(Steckbrief)
 function callCharComponent(clickedHospital) {
-  // console.log("clickedHospital");
-  // console.log(clickedHospital);
-  console.log("currentCetAttribute")
-  console.log(currentCatAttribute)
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
 
   /*  filters only the current numerical attribute from clicked hospital */
@@ -188,7 +189,7 @@ function callCharComponent(clickedHospital) {
   } else {
     sizeResult = 0;
   }
-/*  filters only the current categorical attribute from clicked hospital */
+  /*  filters only the current categorical attribute from clicked hospital */
   if (currentCatAttribute != null) {
     var catResult = clickedHospitalData.hospital_attributes.find(function ( obj ) {
       return obj.code == currentCatAttribute.code;
@@ -209,13 +210,11 @@ function callCharComponent(clickedHospital) {
 
   // displays the values of the current numerical and categorical attribute of clicked hospital
   if (sizeResult != null) {
-    // document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
-    // document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
-    document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
-    document.getElementById('hospitalAttrValue0').innerHTML = sizeResult.value;
+    document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
+    document.getElementById('numericalAttributeValue').innerHTML = sizeResult.value;
   } else {
-    document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
-    document.getElementById('hospitalAttrValue0').innerHTML = "Keine Daten";
+    document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
+    document.getElementById('numericalAttributeValue').innerHTML = "Keine Daten";
   }
 
   if (catResult != null) {
@@ -225,17 +224,7 @@ function callCharComponent(clickedHospital) {
     document.getElementById('categoricalAttributeName').innerHTML = currentCatAttribute.nameDE;
     document.getElementById('categoricalAttributeValue').innerHTML = "Keine Daten";
   }
-
 }
-
-// returns the name (DE) of the chosen numerical attribute
-// function returnNumCode(attributeArray) {
-//   if (attributeArray.code != null) {
-//     return currentNumAttribute.nameDE;
-//   } else {
-//     return "";
-//   }
-// }
 
 // sets numerical attribute to the current selected in dropdown or to the default value (EtMedL)
 function setNumAttribute(attributeArray){
@@ -249,14 +238,11 @@ function getNumAttribute(){
   return this.currentNumAttribute;
 }
 
-// returns the value of the chosen numerical attribute
-// function returnNumValue(attributeArray) {
-//   if (attributeArray.value != null) {
-//     return attributeArray.value;
-//   } else {
-//     return "";
-//   }
-// }
+function setCatAttribute(attributeArray){
+  if(attributeArray!=null){
+    this.currentCatAttribute = attributeArray;
+  }
+}
 
 // returns an array with all data of the clicked hospital
 function getAllDataForClickedHospital(clickedHospital) {
