@@ -17,6 +17,7 @@ var svg;
 var code; // size attribute that defines radius of a circle (default "EdMedL")
 var maxRadius = 0; // maximal value of the size attribute that defines the radius
 var type;
+var selectedHospital;
 
 // hard code because it does not work yet in maps component
 var defaultNumAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
@@ -182,6 +183,8 @@ var initCircles = function(hospitalData){
 
 // support the CharacteristicsComponent with necessary data to show in characteristics(Steckbrief)
 function callCharComponent(clickedHospital) {
+  selectedHospital = clickedHospital;
+
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
 
   /*  filters only the current numerical attribute from clicked hospital */
@@ -417,6 +420,7 @@ var updateCircleRadius = function(numericalAttribute) {
   hospitalData = [];
   initData(allHospitalData, this.type, getNumAttribute().code);
   initCircles(hospitalData);
+  callCharComponent(selectedHospital);
 };
 
 /**
@@ -430,6 +434,8 @@ var updateCircleShape = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   console.log("cat attribute in mapinit");
   console.log(currentCatAttribute);
+
+  callCharComponent(selectedHospital);
 };
 
 
