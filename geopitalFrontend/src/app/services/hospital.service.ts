@@ -29,7 +29,6 @@ export class HospitalService {
     })
   }
 
-
   /**
    * Gets all dummy hospitals
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital

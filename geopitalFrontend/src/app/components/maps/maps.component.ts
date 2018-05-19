@@ -1,7 +1,9 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
 declare function mapDrawer(data): any;
 import { HospitalService } from '../../services/hospital.service';
+import { CharacteristicsService } from "../../services/characteristics.service";
 import {Hospital} from "../../models/hospital.model";
+declare function setNumAttribute(numAttribute): any;
 
 
 /**
@@ -17,8 +19,11 @@ import {Hospital} from "../../models/hospital.model";
 export class MapsComponent implements OnInit, AfterViewChecked {
 
   private hospitalsList: Hospital[];
+  private numericalAttributes: any;
 
-  constructor(private hospitalService: HospitalService) {
+  constructor(
+    private hospitalService: HospitalService,
+    private characteristicsService: CharacteristicsService) {
 
   }
 
@@ -27,6 +32,21 @@ export class MapsComponent implements OnInit, AfterViewChecked {
    * and gives it to the mapDrawer() function in mapInitializer.js
    */
   ngOnInit() {
+
+    // should set num attribute to default value "EtMedL" TODO: make it work
+    this.characteristicsService.getNumericalAttributes()
+      .subscribe(attributes => {
+        this.numericalAttributes = attributes;
+        for (let i of this.numericalAttributes) {
+          if(this.numericalAttributes.code!=null){
+            if(this.numericalAttributes[i].code=="EtMedL"){
+              console.log(this.numericalAttributes[i] + "----------------------");
+              setNumAttribute(this.numericalAttributes[i]);
+            }
+          }
+        }
+      });
+
     this.hospitalService.getAll()
       .subscribe(hospitals => {
         this.hospitalsList = hospitals;

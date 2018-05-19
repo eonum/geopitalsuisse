@@ -1,7 +1,7 @@
-import { Characteristics } from '../models/characteristics.model';
+// import { Characteristics } from '../models/characteristics.model';
 import { Observable } from 'rxjs/Rx';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Response} from '@angular/http';
+import { Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Attributes } from "../models/attributes.model";

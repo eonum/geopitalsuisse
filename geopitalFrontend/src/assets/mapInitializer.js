@@ -6,15 +6,20 @@
 
 // variables that we need globally that are initialized in a function at one point
 var map;
-var allHospitalData; // initialized in function mapDrawer
+var allHospitalData; // initialized in function mapDrawer, contains all hospital data, must not be changed after it is initialized
 var div;
 var div2;
 var circles;
 var hospitalData = [];
-var maxEtMedL = 0;
 var currentNumAttribute;
 var currentCatAttribute;
 var svg;
+var code; // size attribute that defines radius of a circle (default "EdMedL")
+var maxRadius = 0; // maximal value of the size attribute that defines the radius
+
+// hard code because it does not work yet in maps component
+var defaultAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
+  nameFR:"Produits des hospitalisations et soins", nameIT: "Ricavi per degenze e cure"};
 
 /**
  * Initializes map with the correct design.
@@ -25,10 +30,21 @@ var svg;
  */
 var mapDrawer = function(data) {
 
-  // stores initially all data from all hospitals
+  // stores initially all data from all hospitals and sets the default values
+  // of the numerical and categorical attributes
   allHospitalData = data;
-  console.log("data")
-  console.log(allHospitalData)
+  currentNumAttribute = "EtMedL";
+  currentCatAttribute = "Typ";
+  
+  console.log("data");
+  console.log(allHospitalData);
+
+  // sets size attribute to the default value (EtMedL)
+  // prov. solution TODO: set attribute in maps component
+  setNumAttribute(defaultAttribute);
+  console.log(getNumAttribute());
+
+  code = getNumAttribute().code;
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -45,13 +61,13 @@ var mapDrawer = function(data) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-  // defines data that is displayed as circles, since at first we want all types we give here "none"
+  // defines hospital types that are displayed as circles, since at first we want all types we give here "none"
   // as none specific types have to be selected (see function initData)
   var type = [];
   type.push("none");
 
   // initializes data so we can work with it for the visualisation (see function initData)
-  initData(data, type);
+  initData(data, type, code);
 
 
   //------------------------------------------------------
@@ -74,8 +90,7 @@ var mapDrawer = function(data) {
     .style("opacity", 0.0);
 
   // project points using projectPoint() function
-
-  initCircles(hospitalData)
+  initCircles(hospitalData);
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -126,8 +141,6 @@ var mapDrawer = function(data) {
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-  // var zoomLevel = map.getZoom();
-  // project points using projectPoint() function
   circles = svg.selectAll('circle')
     .data(hospitalData)
     .enter()
@@ -166,8 +179,8 @@ function callCharComponent(clickedHospital) {
   // console.log("currentNumAttribute")
   // console.log(currentNumAttribute)
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
-  
-  /*  filter only the current numerical attribute from clicked hospital */ 
+
+  /*  filter only the current numerical attribute from clicked hospital */
   if (currentNumAttribute != null) {
     var sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
       return obj.code == currentNumAttribute.code;
@@ -175,12 +188,12 @@ function callCharComponent(clickedHospital) {
   } else {
     sizeResult = 0;
   }
-  
+
   console.log("only current attr from clicked hospital")
   console.log(sizeResult)
 
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
-  document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>" 
+  document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
   + clickedHospitalData.zipCodeAndCity;
   if (sizeResult != null) {
   // displays the values of the current numerical and categorical attribute of clicked hospital
@@ -190,7 +203,7 @@ function callCharComponent(clickedHospital) {
     document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
     document.getElementById('hospitalAttrValue0').innerHTML = "Keine Angaben";
   }
-  
+
 }
 
 // returns the name (DE) of the chosen numerical attribute
@@ -200,6 +213,18 @@ function returnNumCode(attributeArray) {
   } else {
     return "";
   }
+}
+
+// sets numerical attribute to the current selected in dropdown or to the default value (EtMedL)
+function setNumAttribute(attributeArray){
+  if(attributeArray!=null){
+    this.currentNumAttribute = attributeArray;
+  }
+}
+
+// gets currently selected numerical attribute
+function getNumAttribute(){
+  return this.currentNumAttribute;
 }
 
 // returns the value of the chosen numerical attribute
@@ -266,7 +291,9 @@ var removeCircles = function(){
  * @param numRehaKl
  * @param numSpezKl
  */
-var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+
+  var data = allHospitalData;
 
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
@@ -277,22 +304,22 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
   // build up data array
   // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
   if ((numUniSp % 2) === 0) {
-    initData(data, ["K111"]);
+    initData(data, ["K111"], code);
   }
   if((numZentSp % 2) === 0){
-    initData(data, ["K112"]);
+    initData(data, ["K112"], code);
   }
   if((numGrundVers % 2) === 0){
-    initData(data, ["K121", "K122", "K123"]);
+    initData(data, ["K121", "K122", "K123"], code);
   }
   if((numPsychKl % 2) === 0){
-    initData(data, ["K211", "K212"]);
+    initData(data, ["K211", "K212"], code);
   }
   if((numRehaKl % 2) === 0){
-    initData(data, ["K221"]);
+    initData(data, ["K221"], code);
   }
   if((numSpezKl % 2) === 0){
-    initData(data, ["K231", "K232", "K233", "K234", "K235"]);
+    initData(data, ["K231", "K232", "K233", "K234", "K235"], code);
   }
 
   // draw circles with the data that is build above
@@ -304,12 +331,13 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
  * TODO: Improve function --> make it possible to select which attributes should be store in array (except for coordinates and name)
  * @param data data from backend (JSON)
  * @param type type of hospitals that should be displayed (improvement)
+ * @param code String that defines the size of the circles
  */
-function initData(data, type){
+function initData(data, type, code){
 
   for (var i = 0; i < data.length; i++){
 
-    // stores name, coordinates (latitude, longitude), EtMedL attribute value
+    // stores name, coordinates (latitude, longitude), size attribute value
     // and type of each hospita in a variable to save in array
     if(data[i].latitude!=null && data[i].longitude!=null){
       var hospitalName = data[i].name;
@@ -319,11 +347,11 @@ function initData(data, type){
       // access attributes of hospital
       var attr = data[i].hospital_attributes;
 
-      // filters EtMedL attribute and saves it in variable
+      // filters code attribute and saves it in variable
       var sizeResult = attr.filter(function( obj ) {
-        return obj.code == "EtMedL";
+        return obj.code == code;
       });
-      // saves value of EtMedL attribute in variable
+      // saves value of code attribute in variable
       if(sizeResult[0]!=null && sizeResult[0].value!=null){
         var sizeAttribute = Number(sizeResult[0].value);
       }
@@ -342,23 +370,23 @@ function initData(data, type){
       for(var j = 0; j < type.length; j++){
         if(type[j]!="none"){
           if(typAttribute==type[j]){
-            var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+            var newCoordinates = {x: longitude, y: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
             hospitalData.push(newCoordinates);
           }
         }
         if(type[j]=="none"){
-          var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+          var newCoordinates = {x: longitude, y: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
           hospitalData.push(newCoordinates);
         }
       }
     }
   }
 
-  // get max value of EtMedL attribute (to calculate radius of circles)
+  // get max value of radius attribute (to calculate radius of circles)
   for(var i=0; i<hospitalData.length; i++){
-    if(hospitalData[i]!=null && hospitalData[i].EtMedL!=null){
-      if(hospitalData[i].EtMedL>maxEtMedL){
-        maxEtMedL = hospitalData[i].EtMedL;
+    if(hospitalData[i]!=null && hospitalData[i].radius!=null){
+      if(hospitalData[i].radius>maxRadius){
+        maxRadius = hospitalData[i].radius;
       }
       else{
         continue;
@@ -405,11 +433,11 @@ var updateCircleShape = function(categoricalAttribute) {
 //  */
 function getCircleRadius(d) {
   var zoomLevel = map.getZoom();
-  if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+  if(d.radius*(1/maxRadius)*10 + 4 > 10){
     return 10*zoomLevel*zoomLevel/100;
   }
   else{
-    return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
+    return (d.radius*(1/maxRadius)*10 + 4)*zoomLevel*zoomLevel/100;
   }
 }
 
