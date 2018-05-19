@@ -1,6 +1,7 @@
 import {Component, OnInit } from '@angular/core';
-import {HospitalService} from "../../services/hospital.service";
-import {Hospital} from "../../models/hospital.model";
+// import {HospitalService} from "../../services/hospital.service";
+// import {Hospital} from "../../models/hospital.model";
+import { CharacteristicsService } from "../../services/characteristics.service";
 import {Attributes} from "../../models/attributes.model";
 declare function updateCircleRadius(attribute): any;
 declare function updateCircleShape(attribute): any;
@@ -16,20 +17,20 @@ declare function updateCircleShape(attribute): any;
 })
 export class DropdownComponent implements OnInit {
 
-  private hospitalsList: Hospital[];
+  // private hospitalsList: Hospital[];
   private attributeName : Attributes[];
   private categorialAttributes: any[] = [];
   private numericalAttributes: any[] = [];
 
 
-  constructor(private hospitalService: HospitalService) {  }
+  constructor(private characteristicsService: CharacteristicsService) {  }
 
   /**
    * Is called on init and loads the attribute-array from the backend.
    * The attributes are then displayed in the html.
    */
   ngOnInit() {
-    this.hospitalService.getCategorialAttributes()
+    this.characteristicsService.getCategoricalAttributes()
       .subscribe(attributes => {
         this.attributeName = attributes;
 
@@ -41,7 +42,7 @@ export class DropdownComponent implements OnInit {
         console.log(attributes)
       });
 
-      this.hospitalService.getNumericalAttributes()
+      this.characteristicsService.getNumericalAttributes()
       .subscribe(attributes => {
         this.attributeName = attributes;
 

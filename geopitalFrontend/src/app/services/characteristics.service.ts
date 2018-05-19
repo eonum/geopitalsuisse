@@ -1,35 +1,40 @@
 import { Characteristics } from '../models/characteristics.model';
 import { Observable } from 'rxjs/Rx';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {Response} from '@angular/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Response} from '@angular/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Hospital } from '../models/hospital.model';
+import { Attributes } from "../models/attributes.model";
 
 @Injectable()
 export class CharacteristicsService {
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-  api_url = 'http://localhost:3000';
-  characteristicUrl = `${this.api_url}/api/geopital`;
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {
 
-  getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/geopital')
-      .map(res => {
-        return res['data'] as Hospital[];
-      })
   }
 
 
-  /* getHospitalCharacteristics(): Observable<Hospital[]>{
-    return this.http.get(this.characteristicUrl)
-    .map(res  => {
-      //Maps the response object sent from the server
-
-      return res["data"].docs as Hospital[];
-    })
-} */
+    /**
+   * Gets all categorical attributes of all hospitals
+   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
+   */
+  getCategoricalAttributes(): Observable<Attributes[]> {
+    return this.http.get<Attributes[]>('https://geopital.herokuapp.com/' + 'api/attributeTypes')
+      .map(res => {
+        return res['attribute_types_string'] as Attributes[];
+      })
+  }
+  
+  /**
+   * Gets all categorical attributes of all hospitals
+   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
+   */
+  getNumericalAttributes(): Observable<Attributes[]> {
+    return this.http.get<Attributes[]>('https://geopital.herokuapp.com/' + 'api/attributeTypes')
+      .map(res => {
+        return res['attribute_types_number'] as Attributes[];
+      })
+  }
 }
