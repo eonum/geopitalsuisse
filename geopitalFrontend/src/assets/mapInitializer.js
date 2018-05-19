@@ -176,11 +176,11 @@ var initCircles = function(hospitalData){
 function callCharComponent(clickedHospital) {
   // console.log("clickedHospital");
   // console.log(clickedHospital);
-  // console.log("currentNumAttribute")
-  // console.log(currentNumAttribute)
+  console.log("currentCetAttribute")
+  console.log(currentCatAttribute)
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
 
-  /*  filter only the current numerical attribute from clicked hospital */
+  /*  filters only the current numerical attribute from clicked hospital */
   if (currentNumAttribute != null) {
     var sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
       return obj.code == currentNumAttribute.code;
@@ -188,32 +188,54 @@ function callCharComponent(clickedHospital) {
   } else {
     sizeResult = 0;
   }
+/*  filters only the current categorical attribute from clicked hospital */
+  if (currentCatAttribute != null) {
+    var catResult = clickedHospitalData.hospital_attributes.find(function ( obj ) {
+      return obj.code == currentCatAttribute.code;
+    });
+  } else {
+    catResult = 0;
+  }
 
-  console.log("only current attr from clicked hospital")
+  console.log("only current attr from clicked hospital SIZERESULT")
   console.log(sizeResult)
+  console.log("only current attr from clicked hospital CATRESULT")
+  console.log(catResult)
 
+  // displays the name and address of the clickes hospital in characteristics (Steckbrief)
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
   document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
   + clickedHospitalData.zipCodeAndCity;
-  if (sizeResult != null) {
+
   // displays the values of the current numerical and categorical attribute of clicked hospital
-    document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
-    document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
+  if (sizeResult != null) {
+    // document.getElementById('hospitalAttrCode0').innerHTML = returnNumCode(sizeResult);
+    // document.getElementById('hospitalAttrValue0').innerHTML = returnNumValue(sizeResult);
+    document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
+    document.getElementById('hospitalAttrValue0').innerHTML = sizeResult.value;
   } else {
     document.getElementById('hospitalAttrCode0').innerHTML = currentNumAttribute.nameDE;
-    document.getElementById('hospitalAttrValue0').innerHTML = "Keine Angaben";
+    document.getElementById('hospitalAttrValue0').innerHTML = "Keine Daten";
+  }
+
+  if (catResult != null) {
+    document.getElementById('categoricalAttributeName').innerHTML = currentCatAttribute.nameDE;
+    document.getElementById('categoricalAttributeValue').innerHTML = catResult.value;
+  } else {
+    document.getElementById('categoricalAttributeName').innerHTML = currentCatAttribute.nameDE;
+    document.getElementById('categoricalAttributeValue').innerHTML = "Keine Daten";
   }
 
 }
 
 // returns the name (DE) of the chosen numerical attribute
-function returnNumCode(attributeArray) {
-  if (attributeArray.code != null) {
-    return currentNumAttribute.nameDE;
-  } else {
-    return "";
-  }
-}
+// function returnNumCode(attributeArray) {
+//   if (attributeArray.code != null) {
+//     return currentNumAttribute.nameDE;
+//   } else {
+//     return "";
+//   }
+// }
 
 // sets numerical attribute to the current selected in dropdown or to the default value (EtMedL)
 function setNumAttribute(attributeArray){
@@ -228,13 +250,13 @@ function getNumAttribute(){
 }
 
 // returns the value of the chosen numerical attribute
-function returnNumValue(attributeArray) {
-  if (attributeArray.value != null) {
-    return attributeArray.value;
-  } else {
-    return "";
-  }
-}
+// function returnNumValue(attributeArray) {
+//   if (attributeArray.value != null) {
+//     return attributeArray.value;
+//   } else {
+//     return "";
+//   }
+// }
 
 // returns an array with all data of the clicked hospital
 function getAllDataForClickedHospital(clickedHospital) {
@@ -244,18 +266,6 @@ function getAllDataForClickedHospital(clickedHospital) {
     return obj.name == clickedHospital.name;
   });
   return attrResult;
-}
-
-// returns an array with an id-array for the loop through getElementById
-function builIdArray(hospitalAttributes) {
-  var idArray = [];
-  var count;
-  for (var i=0; i<hospitalAttributes.length; i++) {
-    count = i;
-    var id = 'hospitalAttrCode' + i;
-    idArray.push(id);
-  }
-  return idArray;
 }
 
 
