@@ -6,15 +6,20 @@
 
 // variables that we need globally that are initialized in a function at one point
 var map;
-var allHospitalData; // initialized in function mapDrawer, contains all hospital data
+var allHospitalData; // initialized in function mapDrawer, contains all hospital data, must not be changed after it is initialized
 var div;
 var div2;
 var circles;
 var hospitalData = [];
-var maxRadius = 0; // maximal value of the numerical attribut that defines the radius of the circles (default: "EtMedL")
 var currentNumAttribute;
 var currentCatAttribute;
 var svg;
+var code; // size attribute that defines radius of a circle (default "EdMedL")
+var maxRadius = 0; // maximal value of the size attribute that defines the radius
+
+// hard code because it does not work yet in maps component
+var defaultAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
+  nameFR:"Produits des hospitalisations et soins", nameIT: "Ricavi per degenze e cure"};
 
 /**
  * Initializes map with the correct design.
@@ -29,6 +34,13 @@ var mapDrawer = function(data) {
   allHospitalData = data;
   console.log("data");
   console.log(allHospitalData);
+
+  // sets size attribute to the default value (EtMedL)
+  // prov. solution TODO: set attribute in maps component
+  setNumAttribute(defaultAttribute);
+  console.log(getNumAttribute());
+
+  code = getNumAttribute().code;
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -45,13 +57,10 @@ var mapDrawer = function(data) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-  // defines data that is displayed as circles, since at first we want all types we give here "none"
+  // defines hospital types that are displayed as circles, since at first we want all types we give here "none"
   // as none specific types have to be selected (see function initData)
   var type = [];
   type.push("none");
-
-  // default value that defines the radius of the circles
-  var code = "EtMedL";
 
   // initializes data so we can work with it for the visualisation (see function initData)
   initData(data, type, code);
@@ -77,8 +86,7 @@ var mapDrawer = function(data) {
     .style("opacity", 0.0);
 
   // project points using projectPoint() function
-
-  initCircles(hospitalData)
+  initCircles(hospitalData);
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -129,8 +137,6 @@ var mapDrawer = function(data) {
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
-  // var zoomLevel = map.getZoom();
-  // project points using projectPoint() function
   circles = svg.selectAll('circle')
     .data(hospitalData)
     .enter()
@@ -205,6 +211,18 @@ function returnNumCode(attributeArray) {
   }
 }
 
+// sets numerical attribute to the current selected in dropdown or to the default value (EtMedL)
+function setNumAttribute(attributeArray){
+  if(attributeArray!=null){
+    this.currentNumAttribute = attributeArray;
+  }
+}
+
+// gets currently selected numerical attribute
+function getNumAttribute(){
+  return this.currentNumAttribute;
+}
+
 // returns the value of the chosen numerical attribute
 function returnNumValue(attributeArray) {
   if (attributeArray.value != null) {
@@ -269,15 +287,15 @@ var removeCircles = function(){
  * @param numRehaKl
  * @param numSpezKl
  */
-var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+
+  var data = allHospitalData;
 
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
-
-  var code = "EtMedL";
 
   // build up data array
   // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
