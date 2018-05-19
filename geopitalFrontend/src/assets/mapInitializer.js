@@ -11,7 +11,7 @@ var div;
 var div2;
 var circles;
 var hospitalData = [];
-var maxEtMedL = 0;
+var maxRadius = 0; // maximal value of the numerical attribut that defines the radius of the circles (default: "EtMedL")
 var currentNumAttribute;
 var currentCatAttribute;
 var svg;
@@ -50,8 +50,11 @@ var mapDrawer = function(data) {
   var type = [];
   type.push("none");
 
+  // default value that defines the radius of the circles
+  var code = "EtMedL";
+
   // initializes data so we can work with it for the visualisation (see function initData)
-  initData(data, type);
+  initData(data, type, code);
 
 
   //------------------------------------------------------
@@ -304,12 +307,13 @@ var updateMap = function(data, type, numUniSp, numZentSp, numGrundVers, numPsych
  * TODO: Improve function --> make it possible to select which attributes should be store in array (except for coordinates and name)
  * @param data data from backend (JSON)
  * @param type type of hospitals that should be displayed (improvement)
+ * @param code String that defines the size of the circles
  */
-function initData(data, type){
+function initData(data, type, code){
 
   for (var i = 0; i < data.length; i++){
 
-    // stores name, coordinates (latitude, longitude), EtMedL attribute value
+    // stores name, coordinates (latitude, longitude), size attribute value
     // and type of each hospita in a variable to save in array
     if(data[i].latitude!=null && data[i].longitude!=null){
       var hospitalName = data[i].name;
@@ -319,11 +323,11 @@ function initData(data, type){
       // access attributes of hospital
       var attr = data[i].hospital_attributes;
 
-      // filters EtMedL attribute and saves it in variable
+      // filters code attribute and saves it in variable
       var sizeResult = attr.filter(function( obj ) {
-        return obj.code == "EtMedL";
+        return obj.code == code;
       });
-      // saves value of EtMedL attribute in variable
+      // saves value of code attribute in variable
       if(sizeResult[0]!=null && sizeResult[0].value!=null){
         var sizeAttribute = Number(sizeResult[0].value);
       }
@@ -342,23 +346,23 @@ function initData(data, type){
       for(var j = 0; j < type.length; j++){
         if(type[j]!="none"){
           if(typAttribute==type[j]){
-            var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+            var newCoordinates = {x: longitude, y: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
             hospitalData.push(newCoordinates);
           }
         }
         if(type[j]=="none"){
-          var newCoordinates = {x: longitude, y: latitude, name:hospitalName, EtMedL: sizeAttribute, Typ: typAttribute};
+          var newCoordinates = {x: longitude, y: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
           hospitalData.push(newCoordinates);
         }
       }
     }
   }
 
-  // get max value of EtMedL attribute (to calculate radius of circles)
+  // get max value of radius attribute (to calculate radius of circles)
   for(var i=0; i<hospitalData.length; i++){
-    if(hospitalData[i]!=null && hospitalData[i].EtMedL!=null){
-      if(hospitalData[i].EtMedL>maxEtMedL){
-        maxEtMedL = hospitalData[i].EtMedL;
+    if(hospitalData[i]!=null && hospitalData[i].radius!=null){
+      if(hospitalData[i].radius>maxRadius){
+        maxRadius = hospitalData[i].radius;
       }
       else{
         continue;
@@ -405,11 +409,11 @@ var updateCircleShape = function(categoricalAttribute) {
 //  */
 function getCircleRadius(d) {
   var zoomLevel = map.getZoom();
-  if(d.EtMedL*(1/maxEtMedL)*10 + 4 > 10){
+  if(d.radius*(1/maxRadius)*10 + 4 > 10){
     return 10*zoomLevel*zoomLevel/100;
   }
   else{
-    return (d.EtMedL*(1/maxEtMedL)*10 + 4)*zoomLevel*zoomLevel/100;
+    return (d.radius*(1/maxRadius)*10 + 4)*zoomLevel*zoomLevel/100;
   }
 }
 
