@@ -14,7 +14,7 @@
                 1. Attribut:
               </button>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="#" *ngFor="let attribute of categoricalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+                <a class="dropdown-item" href="#" *ngFor="let attribute of categoricalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
               </div>
           </div>
 
@@ -24,7 +24,7 @@
               2. Attribut:
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#" *ngFor="let attribute of numericalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
+              <a class="dropdown-item" href="#" *ngFor="let attribute of numericalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>
             </div>
           </div>
 

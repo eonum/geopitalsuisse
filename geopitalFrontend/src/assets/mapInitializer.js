@@ -16,6 +16,7 @@ var currentCatAttribute;
 var svg;
 var code; // size attribute that defines radius of a circle (default "EdMedL")
 var maxRadius = 0; // maximal value of the size attribute that defines the radius
+var type;
 
 // hard code because it does not work yet in maps component
 var defaultNumAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
@@ -35,10 +36,12 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // of the numerical (EtMedL) and categorical (Typ) attributes
   allHospitalData = hospitals;
 
+  // TODO: construct something that numAttributes and catAttributes are never null
+  // sets default numerical attribute (EtMedL)
   currentNumAttribute = numAttributes.find(function ( obj ) {
     return obj.code == "EtMedL";
   })
-
+  // sets default categorical attribute (Typ)
   currentCatAttribute = catAttributes.find(function ( obj ) {
     return obj.code == "Typ";
   })
@@ -68,8 +71,8 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // defines hospital types that are displayed as circles, since at first we want all types we give here "none"
   // as none specific types have to be selected (see function initData)
-  var type = [];
-  type.push("none");
+  type = [];
+  this.type.push("none");
 
   // initializes data so we can work with it for the visualisation (see function initData)
   initData(hospitals, type, code);
@@ -290,33 +293,37 @@ var removeCircles = function(){
 var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
 
   var data = allHospitalData;
+  code = getNumAttribute().code;
 
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
 
   // first empty array with hospital data then store only values with the right type
   hospitalData = [];
+  type = [];
 
   // build up data array
   // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
   if ((numUniSp % 2) === 0) {
-    initData(data, ["K111"], code);
+    this.type.push("K111");
   }
   if((numZentSp % 2) === 0){
-    initData(data, ["K112"], code);
+    this.type.push("K112");
   }
   if((numGrundVers % 2) === 0){
-    initData(data, ["K121", "K122", "K123"], code);
+    this.type.push("K121", "K122", "K123");
   }
   if((numPsychKl % 2) === 0){
-    initData(data, ["K211", "K212"], code);
+    this.type.push("K211", "K212");
   }
   if((numRehaKl % 2) === 0){
-    initData(data, ["K221"], code);
+    this.type.push("K221");
   }
   if((numSpezKl % 2) === 0){
-    initData(data, ["K231", "K232", "K233", "K234", "K235"], code);
+    this.type.push("K231", "K232", "K233", "K234", "K235");
   }
+
+  initData(data, this.type, code);
 
   // draw circles with the data that is build above
   initCircles(hospitalData);
@@ -395,14 +402,22 @@ function initData(data, type, code){
  * Updates the current numerical attribute for characteristics (Steckbrief)
  * and initializes the change of circles' radius according to the chosen
  * numerical attribute
- * TODO: calculate new circle radius for current numerical attribute
+ * TODO: calculate new circle radius for current numerical attribute, visualisation not good yet (maybe calculateRadius better?)
  * @param numericalAttribute selected numerical Attribute from Dropdown1
  */
 var updateCircleRadius = function(numericalAttribute) {
   currentNumAttribute = numericalAttribute;
-  console.log("attribute in mapinit");
+  var code = numericalAttribute.code;
+  console.log("num attribute in mapinit");
   console.log(currentNumAttribute);
-}
+  console.log("----------------------------");
+  console.log(getNumAttribute().nameDE);
+
+  removeCircles();
+  hospitalData = [];
+  initData(allHospitalData, this.type, getNumAttribute().code);
+  initCircles(hospitalData);
+};
 
 /**
  * Updates the current categorical attribute for characteristics (Steckbrief)
@@ -415,7 +430,7 @@ var updateCircleShape = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   console.log("cat attribute in mapinit");
   console.log(currentCatAttribute);
-}
+};
 
 
 
@@ -429,6 +444,9 @@ var updateCircleShape = function(categoricalAttribute) {
 //  */
 function getCircleRadius(d) {
   var zoomLevel = map.getZoom();
+  if(d.radius == null){
+    return 4*zoomLevel*zoomLevel/100;
+  }
   if(d.radius*(1/maxRadius)*10 + 4 > 10){
     return 10*zoomLevel*zoomLevel/100;
   }
