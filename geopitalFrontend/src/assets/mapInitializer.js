@@ -15,7 +15,7 @@ var currentNumAttribute;
 var currentCatAttribute;
 var svg;
 var code; // size attribute that defines radius of a circle (default "EdMedL")
-var maxRadius = 0; // maximal value of the size attribute that defines the radius
+//var maxRadius = 0; // maximal value of the size attribute that defines the radius
 var type;
 var selectedHospital;
 
@@ -46,6 +46,12 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // set default selection to first hospital in list
   selectedHospital = hospitals[0]
+
+  // document.getElementById('hospitalName').innerHTML = hospitals[0].name;
+  // document.getElementById('hospitalAddress').innerHTML = hospitals[0].streetAndNumber + "<br/>"
+  // + hospitals[0].zipCodeAndCity;
+  // document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
+  // document.getElementById('numericalAttributeValue').innerHTML = sizeResult.value;
 
 
 console.log("created global variable allHospitalData");
@@ -108,8 +114,6 @@ console.log(hospitalData);
   // calculates svg bounds for the first time
   // on the svg-layer we implement the visualisation with D3
   calculateSVGBounds(hospitalData);
-console.log("SVG Bounds calculated");
-
 
   // Define the div for the tooltips (used for mouseover and click functionality)
   div = d3.select("body").append("div")
@@ -122,7 +126,6 @@ console.log("SVG Bounds calculated");
 
   // project points using projectPoint() function
   initCircles(hospitalData);
-console.log("circles initalized")
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -138,7 +141,6 @@ console.log("circles initalized")
   // xmax is width and ymax is height of svg-layer
   // todo: this function has to be changed that the bounds are calculated better
   function calculateSVGBounds(hospitals) {
-    console.log("calculateSVGBounds")
     var xMax = 0;
     var yMax = 0;
     var heightPadding = 100;
@@ -162,11 +164,11 @@ console.log("circles initalized")
   // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
     console.log("we are zooming")
-   var zoomLevel = map.getZoom();
+    var maxValue = getMaxValue(hospitalData);
    circles
    .attr("cx", function(d) {return projectPoint(d.longitude, d.latitude).x})
    .attr("cy", function(d) {return projectPoint(d.longitude, d.latitude).y})
-   .attr("r", function(d) {return getCircleRadius(d)})
+   .attr("r", function(d) {return getCircleRadius(d, maxValue)})
 
    calculateSVGBounds(hospitalData);
    d3.select('#circleSVG').style('visibility', 'visible');
@@ -182,6 +184,10 @@ var initCircles = function(hospitalData){
   console.log(hospitalData);
   console.log("...end");
 
+  var maxValue = getMaxValue(hospitalData);
+
+  console.log("--------MAXRADIUS-------------")
+  console.log(maxValue);
 
   circles = svg.selectAll('circle')
     .data(hospitalData)
@@ -189,7 +195,7 @@ var initCircles = function(hospitalData){
     .append('circle')
     .style("fill-opacity", 0.7)
     .attr("r", function(d){
-      return getCircleRadius(d);
+      return getCircleRadius(d, maxValue);
     })
     .attr('fill', function(d) {
       return getCircleColour(d);
@@ -219,6 +225,7 @@ function callCharComponent(clickedHospital) {
   selectedHospital = clickedHospital;
 
   var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
+
 
   /*  filters only the current numerical attribute from clicked hospital */
   if (currentNumAttribute != null) {
@@ -374,10 +381,9 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
  */
 function initData(data, type, code){
   console.log("initData");
+  console.log(code);
 
-  console.log(code)
-
-
+  
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), size attribute value
@@ -399,6 +405,8 @@ function initData(data, type, code){
       if(sizeResult[0]!=null && sizeResult[0].value!=null){
         var sizeAttribute = Number(sizeResult[0].value);
       }
+      var maxValue = 0;
+      
 
       // filters type attribute and saves it in variable
       var typResult = attr.filter(function ( obj ) {
@@ -425,18 +433,6 @@ function initData(data, type, code){
       }
     }
   }
-
-  // get max value of radius attribute (to calculate radius of circles)
-  for(var i=0; i<hospitalData.length; i++){
-    if(hospitalData[i]!=null && hospitalData[i].radius!=null){
-      if(hospitalData[i].radius>maxRadius){
-        maxRadius = hospitalData[i].radius;
-      }
-      else{
-        continue;
-      }
-    }
-  }
 }
 
 /**
@@ -448,11 +444,12 @@ function initData(data, type, code){
  */
 var updateCircleRadius = function(numericalAttribute) {
   currentNumAttribute = numericalAttribute;
-  var code = numericalAttribute.code;
+  code = numericalAttribute.code;
   console.log("num attribute in mapinit");
   console.log(currentNumAttribute);
   console.log("----------------------------");
   console.log(getNumAttribute().nameDE);
+
 
   removeCircles();
   hospitalData = [];
@@ -481,29 +478,48 @@ var updateCircleShape = function(categoricalAttribute) {
 //------------------------------------------------------
 // outsourced functions for initCircles
 
-// /**
-//  * Gives markers different radius according to the numerical attribute
-//  * @param d data which is displayed as a circle
-//  * @returns {number} radius of the marker (according numerical attribute)
-//  */
-function getCircleRadius(d) {
-  var zoomLevel = map.getZoom();
-  if(d.radius == null){
-    return 4*zoomLevel*zoomLevel/100;
+/**
+ * Gives markers different radius according to the numerical attribute
+ * @param d data which is displayed as a circle
+ * @returns {number} radius of the marker (according numerical attribute)
+ */
+function getCircleRadius(d, maxValue) {
+  var zoomLevel = map.getZoom(); 
+  if (d.radius != null) {
+    return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
+  } else {
+    // circles without data have radius 0
+    return 0;
   }
-  if(d.radius*(1/maxRadius)*10 + 4 > 10){
-    return 10*zoomLevel*zoomLevel/100;
-  }
-  else{
-    return (d.radius*(1/maxRadius)*10 + 4)*zoomLevel*zoomLevel/100;
-  }
+ 
 }
 
-// /**
-//  * Gives markers different color according to its type attribute
-//  * @param d data which is displayed as a circle
-//  * @returns {string} color of the marker (according to type)
-//  */
+/**
+ * Returns the maximal value of the chosen numerical attribute
+ * @param hospitalData data which is displayed as a circle
+ * @returns {number} maximal radius of the chosen attribute 
+ */
+function getMaxValue(hospitalData) {
+  var maxValue = 0;
+  // get max value of radius attribute (to calculate radius of circles)
+  for(var i=0; i<hospitalData.length; i++){
+    if(hospitalData[i]!=null && hospitalData[i].radius!=null){
+      if(hospitalData[i].radius>maxValue){
+        maxValue = hospitalData[i].radius;
+      }
+      else{
+        continue;
+      }
+    }
+  }
+  return maxValue;
+}
+
+/**
+ * Gives markers different color according to its type attribute
+ * @param d data which is displayed as a circle
+ * @returns {string} color of the marker (according to type)
+ */
 function getCircleColour(d)  {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a');
