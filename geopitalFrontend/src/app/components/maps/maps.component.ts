@@ -35,29 +35,60 @@ export class MapsComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
 
     // should set num attribute to default value "EtMedL" TODO: make it work
+    // this.characteristicsService.getNumericalAttributes()
+    //   .subscribe(attributes => {
+    //     this.numericalAttributes = attributes;
+    //     for (let i of this.numericalAttributes) {
+    //       if(this.numericalAttributes.code!=null){
+    //         if(this.numericalAttributes[i].code=="EtMedL"){
+    //           console.log(this.numericalAttributes[i] + "----------------------");
+    //           setNumAttribute(this.numericalAttributes[i]);
+    //         }
+    //       }
+    //     }
+    //   });
+
+    // this.characteristicsService.getCategoricalAttributes()
+    //   .subscribe(attributes => {
+    //     this.categoricalAttributes = attributes;
+    //   })
+
+    // this.hospitalService.getAll()
+    //   .subscribe(hospitals => {
+    //     this.hospitalsList = hospitals;
+    //     mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
+    //   });
     this.characteristicsService.getNumericalAttributes()
-      .subscribe(attributes => {
-        this.numericalAttributes = attributes;
-        for (let i of this.numericalAttributes) {
-          if(this.numericalAttributes.code!=null){
-            if(this.numericalAttributes[i].code=="EtMedL"){
-              console.log(this.numericalAttributes[i] + "----------------------");
-              setNumAttribute(this.numericalAttributes[i]);
-            }
+    .subscribe(x => {
+      this.numericalAttributes = x;
+      for (let i of this.numericalAttributes) {
+        if(this.numericalAttributes.code!=null){
+          if(this.numericalAttributes[i].code=="EtMedL"){
+            console.log(this.numericalAttributes[i] + "----------------------");
+            setNumAttribute(this.numericalAttributes[i]);
           }
         }
-      });
+      }
+      this.characteristicsService.getCategoricalAttributes()
+      .subscribe(y => {
+        this.categoricalAttributes = y;
 
-    this.characteristicsService.getCategoricalAttributes()
-      .subscribe(attributes => {
-        this.categoricalAttributes = attributes;
+        this.hospitalService.getAll()
+        .subscribe(hospitals => {
+          this.hospitalsList = hospitals;
+          console.log("Retrieved hospital data from backend");
+          console.log(this.hospitalsList);
+          console.log("-------------------------");
+          mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
+        });
+
       })
+    });
 
-    this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
-      });
+
+
+
+
   }
 
   // everything in here is getting triggered every time the map is touched (click/hover)

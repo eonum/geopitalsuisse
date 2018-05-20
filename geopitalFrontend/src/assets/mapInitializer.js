@@ -20,8 +20,8 @@ var type;
 var selectedHospital;
 
 // hard code because it does not work yet in maps component
-var defaultNumAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
-  nameFR:"Produits des hospitalisations et soins", nameIT: "Ricavi per degenze e cure"};
+//var defaultNumAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus medizinischen Leistungen und Pflege",
+//  nameFR:"Produits des hospitalisations et soins", nameIT: "Ricavi per degenze e cure"};
 
 // var defaultCatAttribute = {code: "Typ", category: "string", nameDE:}
 /**
@@ -33,9 +33,24 @@ var defaultNumAttribute = {code:"EtMedL", category:"number", nameDE:"Ertrag aus 
  */
 var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
+  console.log("input data in mapDrawer")
+  console.log(hospitals)
+  console.log(numAttributes)
+  console.log(catAttributes)
+  console.log("end input data in mapDrawer")
+  
+
   // stores initially all data from all hospitals and sets the default values
   // of the numerical (EtMedL) and categorical (Typ) attributes
   allHospitalData = hospitals;
+
+  // set default selection to first hospital in list
+  selectedHospital = hospitals[0]
+
+
+console.log("created global variable allHospitalData");
+console.log(allHospitalData)
+
 
   // TODO: construct something that numAttributes and catAttributes are never null
   // sets default numerical attribute (EtMedL)
@@ -49,11 +64,15 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // sets size attribute to the default value (EtMedL)
   // prov. solution TODO: set attribute in maps component
-  setNumAttribute(defaultNumAttribute);
+ // setNumAttribute(defaultNumAttribute);
   //setCatAttribute(defaultCatAttribute);
   console.log(getNumAttribute());
 
   code = getNumAttribute().code;
+console.log("code:");
+console.log(code);
+
+
 
   //------------------------------------------------------
   // Initialize map and provided data
@@ -77,7 +96,8 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // initializes data so we can work with it for the visualisation (see function initData)
   initData(hospitals, type, code);
-
+console.log("Data initialized");
+console.log(hospitalData);
 
   //------------------------------------------------------
   // markers and tooltip with D3
@@ -88,6 +108,8 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // calculates svg bounds for the first time
   // on the svg-layer we implement the visualisation with D3
   calculateSVGBounds(hospitalData);
+console.log("SVG Bounds calculated");
+
 
   // Define the div for the tooltips (used for mouseover and click functionality)
   div = d3.select("body").append("div")
@@ -100,10 +122,13 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // project points using projectPoint() function
   initCircles(hospitalData);
+console.log("circles initalized")
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
   function projectPoint(x, y) {
+   // console.log("projectPoint");
+   // console.log(x + ":" + y);
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
     return point;
   }
@@ -113,13 +138,14 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // xmax is width and ymax is height of svg-layer
   // todo: this function has to be changed that the bounds are calculated better
   function calculateSVGBounds(hospitals) {
+    console.log("calculateSVGBounds")
     var xMax = 0;
     var yMax = 0;
     var heightPadding = 100;
     var widthPadding = 300;
     hospitals.forEach(function(d) {
-      xMax = Math.max(projectPoint(d.x, d.y).x, xMax);
-      yMax = Math.max(projectPoint(d.x, d.y).y, yMax);
+      xMax = Math.max(projectPoint(d.longitude, d.latitude).x, xMax);
+      yMax = Math.max(projectPoint(d.longitude, d.latitude).y, yMax);
     });
     svg
       .style("left", 0)
@@ -135,10 +161,11 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
+    console.log("we are zooming")
    var zoomLevel = map.getZoom();
    circles
-   .attr("cx", function(d) {return projectPoint(d.x, d.y).x})
-   .attr("cy", function(d) {return projectPoint(d.x, d.y).y})
+   .attr("cx", function(d) {return projectPoint(d.longitude, d.latitude).x})
+   .attr("cy", function(d) {return projectPoint(d.longitude, d.latitude).y})
    .attr("r", function(d) {return getCircleRadius(d)})
 
    calculateSVGBounds(hospitalData);
@@ -150,6 +177,12 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
  * Draws circles on map
  */
 var initCircles = function(hospitalData){
+
+  console.log("---INIT CIRCLES");
+  console.log(hospitalData);
+  console.log("...end");
+
+
   circles = svg.selectAll('circle')
     .data(hospitalData)
     .enter()
@@ -165,10 +198,10 @@ var initCircles = function(hospitalData){
       return getCircleBorderColour(d);
     })
     .attr("cx", function(d) {
-      return projectPoint(d.x, d.y).x;
+      return projectPoint(d.longitude, d.latitude).x;
     })
     .attr("cy", function(d) {
-      return projectPoint(d.x, d.y).y;
+      return projectPoint(d.longitude, d.latitude).y;
     })
     .on("mouseover", function(d) {
       return showTooltip(d);
@@ -340,6 +373,10 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
  * @param code String that defines the size of the circles
  */
 function initData(data, type, code){
+  console.log("initData");
+
+  console.log(code)
+
 
   for (var i = 0; i < data.length; i++){
 
@@ -357,6 +394,7 @@ function initData(data, type, code){
       var sizeResult = attr.filter(function( obj ) {
         return obj.code == code;
       });
+
       // saves value of code attribute in variable
       if(sizeResult[0]!=null && sizeResult[0].value!=null){
         var sizeAttribute = Number(sizeResult[0].value);
@@ -376,12 +414,12 @@ function initData(data, type, code){
       for(var j = 0; j < type.length; j++){
         if(type[j]!="none"){
           if(typAttribute==type[j]){
-            var newCoordinates = {x: longitude, y: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
+            var newCoordinates = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
             hospitalData.push(newCoordinates);
           }
         }
         if(type[j]=="none"){
-          var newCoordinates = {x: longitude, y: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
+          var newCoordinates = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
           hospitalData.push(newCoordinates);
         }
       }
@@ -434,7 +472,7 @@ var updateCircleShape = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   console.log("cat attribute in mapinit");
   console.log(currentCatAttribute);
-
+  console.log(selectedHospital)
   callCharComponent(selectedHospital);
 };
 

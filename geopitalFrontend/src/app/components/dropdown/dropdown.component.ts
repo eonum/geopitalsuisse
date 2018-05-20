@@ -49,7 +49,9 @@ export class DropdownComponent implements OnInit {
     updateCircleRadius(numericalAttribute);
   }
 
-  selectedCatAttribute(categorialAttribute) {
-    updateCircleShape(categorialAttribute);
+  selectedCatAttribute(categorcialAttribute) {
+    console.log("selectedCatAttribue")
+    console.log(categorcialAttribute)
+    updateCircleShape(categorcialAttribute);
   }
 }

@@ -22,7 +22,8 @@ export class HospitalService {
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('https://geopital.herokuapp.com/' + 'api/hospitals')
+    //return this.http.get<Hospital[]>('https://geopital.herokuapp.com/' + 'api/hospitals')
+    return this.http.get<Hospital[]>('https://psedev.herokuapp.com/api/hospitals')
     .map(res => {
       return res as Hospital[]
 
