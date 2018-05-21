@@ -1,268 +1,142 @@
-<!-- <body ng-app="">
 <div class="nav-bar-checkboxes">
-
   <nav id="checkboxes-container" class="navbar navbar-expand-lg navbar-dark bg-light">
-
-     Keep HTML: <input type="checkbox" ng-model="myVar" ng-init="myVar = true" id=myVar>
-<h1 id="display"></h1>
-    <div ng-if="myVar">
-    <h1>Welcome</h1>
-    <p>Welcome to my home.</p>
-    <hr>
-    </div>
-
-    <div id="checkboxes">
-
-      <fieldset>
-
-        <h4 id="catName"></h4>
-
-
-
-        <div class="wrapper">
-        <label class="container" id="catOpt1"> option 1
-          <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-          <span  class="checkmark1"></span>
-        </label>
-
-        <label class="container" id="catOpt2">
-          <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-          <span class="checkmark2"></span>
-        </label>
-      </div>
-
-
-
-        <label class="container" id="catOpt3">
-          <input type="checkbox" checked="checked" (change)="selectHospitalType('K121', 'K122', 'K123')">
-          <span class="checkmark3"></span>
-        </label>
-
-        <label class="container">
-          <input type="checkbox" checked="checked" (change)="selectHospitalType('K211', 'K212')">
-          <span class="checkmark4"></span>
-        </label>
-
-        <label class="container">
-          <input type="checkbox" checked="checked" (change)="selectHospitalType('K221')">
-          <span class="checkmark5"></span>
-        </label>
-
-        <label class="container">
-          <input type="checkbox" checked="checked" (change)="selectHospitalType('K231', 'K232', 'K233', 'K234', 'K235')">
-          <span class="checkmark6"></span>
-        </label>
-
-      </fieldset>
-
-    </div>
-  </nav>
-</div>
-</body> -->
-
-
-
-
-
-
-
-
-
-  <div class="nav-bar-checkboxes">
-    <nav id="checkboxes-container" class="navbar navbar-expand-lg navbar-dark bg-light">
-
-    <h5 id ="catTitle"></h5>
-
-    <!-- Keep HTML: <input type="checkbox" ng-model="RFormDisplay" ng-init="RFormDisplay = true" id=RFormDisplay> -->
-
-    <!-- <input ng-model="RFormDisplay" ng-init="RFormDisplay = true" id=RFormDisplay> -->
-    <!-- Keep HTML: <input type="checkbox" ng-model="AktDisplay" ng-init="AktDisplay = true" id=AktDisplay>
-    Keep HTML: <input type="checkbox" ng-model="SLDisplay" ng-init="SLDisplay = true" id=SLDisplay>
-    Keep HTML: <input type="checkbox" ng-model="WBDisplay" ng-init="WBDisplay = true" id=WBDisplay>
-    Keep HTML: <input type="checkbox" ng-model="SADisplay" ng-init="SADisplay = true" id=SADisplay>
-    Keep HTML: <input type="checkbox" ng-model="LADisplay" ng-init="LADisplay = true" id=LADisplay> -->
-
-
-<div id="RForm">
-    <fieldset>
-
+  <h5 id ="catTitle"></h5>
+    <div id="RForm">
+     <fieldset>
         <div class="wrapper">
           <label class="container"> R1
-            <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
+            <input type="checkbox"  checked="checked" (change)="selectedCatValue('RForm','R1')">
             <span  class="checkmark1"></span>
           </label>
           <label class="container"> R2
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
+            <input type="checkbox" checked="checked" (change)="selectedCatValue('RForm','R2')">
             <span class="checkmark1"></span>
           </label>
           <label class="container"> R3
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
+            <input type="checkbox" checked="checked" (change)="selectedCatValue('RForm','R3')">
             <span class="checkmark1"></span>
           </label>
           <label class="container"> R4
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
+            <input type="checkbox" checked="checked" (change)="selectedCatValue('RForm','R4')">
             <span class="checkmark1"></span>
           </label>
         </div>
-      </fieldset>
-</div>
+     </fieldset>
+    </div>
 
-<div id="Akt">
-    <fieldset>
-
-        <div class="wrapper">
-          <label class="container"> A
-            <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-            <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> B
-              <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-              <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> P
-              <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-              <span  class="checkmark1"></span>
-            </label>
-            <label class="container"> R
-                <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-                <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> A, P
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> A, R
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> P, R
-              <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-              <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> A, P, R
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-        </div>
-    </fieldset>
-</div>
-
-<div id="SL">
-    <fieldset>
-
-        <div class="wrapper">
-          <label class="container"> IPS
-            <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-            <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> NF
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> NF, IPS
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-          </label>
-        </div>
-    </fieldset>
-</div>
-
-<div id="WB">
-    <fieldset>
-
-        <div class="wrapper">
-          <label class="container"> Arzt
-            <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-            <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> BGs
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> Arzt, BGs
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-            </label>
-          <label class="container"> MSt, Arzt
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-          </label>
-          <label class="container"> MSt, Arzt, BGs
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-          </label>
-        </div>
-    </fieldset>
-</div>
-
-<div id="SA">
-    <fieldset>
-
-        <div class="wrapper">
-          <label class="container"> Arzt
-            <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-            <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> BGs
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> Arzt, BGs
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-            </label>
-          <label class="container"> MSt, Arzt
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-          </label>
-          <label class="container"> MSt, Arzt, BGs
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-          </label>
-        </div>
-    </fieldset>
-</div>
-
-<div id="LA">
-    <fieldset>
-
-        <div class="wrapper">
-          <label class="container"> Stat
-            <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-            <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> Stat, Amb
-            <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-            <span class="checkmark1"></span>
-          </label>
-        </div>
-      </fieldset>
-</div>
-
-      <!-- <div id="checkboxes">
+    <div id="Akt">
         <fieldset>
-          <h4 id="catName"></h4>
-          <div class="wrapper">
-            <label class="container" id="catOpt1">
-              <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
-              <span  class="checkmark1"></span>
-            </label>
-            <label class="container" id="catOpt2">
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-            </label>
-            <label class="container"id="catOpt3">
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-            </label>
-            <label class="container" id="catOpt4">
-              <input type="checkbox" checked="checked" (change)="selectedCatValue('Amb, Stat')">
-              <span class="checkmark1"></span>
-            </label>
-          </div>
+            <div class="wrapper">
+              <label class="container"> A
+                <input type="checkbox"  checked="checked" (change)="selectedCatValue('Akt','A')">
+                <span  class="checkmark1"></span>
+              </label>
+              <label class="container"> B
+                  <input type="checkbox"  checked="checked" (change)="selectedCatValue('Akt','B')">
+                  <span  class="checkmark1"></span>
+              </label>
+              <label class="container"> P
+                  <input type="checkbox"  checked="checked" (change)="selectedCatValue('Akt','P')">
+                  <span  class="checkmark1"></span>
+                </label>
+                <label class="container"> R
+                    <input type="checkbox"  checked="checked" (change)="selectedCatValue('Akt','R')">
+                    <span  class="checkmark1"></span>
+              </label>
+            </div>
         </fieldset>
-      </div> -->
+    </div>
 
-    </nav>
+    <div id="SL">
+        <fieldset>
 
-  </div>
+            <div class="wrapper">
+              <label class="container"> IPS
+                <input type="checkbox"  checked="checked" (change)="selectedCatValue('SL','IPS')">
+                <span  class="checkmark1"></span>
+              </label>
+              <label class="container"> NF
+                <input type="checkbox" checked="checked" (change)="selectedCatValue('SL','NF')">
+                <span class="checkmark1"></span>
+              </label>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="WB">
+        <fieldset>
+
+            <div class="wrapper">
+              <label class="container"> Arzt
+                <input type="checkbox"  checked="checked" (change)="selectedCatValue('WB','Arzt')">
+                <span  class="checkmark1"></span>
+              </label>
+              <label class="container"> BGs
+                <input type="checkbox" checked="checked" (change)="selectedCatValue('WB','BGs')">
+                <span class="checkmark1"></span>
+              </label>
+              <label class="container"> MSt
+                  <input type="checkbox" checked="checked" (change)="selectedCatValue('WB','MSt')">
+                  <span class="checkmark1"></span>
+                </label>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="SA">
+        <fieldset>
+
+            <div class="wrapper">
+              <label class="container"> Angio
+                <input type="checkbox"  checked="checked" (change)="selectedCatValue('SA','Angio')">
+                <span  class="checkmark1"></span>
+              </label>
+              <label class="container"> CC
+                <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','CC')">
+                <span class="checkmark1"></span>
+              </label>
+              <label class="container"> CT
+                <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','CT')">
+                <span class="checkmark1"></span>
+              </label>
+              <label class="container"> Dia
+                  <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','Dia')">
+                  <span class="checkmark1"></span>
+                </label>
+                <label class="container"> LB
+                  <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','LB')">
+                  <span class="checkmark1"></span>
+                </label>
+              <label class="container"> Lito
+                  <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','Lito')">
+                  <span class="checkmark1"></span>
+              </label>
+              <label class="container"> MRI
+                  <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','MRI')">
+                  <span class="checkmark1"></span>
+              </label>
+              <label class="container"> PET
+                <input type="checkbox" checked="checked" (change)="selectedCatValue('SA','PET')">
+                <span class="checkmark1"></span>
+              </label>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="LA">
+        <fieldset>
+
+            <div class="wrapper">
+              <label class="container"> Stat
+                <input type="checkbox"  checked="checked" (change)="selectedCatValue('LA','Stat')">
+                <span  class="checkmark1"></span>
+              </label>
+              <label class="container"> Amb
+                <input type="checkbox" checked="checked" (change)="selectedCatValue('LA','Amb')">
+                <span class="checkmark1"></span>
+              </label>
+            </div>
+          </fieldset>
+    </div>
+  </nav>
+</div>

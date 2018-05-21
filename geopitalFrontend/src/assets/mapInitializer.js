@@ -389,9 +389,13 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
  * @param code String that defines the size of the circles
  */
 function initData(data, type, code){
+  hospitalData = [];
   console.log("initData");
   console.log(code);
 
+  // TODO: include filter-function here, build a function in categorial-attributes
+  // to get the allDict dictionary
+  //var data = filter(inputdata,getAllDict())
 
   for (var i = 0; i < data.length; i++){
 
@@ -483,7 +487,7 @@ var updateCircleShape = function(categoricalAttribute) {
   updateCatOptions(categoricalAttribute);
 };
 
-function updateCatOptions (categoricalAttribute) {
+function updateCatOptions(categoricalAttribute) {
 
   console.log("####################")
 
@@ -539,6 +543,83 @@ function hideAllOptions(inputCode){
     return;
   }
 }
+
+
+function updateCirclesFromSelection(allDict){
+  
+  // update
+  hospitalData = [];
+  var filteredHospitals = filter(allHospitalData,allDict);
+  console.log("?????????????????");
+  console.log(filteredHospitals);
+  console.log("?????????????????");
+  initData(filteredHospitals, this.type, this.code);
+
+  removeCircles();
+  //update circles accordingly
+  initCircles(hospitalData);
+}
+
+
+function filter(hospitalDataToFilter, allDict){
+
+//  console.log("filter");
+ // console.log(hospitalDataToFilter);
+
+   // consider all hospitals to be eligable
+   var filteredHospitalData = [];
+
+   for (var i = 0; i < hospitalDataToFilter.length; i++){
+     //console.log("i:"+i);
+     //console.log(hospitalDataToFilter[i].hospital_attributes);
+      // filter for the unchecked attributes
+      // loop over all attributes of the i-th hospital
+      var skip = false;
+      for (var j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
+
+        if (skip){
+          break;
+        }
+
+        var currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
+        //console.log("currentCode:" + currentCode);
+        if(currentCode in allDict){
+          //console.log("it is in");
+          for (var key in allDict[currentCode]){
+          //   console.log("key = " + key);
+          //   console.log("DictValue = " + allDict[currentCode][key]);
+          //  console.log("value = " + hospitalDataToFilter[i].hospital_attributes[j].value);
+          //  console.log("includes=" + hospitalDataToFilter[i].hospital_attributes[j].value.includes(key));
+          //  console.log("true? =" + !allDict[currentCode][key]);
+           if(!allDict[currentCode][key] && 
+              hospitalDataToFilter[i].hospital_attributes[j].value.includes(key)){
+               // console.log("skip that one");
+                skip = true;
+                //filteredHospitalData.push(hospitalDataToFilter[i]);
+                break;
+              } else {
+                continue;
+            }
+          }
+
+        } else {
+          // attribute is not part of the filter dictionary
+          continue;
+        }
+        
+      }
+
+      if(skip){
+        continue;
+      } else {
+        //console.log("pushing the hospital number " + i);
+        filteredHospitalData.push(hospitalDataToFilter[i]);
+      }
+    }
+    return filteredHospitalData;
+}
+
+
 
 
 //------------------------------------------------------
