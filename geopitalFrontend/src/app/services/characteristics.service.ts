@@ -21,7 +21,7 @@ export class CharacteristicsService {
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getCategoricalAttributes(): Observable<Attributes[]> {
-    return this.http.get<Attributes[]>('https://psedev.herokuapp.com/' + 'api/attributeTypes')
+    return this.http.get<Attributes[]>('https://geopital.herokuapp.com/' + 'api/attributeTypes')
       .map(res => {
         return res['attribute_types_string'] as Attributes[];
       })
