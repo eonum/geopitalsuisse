@@ -1,0 +1,211 @@
+/* contains the navbar with the checkboxes */
+#checkboxes-container{
+    height:235px;
+    width:300px;
+    position:relative;
+    z-index:4000;
+    float:right;
+    margin-right:0px;
+    margin-top:0px;
+    border: 0.5px solid #f1f1f1;
+  }
+  .wrapper {
+    overflow-y:scroll;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+  /* container for the checkboxes */
+  .container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color:#443f3f;
+  }
+  .checkmark2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color:#443f3f;
+  }
+  /* .checkmark3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color:#2ca82a;
+  }
+  .checkmark4 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #2a8ea8;
+  }
+  .checkmark5 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #2c2aa8;
+  }
+  .checkmark6 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #772aa8;
+  } */
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark1:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkmark2:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  /* .checkmark3:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkmark4:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkmark5:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkmark6:after {
+    content: "";
+    position: absolute;
+    display: none;
+  } */
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark1:after {
+    display: block;
+  }
+  .container input:checked ~ .checkmark2:after {
+    display: block;
+  }
+  /* .container input:checked ~ .checkmark3:after {
+    display: block;
+  }
+  .container input:checked ~ .checkmark4:after {
+    display: block;
+  }
+  .container input:checked ~ .checkmark5:after {
+    display: block;
+  }
+  .container input:checked ~ .checkmark6:after {
+    display: block;
+  } */
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark1:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  .container .checkmark2:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  /* .container .checkmark3:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  .container .checkmark4:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  .container .checkmark5:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  .container .checkmark6:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  } */
+  

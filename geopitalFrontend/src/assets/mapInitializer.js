@@ -13,6 +13,7 @@ var circles;
 var hospitalData = [];
 var currentNumAttribute;
 var currentCatAttribute;
+var allCatAttributes = []
 var svg;
 var code; // size attribute that defines radius of a circle (default "EdMedL")
 //var maxRadius = 0; // maximal value of the size attribute that defines the radius
@@ -44,8 +45,13 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // of the numerical (EtMedL) and categorical (Typ) attributes
   allHospitalData = hospitals;
 
+  allCatAttributes = catAttributes;
+  
+
   // set default selection to first hospital in list
   selectedHospital = hospitals[0]
+
+//  document.getElementById('RFormDisplay').innerHTML = "false";
 
   // document.getElementById('hospitalName').innerHTML = hospitals[0].name;
   // document.getElementById('hospitalAddress').innerHTML = hospitals[0].streetAndNumber + "<br/>"
@@ -244,8 +250,11 @@ function callCharComponent(clickedHospital) {
     catResult = 0;
   }
 
+  console.log("current numattribute")
+  console.log(currentNumAttribute)
   console.log("only current attr from clicked hospital SIZERESULT")
   console.log(sizeResult)
+
   console.log("only current attr from clicked hospital CATRESULT")
   console.log(catResult)
 
@@ -445,10 +454,10 @@ function initData(data, type, code){
 var updateCircleRadius = function(numericalAttribute) {
   currentNumAttribute = numericalAttribute;
   code = numericalAttribute.code;
-  console.log("num attribute in mapinit");
-  console.log(currentNumAttribute);
-  console.log("----------------------------");
-  console.log(getNumAttribute().nameDE);
+  // console.log("num attribute in mapinit");
+  // console.log(currentNumAttribute);
+  // console.log("----------------------------");
+  // console.log(getNumAttribute().nameDE);
 
 
   removeCircles();
@@ -469,10 +478,67 @@ var updateCircleShape = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   console.log("cat attribute in mapinit");
   console.log(currentCatAttribute);
-  console.log(selectedHospital)
+  // console.log(selectedHospital)
   callCharComponent(selectedHospital);
+  updateCatOptions(categoricalAttribute);
 };
 
+function updateCatOptions (categoricalAttribute) {
+
+  console.log("####################")
+  
+  // hide all categorical attributes
+  for(var i = 0; i<allCatAttributes.length; i++){
+    hideAllOptions(allCatAttributes[i].code);
+  }
+
+  // only display the selected one
+  toggleOptions(categoricalAttribute.code);
+
+  // change the category title accordingly
+  document.getElementById('catTitle').innerHTML = categoricalAttribute.nameDE;
+
+
+
+  console.log("####################")
+
+
+
+  // document.getElementById('catName').innerHTML = categoricalAttribute.nameDE;
+  // if (categoricalAttribute.code == "LA") {
+  //   document.getElementById('catOpt1').innerHTML = "Stationär";
+  //   document.getElementById('catOpt2').innerHTML = "Ambulant, Stationär";
+  // }
+  // if (categoricalAttribute.code == "SL") {
+  //   document.getElementById('catOpt1').innerHTML = "IPS";
+  //   document.getElementById('catOpt2').innerHTML = "NF";
+  //   document.getElementById('catOpt3').innerHTML = "NF, IPS";
+  // }
+}
+
+function toggleOptions(inputCode){
+  try{
+    var x = document.getElementById(inputCode);
+
+    if(x.style.display == "none"){
+      x.style.display = "block"
+    } else {
+      x.style.display = "none";
+    }
+  } catch(err) {
+    //console.log("could not toggle code " + inputCode);
+    return
+  }
+}
+
+function hideAllOptions(inputCode){
+  try{
+    var x = document.getElementById(inputCode);
+    x.style.display = "none";
+  }catch(err){
+    return;
+  }
+}
 
 
 //------------------------------------------------------
@@ -485,13 +551,11 @@ var updateCircleShape = function(categoricalAttribute) {
  */
 function getCircleRadius(d, maxValue) {
   var zoomLevel = map.getZoom(); 
-  if (d.radius != null) {
-    return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
+  if (!d.radius) {
+    return 0; // circles without data have radius 0
   } else {
-    // circles without data have radius 0
-    return 0;
-  }
- 
+    return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
+  } 
 }
 
 /**

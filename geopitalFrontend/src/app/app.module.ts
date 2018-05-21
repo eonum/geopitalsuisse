@@ -18,6 +18,7 @@ import {AddressService} from "./services/address.service";
 import {AppRoutingModule} from "./app-routing.module";
 import { AttributesComponent } from './components/attributes/attributes.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { CategorialAttributesComponent } from './components/categorial-attributes/categorial-attributes.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     AddressComponent,
     AttributesComponent,
     DropdownComponent,
+    CategorialAttributesComponent,
   ],
   imports: [
     BrowserModule,
