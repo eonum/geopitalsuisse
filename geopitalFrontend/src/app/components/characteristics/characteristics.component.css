@@ -1,5 +1,5 @@
 #char-container{
-    height:250px;
+    height:240px;
     width:300px;
     position:relative;
     z-index:4000;
@@ -8,7 +8,7 @@
     margin-top:0px;
     border: 0.5px solid #f1f1f1;
   }
-  
+
 #characteristics{
   /* relative to height of char-container (?)*/
     max-height:250px;
@@ -32,7 +32,6 @@
   max-height:150px;
   overflow-y:scroll;
   -ms-overflow-style: -ms-autohiding-scrollbar;
-    
+
 }
 
-  

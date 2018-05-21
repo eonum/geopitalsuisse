@@ -39,14 +39,14 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   console.log(numAttributes)
   console.log(catAttributes)
   console.log("end input data in mapDrawer")
-  
+
 
   // stores initially all data from all hospitals and sets the default values
   // of the numerical (EtMedL) and categorical (Typ) attributes
   allHospitalData = hospitals;
 
   allCatAttributes = catAttributes;
-  
+
 
   // set default selection to first hospital in list
   selectedHospital = hospitals[0]
@@ -392,7 +392,7 @@ function initData(data, type, code){
   console.log("initData");
   console.log(code);
 
-  
+
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), size attribute value
@@ -415,7 +415,7 @@ function initData(data, type, code){
         var sizeAttribute = Number(sizeResult[0].value);
       }
       var maxValue = 0;
-      
+
 
       // filters type attribute and saves it in variable
       var typResult = attr.filter(function ( obj ) {
@@ -486,7 +486,7 @@ var updateCircleShape = function(categoricalAttribute) {
 function updateCatOptions (categoricalAttribute) {
 
   console.log("####################")
-  
+
   // hide all categorical attributes
   for(var i = 0; i<allCatAttributes.length; i++){
     hideAllOptions(allCatAttributes[i].code);
@@ -550,18 +550,18 @@ function hideAllOptions(inputCode){
  * @returns {number} radius of the marker (according numerical attribute)
  */
 function getCircleRadius(d, maxValue) {
-  var zoomLevel = map.getZoom(); 
+  var zoomLevel = map.getZoom();
   if (!d.radius) {
     return 0; // circles without data have radius 0
   } else {
     return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
-  } 
+  }
 }
 
 /**
  * Returns the maximal value of the chosen numerical attribute
  * @param hospitalData data which is displayed as a circle
- * @returns {number} maximal radius of the chosen attribute 
+ * @returns {number} maximal radius of the chosen attribute
  */
 function getMaxValue(hospitalData) {
   var maxValue = 0;

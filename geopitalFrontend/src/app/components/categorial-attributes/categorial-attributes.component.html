@@ -67,25 +67,25 @@
 
 
 
-<body ng-app="">
+
   <div class="nav-bar-checkboxes">
     <nav id="checkboxes-container" class="navbar navbar-expand-lg navbar-dark bg-light">
 
-    <h4 id ="catTitle"></h4>
-  
+    <h5 id ="catTitle"></h5>
+
     <!-- Keep HTML: <input type="checkbox" ng-model="RFormDisplay" ng-init="RFormDisplay = true" id=RFormDisplay> -->
-      
+
     <!-- <input ng-model="RFormDisplay" ng-init="RFormDisplay = true" id=RFormDisplay> -->
     <!-- Keep HTML: <input type="checkbox" ng-model="AktDisplay" ng-init="AktDisplay = true" id=AktDisplay>
     Keep HTML: <input type="checkbox" ng-model="SLDisplay" ng-init="SLDisplay = true" id=SLDisplay>
     Keep HTML: <input type="checkbox" ng-model="WBDisplay" ng-init="WBDisplay = true" id=WBDisplay>
     Keep HTML: <input type="checkbox" ng-model="SADisplay" ng-init="SADisplay = true" id=SADisplay>
     Keep HTML: <input type="checkbox" ng-model="LADisplay" ng-init="LADisplay = true" id=LADisplay> -->
-    
+
 
 <div id="RForm">
     <fieldset>
-               
+
         <div class="wrapper">
           <label class="container"> R1
             <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -109,7 +109,7 @@
 
 <div id="Akt">
     <fieldset>
-       
+
         <div class="wrapper">
           <label class="container"> A
             <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -149,7 +149,7 @@
 
 <div id="SL">
     <fieldset>
-          
+
         <div class="wrapper">
           <label class="container"> IPS
             <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -169,7 +169,7 @@
 
 <div id="WB">
     <fieldset>
-       
+
         <div class="wrapper">
           <label class="container"> Arzt
             <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -197,7 +197,7 @@
 
 <div id="SA">
     <fieldset>
-     
+
         <div class="wrapper">
           <label class="container"> Arzt
             <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -225,7 +225,7 @@
 
 <div id="LA">
     <fieldset>
-         
+
         <div class="wrapper">
           <label class="container"> Stat
             <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -241,7 +241,7 @@
 
       <!-- <div id="checkboxes">
         <fieldset>
-          <h4 id="catName"></h4>        
+          <h4 id="catName"></h4>
           <div class="wrapper">
             <label class="container" id="catOpt1">
               <input type="checkbox"  checked="checked" (change)="selectedCatValue('Stat')">
@@ -266,4 +266,3 @@
     </nav>
 
   </div>
-</body>
