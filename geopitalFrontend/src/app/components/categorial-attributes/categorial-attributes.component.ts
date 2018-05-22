@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 declare function selectedCatValue(value): any;
+declare function hideAllOptions(categories): any;
 declare function updateCatOptions(defaultCategory): any;
 declare function updateCirclesFromSelection(allDict): any;
 
@@ -33,9 +34,15 @@ export class CategorialAttributesComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {    
-    // displays default category (RForm) on loaded site
+  ngOnInit() {
+    // option panel must be wiped first
+    for (var i =0 ; i<this.CatCodeList.length; i++) {
+      hideAllOptions(this.CatCodeList[i]);
+    }
+    
+    // displays default category (RForm)
     updateCatOptions(this.DefaultCategory);
+    
   }
 
   // updates the selected/deselected options and give the information to mapInitializer
