@@ -20,8 +20,6 @@ var type;
 var selectedHospital;
 var filteredHospitals = []; // contains hospitals filtered according to the selection of the categorical attributes
 
-// hardcoded until it's contained in the catAttributes again (wait for backend)
-var defaultCatAttribute = {code:"Typ", category:"string", nameDE:"Spitaltyp, gemäss BFS Spitaltypologie"};
 
 /**
  * Initializes map with the correct design.
@@ -38,7 +36,6 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   console.log(catAttributes)
   console.log("end input data in mapDrawer")
 
-
   // stores initially all data from all hospitals and sets the default values
   // of the numerical (EtMedL) and categorical (Typ) attributes
   allHospitalData = hospitals;
@@ -51,11 +48,9 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
     return obj.code == "EtMedL";
   })
   // sets default categorical attribute (Typ)
-  // defaultAttribute until the real attribute is part of the catAttributes again (wait for backend)
-  currentCatAttribute = defaultCatAttribute;
-  // currentCatAttribute = catAttributes.find(function ( obj ) {
-  //   return obj.code == "Typ";
-  // })
+  currentCatAttribute = catAttributes.find(function ( obj ) {
+    return obj.code == "Typ";
+  })
   console.log("current catAttr in mapdrawer")
   console.log(currentCatAttribute)
    // set default selection to first hospital in list and show it on Steckbrief
@@ -451,7 +446,7 @@ var updateCircleRadius = function(numericalAttribute) {
  * Updates the current categorical attribute for characteristics (Steckbrief)
  * and initializes the update of the options according to the chosen
  * categorial attribute
- * @param categoricalAttribute selected categorical Attribute from Dropdown2
+ * @param categoricalAttribute selected categorical Attribute from Dropdown1
  */
 var showCatOptions = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
@@ -464,9 +459,10 @@ var showCatOptions = function(categoricalAttribute) {
 /**
  * Displays the options according to the chosen categorical attribute
  * on the menu (categorical-attributes)
- * @param categoricalAttribute selected categorical Attribute from Dropdown2
+ * @param categoricalAttribute selected categorical Attribute from Dropdown1
  */
 function updateCatOptions(categoricalAttribute) {
+
   // hide all categorical attributes
   for(var i = 0; i<allCatAttributes.length; i++){
     hideAllOptions(allCatAttributes[i].code);
@@ -480,7 +476,7 @@ function updateCatOptions(categoricalAttribute) {
 
 /**
  * Displays only the options for the selected categorical attribute
- * @param inputCode selected categorical Attribute from Dropdown2
+ * @param inputCode selected categorical Attribute from Dropdown1
  */
 function toggleOptions(inputCode){
   try{
@@ -504,6 +500,22 @@ function hideAllOptions(inputCode){
   }catch(err){
     return;
   }
+}
+
+// displays the default options of "RForm", see categorical-attributes.component.ts
+// TODO: find the bug: why is allCatAttributes empty?
+// then call "updateCatOptions"
+function displayDefaultOptions(defaultCode) {
+  console.log("defaultCODE")
+    console.log(defaultCode);
+    console.log("ALLCATATT")
+    console.log(allCatAttributes);
+
+   var defaultCategory = allCatAttributes.find(function ( obj ) {
+    return obj.code == defaultCode;
+    console.log("defaultCATEGORY")
+    console.log(defaultCategory);
+  })
 }
 
 /**

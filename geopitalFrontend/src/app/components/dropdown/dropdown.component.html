@@ -11,7 +11,7 @@
           <!-- first dropdown with numeric attributes -->
           <div id="numAttr" class="dropdown" style="padding-bottom:5px; padding-right:5px;">
               <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                1. Attribut:
+                Filter:
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#" *ngFor="let attribute of categoricalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
@@ -21,7 +21,7 @@
           <!-- second dropdown with categorial attributes -->
           <div id="katAttr" class="dropdown" style="padding-bottom:5px; padding-left:5px;">
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-              2. Attribut:
+              Kennzahlen:
             </button>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="#" *ngFor="let attribute of numericalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>

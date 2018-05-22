@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 declare function selectedCatValue(value): any;
 declare function hideAllOptions(categories): any;
+//declare function updateCatOptions(defaultCategory): any;
+declare function displayDefaultOptions(defaultCategory): any;
 declare function updateCirclesFromSelection(allDict): any;
 
 @Component({
@@ -9,9 +11,11 @@ declare function updateCirclesFromSelection(allDict): any;
   styleUrls: ['./categorial-attributes.component.css']
 })
 export class CategorialAttributesComponent implements OnInit {
-
+  // all categorical codes
   private CatCodeList = ["RForm", "Akt", "SL", "WB", "SA", "LA"];
   
+  // dictionaries with all options of the categorical codes,
+  // when an option is true it's selected, when false it's deselected
   RformDict = {'R1':true, 'R2':true, 'R3':true, 'R4':true};
   AktDict = {'A':true, 'B':true, 'P':true, 'R':true};
   SLDict = {'IPS':true, 'NF':true};
@@ -27,25 +31,23 @@ export class CategorialAttributesComponent implements OnInit {
               'SA':this.SADict,
               'LA':this.LADict};
 
-
   constructor() { }
 
   ngOnInit() {
+    // option panel must be wiped first
     for (var i =0 ; i<this.CatCodeList.length; i++) {
       hideAllOptions(this.CatCodeList[i]);
     }
+    // displays default category (RForm)
+    displayDefaultOptions(this.CatCodeList[0])
+    //updateCatOptions(this.CatCodeList[0]);
     
   }
 
+  // updates the selected/deselected options and give the information to mapInitializer
   selectedCatValue(category, code) {
-
-   console.log("changing filter in category:" + category);
-   console.log("code: " + code)
-   console.log("set to: " + this.allDict[category][code]);
-  // invert boolean decoding
+  // inverts boolean of selected / deselected option
   this.allDict[category][code] = !this.allDict[category][code]
-  console.log("set to: " + this.allDict[category][code]);
-
   updateCirclesFromSelection(this.allDict);
   }
 

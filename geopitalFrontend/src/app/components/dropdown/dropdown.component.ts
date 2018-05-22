@@ -32,8 +32,13 @@ export class DropdownComponent implements OnInit {
     this.characteristicsService.getCategoricalAttributes()
       .subscribe(attributes => {
         this.categoricalAttributes = attributes;
+        
+        // extract the categorical attribute "Typ" since its not used in this selection
+        this.categoricalAttributes = this.categoricalAttributes.filter(attribute => {
+        return attribute.code !== "Typ";
+        })
       });
-
+      
     this.characteristicsService.getNumericalAttributes()
       .subscribe(attributes => {
         this.numericalAttributes = attributes;
