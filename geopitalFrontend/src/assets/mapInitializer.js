@@ -51,7 +51,7 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   })
   // sets default categorical attribute (Typ)
   currentCatAttribute = catAttributes.find(function ( obj ) {
-    return obj.code == "Typ";
+    return obj.code == "RForm";
   })
   console.log("current catAttr in mapdrawer")
   console.log(currentCatAttribute)
@@ -239,8 +239,13 @@ function callCharComponent(clickedHospital) {
 
   // displays the name and address of the clickes hospital in characteristics (Steckbrief)
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
-  document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
-  + clickedHospitalData.zipCodeAndCity;
+  if (clickedHospitalData.streetAndNumber != null) {
+    document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
+    + clickedHospitalData.zipCodeAndCity;
+  } else {
+    document.getElementById('hospitalAddress').innerHTML = "" + clickedHospitalData.zipCodeAndCity;
+  }
+  
 
   // displays the values of the current numerical and categorical attribute of clicked hospital
   if (sizeResult != null) {
@@ -380,10 +385,6 @@ function initData(data, type){
   // initially empty array to be filled up with hospitals to be displayed on map
   hospitalData = [];
 
-  // TODO: include filter-function here, build a function in categorial-attributes
-  // to get the allDict dictionary
-  //var data = filter(inputdata,getAllDict())
-
   for (var i = 0; i < data.length; i++){
 
     // stores name, coordinates (latitude, longitude), size attribute value
@@ -404,9 +405,9 @@ function initData(data, type){
       // saves value of code attribute in variable
       if(sizeResult[0]!=null && sizeResult[0].value!=null){
         var sizeAttribute = Number(sizeResult[0].value);
+      } else {
+        continue;
       }
-      var maxValue = 0;
-
 
       // filters type attribute and saves it in variable
       var typResult = attr.filter(function ( obj ) {
@@ -637,8 +638,8 @@ function filter(hospitalDataToFilter, allDict){
  */
 function getCircleRadius(d, maxValue) {
   var zoomLevel = map.getZoom();
-  if (!d.radius) {
-    return 0; // circles with value 0 or without data have radius 2
+  if (d.radius == 0) {
+    return 3*zoomLevel*zoomLevel/100; // circles with value 0 have radius 3
   } else {
     return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
   }
