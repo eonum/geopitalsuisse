@@ -18,7 +18,7 @@ var allCatAttributes = [];
 var svg;
 var type;
 var selectedHospital;
-var filteredHospitals = []; // contains hospitals filtered according to the selection of the categorical attributes
+var filteredHospitals; // contains hospitals filtered according to the selection of the categorical attributes
 
 
 /**
@@ -39,6 +39,8 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // stores initially all data from all hospitals and sets the default values
   // of the numerical (EtMedL) and categorical (Typ) attributes
   allHospitalData = hospitals;
+
+  filteredHospitals = ["none"];
 
   allCatAttributes = catAttributes;
 
@@ -321,7 +323,16 @@ var removeCircles = function(){
  */
 var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
 
-  var data = filteredHospitals;
+  var data;
+
+  if(filteredHospitals[0]!="none"){
+    data = filteredHospitals;
+  }
+  else{
+    data = allHospitalData;
+  }
+
+
   //code = getNumAttribute().code;
 
   // remove circles that are already defined so we can initialize them again with other data
