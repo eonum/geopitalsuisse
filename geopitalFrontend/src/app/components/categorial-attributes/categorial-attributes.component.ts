@@ -21,10 +21,10 @@ export class CategorialAttributesComponent implements OnInit {
   LADict = {'Stat':true, 'Amb':true};              
 
   allDict = {'RForm':this.RformDict,
-              'Akt': this.AktDict,
-              'SL': this.SLDict,
-              'WB': this.WBDict,
-              'SA': this.SADict,
+              'Akt':this.AktDict,
+              'SL':this.SLDict,
+              'WB':this.WBDict,
+              'SA':this.SADict,
               'LA':this.LADict};
 
 
@@ -34,6 +34,7 @@ export class CategorialAttributesComponent implements OnInit {
     for (var i =0 ; i<this.CatCodeList.length; i++) {
       hideAllOptions(this.CatCodeList[i]);
     }
+    
   }
 
   selectedCatValue(category, code) {

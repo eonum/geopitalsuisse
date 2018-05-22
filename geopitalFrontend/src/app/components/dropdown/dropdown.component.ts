@@ -2,7 +2,7 @@ import {Component, OnInit } from '@angular/core';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import {Attributes} from "../../models/attributes.model";
 declare function updateCircleRadius(attribute): any;
-declare function updateCircleShape(attribute): any;
+declare function showCatOptions(attribute): any;
 declare function setNumAttribute(attribute): any;
 
 /**
@@ -41,17 +41,21 @@ export class DropdownComponent implements OnInit {
   }
 
   /**
-   * Function is called when user selects an attribute in the dropdown from the html.
-   * @param attribute selected attribute from dropdown
+   * Function is called when user selects an attribute in the dropdown1 from the html.
+   * @param categorcialAttribute selected categorical attribute from dropdown1
+   */
+  selectedCatAttribute(categorcialAttribute) {
+    showCatOptions(categorcialAttribute);
+  }
+
+  /**
+   * Function is called when user selects an attribute in the dropdown2 from the html.
+   * @param numericalAttribute selected numerical attribute from dropdown2
    */
   selectedNumAttribute(numericalAttribute){
     setNumAttribute(numericalAttribute);
     updateCircleRadius(numericalAttribute);
   }
 
-  selectedCatAttribute(categorcialAttribute) {
-    console.log("selectedCatAttribue")
-    console.log(categorcialAttribute)
-    updateCircleShape(categorcialAttribute);
-  }
+
 }
