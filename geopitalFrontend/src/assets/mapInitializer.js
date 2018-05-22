@@ -1,7 +1,9 @@
 /**
  * Contains logic of application
- * Is responsible that the map is initialized correctly
+ * Is at the beginning responsible that the map is initialized correctly
  * and the circles are drawn with the data provided.
+ * Then it is responsible that a certain selection from a user is displayed
+ * and visualized correctly.
  */
 
 // variables that we need globally that are initialized in a function at one point
@@ -10,13 +12,13 @@ var allHospitalData; // initialized in function mapDrawer, contains all hospital
 var div;
 var circles;
 var hospitalData = [];
-//var code; // size attribute that defines radius of a circle (default "EdMedL")
-var currentNumAttribute; 
-var currentCatAttribute; // categorial attribute to be displayed in Steckbrief and for filtering
+var currentNumAttribute;
+var currentCatAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
 var allCatAttributes = [];
 var svg;
 var type;
 var selectedHospital;
+var filteredHospitals = []; // contains hospitals filtered according to the selection of the categorical attributes
 
 // hardcoded until it's contained in the catAttributes again (wait for backend)
 var defaultCatAttribute = {code:"Typ", category:"string", nameDE:"Spitaltyp, gemäss BFS Spitaltypologie"};
@@ -58,7 +60,7 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   console.log(currentCatAttribute)
    // set default selection to first hospital in list and show it on Steckbrief
   selectedHospital = hospitals[0]
-  //callCharComponent(selectedHospital);
+  callCharComponent(selectedHospital);
 
   // sets size attribute to the default value (EtMedL)
   // prov. solution TODO: set attribute in maps component
@@ -324,7 +326,7 @@ var removeCircles = function(){
  */
 var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
 
-  var data = allHospitalData;
+  var data = filteredHospitals;
   //code = getNumAttribute().code;
 
   // remove circles that are already defined so we can initialize them again with other data
@@ -431,16 +433,12 @@ function initData(data, type){
  * Updates the current numerical attribute for characteristics (Steckbrief)
  * and initializes the change of circles' radius according to the chosen
  * numerical attribute
- * TODO: calculate new circle radius for current numerical attribute, visualisation not good yet (maybe calculateRadius better?)
  * @param numericalAttribute selected numerical Attribute from Dropdown1
  */
 var updateCircleRadius = function(numericalAttribute) {
   currentNumAttribute = numericalAttribute;
-  //code = numericalAttribute.code;
-  console.log("---currentNumAttribute---")
-  console.log(currentNumAttribute)
-  // console.log("----code----")
-//console.log(code)
+  console.log("---currentNumAttribute---");
+  console.log(currentNumAttribute);
 
   removeCircles();
   hospitalData = [];
@@ -509,15 +507,15 @@ function hideAllOptions(inputCode){
 }
 
 /**
- * Initializes the dataset for showing just the hospitals according to the 
+ * Initializes the dataset for showing just the hospitals according to the
  * selected options from the categorical attributes.
  * @param allDict the dictionary of the activated/deactivated options
  */
 function updateCirclesFromSelection(allDict){
-  
+
   // update
   hospitalData = [];
-  var filteredHospitals = filter(allHospitalData,allDict);
+  filteredHospitals = filter(allHospitalData,allDict);
   console.log("?????????????????");
   console.log(filteredHospitals);
   console.log("?????????????????");
@@ -539,15 +537,10 @@ function updateCirclesFromSelection(allDict){
  */
 function filter(hospitalDataToFilter, allDict){
 
-//  console.log("filter");
- // console.log(hospitalDataToFilter);
-
    // consider all hospitals to be eligable
    var filteredHospitalData = [];
 
    for (var i = 0; i < hospitalDataToFilter.length; i++){
-     //console.log("i:"+i);
-     //console.log(hospitalDataToFilter[i].hospital_attributes);
 
       // filter for the deselected attributes
       // loop over all attributes of the i-th hospital
@@ -571,7 +564,7 @@ function filter(hospitalDataToFilter, allDict){
           //  console.log("true? =" + !allDict[currentCode][key]);
 
           // skip hospitals who contains values according to the deselected (false) options
-           if(!allDict[currentCode][key] && 
+           if(!allDict[currentCode][key] &&
               hospitalDataToFilter[i].hospital_attributes[j].value.includes(key)){
                // console.log("skip that one");
                 skip = true;
@@ -585,7 +578,7 @@ function filter(hospitalDataToFilter, allDict){
           // attribute is not part of the filter dictionary
           continue;
         }
-        
+
       }
 
       if(skip){
