@@ -446,9 +446,17 @@ var updateCircleRadius = function(numericalAttribute) {
   console.log("---currentNumAttribute---");
   console.log(currentNumAttribute);
 
+  var data;
+  if(filteredHospitals[0]!="none"){
+    data = filteredHospitals;
+  }
+  else{
+    data = allHospitalData;
+  }
+
   removeCircles();
   hospitalData = [];
-  initData(allHospitalData, this.type);
+  initData(data, this.type);
   initCircles(hospitalData);
   callCharComponent(selectedHospital);
 };
@@ -516,9 +524,9 @@ function hideAllOptions(inputCode){
 // displays the default options of "RForm", see categorical-attributes.component.ts
 // TODO: find the bug: why is allCatAttributes empty?
 // then call "updateCatOptions"
-function displayDefaultOptions(defaultCode) {
+function displayDefaultOptions(defaultCategory) {
   console.log("defaultCODE")
-    console.log(defaultCode);
+    console.log(defaultCategory);
     console.log("ALLCATATT")
     console.log(allCatAttributes);
 
@@ -629,8 +637,8 @@ function filter(hospitalDataToFilter, allDict){
  */
 function getCircleRadius(d, maxValue) {
   var zoomLevel = map.getZoom();
-  if (d.radius == null) {
-    return 1*zoomLevel*zoomLevel/100; // circles with value 0 or without data have radius 2
+  if (!d.radius) {
+    return 0; // circles with value 0 or without data have radius 2
   } else {
     return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
   }
