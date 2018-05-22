@@ -1,6 +1,6 @@
 /* contains the navbar with the checkboxes */
 #checkboxes-container{
-    height:100px;
+    height:90px;
     width:300px;
     position:relative;
     z-index:4000;
