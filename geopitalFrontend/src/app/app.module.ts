@@ -17,8 +17,6 @@ import { CategorialAttributesComponent } from './components/categorial-attribute
 
 import {CharacteristicsService} from './services/characteristics.service';
 import {HospitalService} from "./services/hospital.service";
-import {AddressService} from "./services/address.service";
-import {MapService} from './services/map.service';
 
 
 @NgModule({
@@ -42,10 +40,8 @@ import {MapService} from './services/map.service';
 
   ],
   providers: [
-    MapService,
     CharacteristicsService,
-    HospitalService,
-    AddressService
+    HospitalService
   ],
   bootstrap: [AppComponent]
 })
