@@ -15,7 +15,7 @@ var hospitalData = [];
 var currentNumAttribute; // numerical attribute that defines the radius of the circles
 var currentCatAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
 var allCatAttributes = [];
-var resetedAllDict; // contains all options of categorical attributes as "true" for resetting
+var checkBoxDictionary; // contains all options of categorical attributes as "true" for resetting
 var svg;
 var type;
 var selectedHospital;
@@ -415,18 +415,40 @@ var updateCircleRadius = function(numericalAttribute) {
  * @param categoricalAttribute selected categorical Attribute from Dropdown1
  */
 var showCatOptions = function(categoricalAttribute) {
+
+  // graphical checking of all checkboxes
+  resetCheckBoxes();
+
   currentCatAttribute = categoricalAttribute;
   console.log("---currentCatAttribute---")
   console.log(currentCatAttribute)
   callCharComponent(selectedHospital);
   updateCatOptions(categoricalAttribute);
-  // resets the filter of older selection
-  updateCirclesFromSelection(resetedAllDict);
   filteredHospitals = ["none"];
   removeCircles();
   initData(allHospitalData, this.type);
   initCircles(hospitalData);
 };
+
+
+function resetCheckBoxes(){
+
+  // mark all graphical checkboxes as "checked"
+  var allContainers = document.getElementsByName('checkbox');
+  for (var i = 0; i<allContainers.length; i++){
+    allContainers[i].checked = true
+  } 
+
+  // update the check box dictionary accordingly to true for all values
+  for (var key in checkBoxDictionary){
+    console.log("outerKey: " + key);
+    for (var innerKey in checkBoxDictionary[key]){
+      console.log("innerKey:" + innerKey)
+      checkBoxDictionary[key][innerKey] = true
+    }
+  }
+}
+
 
 /**
  * Displays the options according to the chosen categorical attribute
@@ -480,7 +502,7 @@ function hideAllOptions(inputCode){
  * @param allDict the dictionary of all options activated
  */
 function setDefaultOptionSelection(AllDict) {
-  resetedAllDict = AllDict;
+  checkBoxDictionary = AllDict;
 }
 
 /**
@@ -488,9 +510,14 @@ function setDefaultOptionSelection(AllDict) {
  * selected options from the categorical attributes.
  * @param allDict the dictionary of the activated/deactivated options
  */
-function updateCirclesFromSelection(allDict){
+//function updateCirclesFromSelection(allDict){
+function updateCirclesFromSelection(category, code){
+
+  // toggle dictionary entry of selected/deselected checkbox, described by category and code
+  checkBoxDictionary[category][code] = !checkBoxDictionary[category][code]
+
   // update
-  filteredHospitals = filter(allHospitalData,allDict);
+  filteredHospitals = filter(allHospitalData, checkBoxDictionary);
   console.log("?????????????????");
   console.log(filteredHospitals);
   console.log("?????????????????");
@@ -519,38 +546,41 @@ function filter(hospitalDataToFilter, allDict){
 
       // filter for the deselected attributes
       // loop over all attributes of the i-th hospital
-      var skip = false;
+      var skip = true;
       for (var j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
-        if (skip){
-          break;
-        }
-
+ 
         var currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
-
         // check only the attributes who are part of the categorical attributes (in allDict)
-        if(currentCode in allDict){
+        var checkPerformed = false;
+        if((currentCode == currentCatAttribute.code)  && (currentCode in allDict)){
           for (var key in allDict[currentCode]){
-          // skip hospitals who contains values according to the deselected (false) options
-           if(!allDict[currentCode][key] &&
+          // keep hospital if checkbox(dictionary) entry is true and contained in hospital attribute
+           if(allDict[currentCode][key] &&
               hospitalDataToFilter[i].hospital_attributes[j].value.includes(key)){
-                skip = true;
+                skip = false;
+                checkPerformed = true;
                 break;
-              } else {
+            } else {
                 continue;
             }
           }
-
+        checkPerformed = true;
         } else {
           // attribute is not part of the filter dictionary
           continue;
         }
+        // if we checked the currentCatAttribute we are done
+        if(checkPerformed){
+          break;
+        }
 
       }
 
+      // if skip is true, we don't add the hospital and continue with the next
       if(skip){
         continue;
       } else {
-        // hospital contains the selected option (true)
+      // we don't skip the hospital and add it to the selection
         filteredHospitalData.push(hospitalDataToFilter[i]);
       }
     }

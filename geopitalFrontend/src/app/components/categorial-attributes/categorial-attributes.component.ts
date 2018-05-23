@@ -3,7 +3,8 @@ declare function selectedCatValue(value): any;
 declare function hideAllOptions(categories): any;
 declare function updateCatOptions(defaultCategory): any;
 declare function setDefaultOptionSelection(allDict): any;
-declare function updateCirclesFromSelection(allDict): any;
+declare function updateCirclesFromSelection(category, code): any;
+// declare function setAllBoxesToChecked(allDict): any;
 
 @Component({
   selector: 'app-categorial-attributes',
@@ -48,9 +49,16 @@ export class CategorialAttributesComponent implements OnInit {
 
   // updates the selected/deselected options and give the information to mapInitializer
   selectedCatValue(category, code) {
+   // console.log(category)
+   // console.log(code)
   // inverts boolean of selected / deselected option
-  this.allDict[category][code] = !this.allDict[category][code]
-  updateCirclesFromSelection(this.allDict);
+  //this.allDict[category][code] = !this.allDict[category][code]
+  //updateCirclesFromSelection(this.allDict);
+    updateCirclesFromSelection(category, code);
   }
+
+
+
+
 
 }
