@@ -277,16 +277,6 @@ function callCharComponent(clickedHospital) {
     catResult = 0;
   }
 
-  console.log("current numattribute")
-  console.log(currentNumAttribute)
-  console.log("current catattribute")
-  console.log(currentCatAttribute)
-  console.log("only current attr from clicked hospital SIZERESULT")
-  console.log(sizeResult)
-
-  console.log("only current attr from clicked hospital CATRESULT")
-  console.log(catResult)
-
   // displays the name and address of the clickes hospital in characteristics (Steckbrief)
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
   if (clickedHospitalData.streetAndNumber != null) {
@@ -315,34 +305,6 @@ function callCharComponent(clickedHospital) {
   }
 }
 
-// sets numerical attribute to the current selected in dropdown or to the default value (EtMedL)
-function setNumAttribute(attributeArray){
-  if(attributeArray!=null){
-    this.currentNumAttribute = attributeArray;
-  }
-}
-
-// gets currently selected numerical attribute
-function getNumAttribute(){
-  return this.currentNumAttribute;
-}
-
-function setCatAttribute(attributeArray){
-  if(attributeArray!=null){
-    this.currentCatAttribute = attributeArray;
-  }
-}
-
-// returns an array with all data of the clicked hospital
-function getAllDataForClickedHospital(clickedHospital) {
-  var attr = allHospitalData;
-  // finds array according to clickedHospital
-  var attrResult = attr.find(function( obj ) {
-    return obj.name == clickedHospital.name;
-  });
-  return attrResult;
-}
-
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -364,11 +326,9 @@ var removeCircles = function(){
 
 /**
  * Updates map with new data
- * TODO: better implementation with type and not hardcoding
- * @param data data that contains all the information of the hospitals (from backend)
- * @param type describes type of hospital that should be shown
+ *
  * For the next parameters: number of times checkbox was pressed
- * --> since default is checked, even numbers (0,2,4,6) mean that this type should be displayed
+ * --> since default is checked, even numbers (0,2,4,6, ...) mean that this type should be displayed
  * @param numUniSp
  * @param numZentSp
  * @param numGrundVers
@@ -380,15 +340,13 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
 
   var data;
 
+  // use only filtered hospitals (categorical attributes) but only if a filter is active
   if(filteredHospitals[0]!="none"){
     data = filteredHospitals;
   }
   else{
     data = allHospitalData;
   }
-
-
-  //code = getNumAttribute().code;
 
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
@@ -572,22 +530,13 @@ function filter(hospitalDataToFilter, allDict){
         }
 
         var currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
-        //console.log("currentCode:" + currentCode);
 
         // check only the attributes who are part of the categorical attributes (in allDict)
         if(currentCode in allDict){
-          //console.log("it is in");
           for (var key in allDict[currentCode]){
-          //   console.log("key = " + key);
-          //   console.log("DictValue = " + allDict[currentCode][key]);
-          //  console.log("value = " + hospitalDataToFilter[i].hospital_attributes[j].value);
-          //  console.log("includes=" + hospitalDataToFilter[i].hospital_attributes[j].value.includes(key));
-          //  console.log("true? =" + !allDict[currentCode][key]);
-
           // skip hospitals who contains values according to the deselected (false) options
            if(!allDict[currentCode][key] &&
               hospitalDataToFilter[i].hospital_attributes[j].value.includes(key)){
-               // console.log("skip that one");
                 skip = true;
                 break;
               } else {
@@ -605,8 +554,6 @@ function filter(hospitalDataToFilter, allDict){
       if(skip){
         continue;
       } else {
-        //console.log("pushing the hospital number " + i);
-
         // hospital contains the selected option (true)
         filteredHospitalData.push(hospitalDataToFilter[i]);
       }
@@ -677,11 +624,11 @@ function getCircleColour(d)  {
     return ('#d633ff');
 }
 
-// /**
-//  * Gives markers different border color according to its type attribute
-//  * @param d data which is displayed as a circle
-//  * @returns {string} color of the border of the marker (according to type)
-//  */
+ /**
+  * Gives markers different border color according to its type attribute
+  * @param d data which is displayed as a circle
+  * @returns {string} color of the border of the marker (according to type)
+  */
 function getCircleBorderColour(d) {
   if (d.Typ == "K111") // Universitätspitäler
     return ('#a82a2a')
@@ -700,10 +647,10 @@ function getCircleBorderColour(d) {
 }
 
 
-// /**
-//  * Displays tooltip when hovering over a marker
-//  * @param d data which is displayed as a circle
-//  */
+ /**
+  * Displays tooltip when hovering over a marker
+  * @param d data which is displayed as a circle
+  */
 function showTooltip(d) {
   div.transition()
         .duration(1)
@@ -713,12 +660,44 @@ function showTooltip(d) {
         .style("top", (d3.event.pageY - 0) + "px");
 }
 
-// /**
-//  * Let's the tooltip disappear when hovering out of a marker
-//  * @param d data which is displayed as a circle
-//  */
+ /**
+  * Let's the tooltip disappear when hovering out of a marker
+  * @param d data which is displayed as a circle
+  */
 function removeTooltip(d) {
   div.transition()
         .duration(500)
         .style("opacity", 0);
+}
+
+
+//------------------------------------------------------
+// get and setter methods
+
+// sets numerical attribute to the currently selected in dropdown
+function setNumAttribute(attributeArray){
+  if(attributeArray!=null){
+    this.currentNumAttribute = attributeArray;
+  }
+}
+
+// gets currently selected numerical attribute
+function getNumAttribute(){
+  return this.currentNumAttribute;
+}
+
+function setCatAttribute(attributeArray){
+  if(attributeArray!=null){
+    this.currentCatAttribute = attributeArray;
+  }
+}
+
+// returns an array with all data of the clicked hospital
+function getAllDataForClickedHospital(clickedHospital) {
+  var attr = allHospitalData;
+  // finds array according to clickedHospital
+  var attrResult = attr.find(function( obj ) {
+    return obj.name == clickedHospital.name;
+  });
+  return attrResult;
 }
