@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 declare function selectedCatValue(value): any;
 declare function hideAllOptions(categories): any;
 declare function updateCatOptions(defaultCategory): any;
+declare function setDefaultOptionSelection(allDict): any;
 declare function updateCirclesFromSelection(allDict): any;
 
 @Component({
@@ -42,7 +43,7 @@ export class CategorialAttributesComponent implements OnInit {
     
     // displays default category (RForm)
     updateCatOptions(this.DefaultCategory);
-    
+    setDefaultOptionSelection(this.allDict);
   }
 
   // updates the selected/deselected options and give the information to mapInitializer

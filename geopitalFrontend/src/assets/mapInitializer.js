@@ -15,6 +15,7 @@ var hospitalData = [];
 var currentNumAttribute; // numerical attribute that defines the radius of the circles
 var currentCatAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
 var allCatAttributes = [];
+var resetedAllDict; // contains all options of categorical attributes as "true" for resetting
 var svg;
 var type;
 var selectedHospital;
@@ -351,8 +352,7 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
   // remove circles that are already defined so we can initialize them again with other data
   removeCircles();
 
-  // first empty array with hospital data then store only values with the right type
-  hospitalData = [];
+  // first empty type
   type = [];
 
   // build up data array
@@ -403,7 +403,6 @@ var updateCircleRadius = function(numericalAttribute) {
   }
 
   removeCircles();
-  hospitalData = [];
   initData(data, this.type);
   initCircles(hospitalData);
   callCharComponent(selectedHospital);
@@ -421,6 +420,12 @@ var showCatOptions = function(categoricalAttribute) {
   console.log(currentCatAttribute)
   callCharComponent(selectedHospital);
   updateCatOptions(categoricalAttribute);
+  // resets the filter of older selection
+  updateCirclesFromSelection(resetedAllDict);
+  filteredHospitals = ["none"];
+  removeCircles();
+  initData(allHospitalData, this.type);
+  initCircles(hospitalData);
 };
 
 /**
@@ -469,20 +474,13 @@ function hideAllOptions(inputCode){
   }
 }
 
-// displays the default options of "RForm", see categorical-attributes.component.ts
-// TODO: find the bug: why is allCatAttributes empty?
-// then call "updateCatOptions"
-function displayDefaultOptions(defaultCategory) {
-  console.log("defaultCODE")
-    console.log(defaultCategory);
-    console.log("ALLCATATT")
-    console.log(allCatAttributes);
-
-   var defaultCategory = allCatAttributes.find(function ( obj ) {
-    return obj.code == defaultCode;
-    console.log("defaultCATEGORY")
-    console.log(defaultCategory);
-  })
+/**
+ * Stores the dictionary with all options as true as global variable,
+ * used to reset the selection when chosing another categorical attribute
+ * @param allDict the dictionary of all options activated
+ */
+function setDefaultOptionSelection(AllDict) {
+  resetedAllDict = AllDict;
 }
 
 /**
@@ -491,9 +489,7 @@ function displayDefaultOptions(defaultCategory) {
  * @param allDict the dictionary of the activated/deactivated options
  */
 function updateCirclesFromSelection(allDict){
-
   // update
-  hospitalData = [];
   filteredHospitals = filter(allHospitalData,allDict);
   console.log("?????????????????");
   console.log(filteredHospitals);
