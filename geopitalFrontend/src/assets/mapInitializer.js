@@ -12,7 +12,7 @@ var allHospitalData; // initialized in function mapDrawer, contains all hospital
 var div;
 var circles;
 var hospitalData = [];
-var currentNumAttribute;
+var currentNumAttribute; // numerical attribute that defines the radius of the circles
 var currentCatAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
 var allCatAttributes = [];
 var svg;
@@ -25,54 +25,14 @@ var filteredHospitals; // contains hospitals filtered according to the selection
  * Initializes map with the correct design.
  * Draws circles from the provided data and implements zoom-function for these circles.
  *
- * @param data that sets where and how the hospitals are visualized as circles
- *        contains coordinates, general information and attributes of a hospital
+ * @param hospitals array, contains general information for each hospital (name, address, coordinates, attributes)
+ * @param numAttributes array, contains all numerical attributes a hospital can have (name, value, code)
+ * @param catAttributes array, contains all categorical attributes a hospital can have (name, value, code)
  */
 var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
-  console.log("input data in mapDrawer")
-  console.log(hospitals)
-  console.log(numAttributes)
-  console.log(catAttributes)
-  console.log("end input data in mapDrawer")
-
-  // stores initially all data from all hospitals and sets the default values
-  // of the numerical (EtMedL) and categorical (Typ) attributes
-  allHospitalData = hospitals;
-
-  filteredHospitals = ["none"];
-
-  allCatAttributes = catAttributes;
-
-  // TODO: construct something that numAttributes and catAttributes are never null
-  // sets default numerical attribute (EtMedL)
-  currentNumAttribute = numAttributes.find(function ( obj ) {
-    return obj.code == "EtMedL";
-  })
-  // sets default categorical attribute (Typ)
-  currentCatAttribute = catAttributes.find(function ( obj ) {
-    return obj.code == "RForm";
-  })
-  console.log("current catAttr in mapdrawer")
-  console.log(currentCatAttribute)
-   // set default selection to first hospital in list and show it on Steckbrief
-  selectedHospital = hospitals[0]
-  callCharComponent(selectedHospital);
-
-  // sets size attribute to the default value (EtMedL)
-  // prov. solution TODO: set attribute in maps component
- // setNumAttribute(defaultNumAttribute);
-  //setCatAttribute(defaultCatAttribute);
-  //console.log(getNumAttribute());
-
-//   code = getNumAttribute().code;
-// console.log("code:");
-// console.log(code);
-
-
-
   //------------------------------------------------------
-  // Initialize map and provided data
+  // Initialize map
 
   // defines map and sets default view when page is loaded
   map = L.map('mapid').setView([46.818188, 8.97512], 8);
@@ -86,15 +46,41 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-  // defines hospital types that are displayed as circles, since at first we want all types we give here "none"
-  // as none specific types have to be selected (see function initData)
+
+  //------------------------------------------------------
+  // Initialize data
+
+  // stores initially all data from all hospitals
+  allHospitalData = hospitals;
+
+  // TODO: construct something that numAttributes and catAttributes are never null, maybe solved?
+  // sets default numerical attribute (EtMedL)
+  currentNumAttribute = numAttributes.find(function ( obj ) {
+    return obj.code == "EtMedL";
+  });
+  // sets default categorical attribute (Typ)
+  currentCatAttribute = catAttributes.find(function ( obj ) {
+    return obj.code == "RForm";
+  });
+
+  // initialize array with "none" so we know that no hospitals have been filtered yet
+  filteredHospitals = ["none"];
+
+  // stores categorical attributes that can be displayed in Steckbrief
+  allCatAttributes = catAttributes;
+
+  // set default selection to first hospital in list and show it on Steckbrief
+  selectedHospital = hospitals[0];
+  callCharComponent(selectedHospital);
+
+  // defines hospital types (type attribute) that are displayed as circles, since at first we want all types
+  // we give here "none" as none specific types have to be selected (see function initData)
   type = [];
   this.type.push("none");
 
   // initializes data so we can work with it for the visualisation (see function initData)
   initData(hospitals, type);
-console.log("Data initialized");
-console.log(hospitalData);
+
 
   //------------------------------------------------------
   // markers and tooltip with D3
@@ -111,7 +97,7 @@ console.log(hospitalData);
     .attr("class", "tooltip")
     .style("opacity", 0.0);
 
-  // project points using projectPoint() function
+  // initialize circles on map
   initCircles(hospitalData);
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
@@ -126,7 +112,6 @@ console.log(hospitalData);
   // we have to calculate the width and the height of the svg element.
   // calculate the y max and x max value for all datapoints and add a padding.
   // xmax is width and ymax is height of svg-layer
-  // todo: this function has to be changed that the bounds are calculated better
   function calculateSVGBounds(hospitals) {
     var xMax = 0;
     var yMax = 0;
@@ -150,17 +135,17 @@ console.log(hospitalData);
 
   // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
-    console.log("we are zooming")
     var maxValue = getMaxValue(hospitalData);
-   circles
-   .attr("cx", function(d) {return projectPoint(d.longitude, d.latitude).x})
-   .attr("cy", function(d) {return projectPoint(d.longitude, d.latitude).y})
-   .attr("r", function(d) {return getCircleRadius(d, maxValue)})
+    circles
+      .attr("cx", function(d) {return projectPoint(d.longitude, d.latitude).x})
+      .attr("cy", function(d) {return projectPoint(d.longitude, d.latitude).y})
+      .attr("r", function(d) {return getCircleRadius(d, maxValue)});
 
-   calculateSVGBounds(hospitalData);
-   d3.select('#circleSVG').style('visibility', 'visible');
+    calculateSVGBounds(hospitalData);
+    d3.select('#circleSVG').style('visibility', 'visible');
   });
 };
+
 
 /**
  * Draws circles on map
@@ -245,7 +230,7 @@ function callCharComponent(clickedHospital) {
   } else {
     document.getElementById('hospitalAddress').innerHTML = "" + clickedHospitalData.zipCodeAndCity;
   }
-  
+
 
   // displays the values of the current numerical and categorical attribute of clicked hospital
   if (sizeResult != null) {
