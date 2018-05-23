@@ -1,6 +1,6 @@
 /* contains the navbar with the checkboxes */
 #checkboxes-container{
-    height:120px;
+    height:150px;
     width:300px;
     position:relative;
     z-index:4000;
@@ -18,11 +18,12 @@
     padding-top: 0px;
     padding-bottom: 0px;
     width: 290;
-    height: 70px;
-    overflow: auto;
-    /* width: 290;
+    height: 80px;
     overflow-y:scroll;
-    -ms-overflow-style: -ms-autohiding-scrollbar; */
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    /* overflow: auto; */
+    
+    
   }
   /* container for the checkboxes */
   .container {

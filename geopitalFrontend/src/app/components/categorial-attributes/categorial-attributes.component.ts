@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 declare function selectedCatValue(value): any;
 declare function hideAllOptions(categories): any;
-//declare function updateCatOptions(defaultCategory): any;
-declare function displayDefaultOptions(defaultCategory): any;
+declare function updateCatOptions(defaultCategory): any;
+declare function setDefaultOptionSelection(allDict): any;
 declare function updateCirclesFromSelection(allDict): any;
 
 @Component({
@@ -13,6 +13,8 @@ declare function updateCirclesFromSelection(allDict): any;
 export class CategorialAttributesComponent implements OnInit {
   // all categorical codes
   private CatCodeList = ["RForm", "Akt", "SL", "WB", "SA", "LA"];
+  // default category to show on loaded site
+  private DefaultCategory = {code:"RForm", nameDE:"Rechtsform", nameFR: "Forme juridique", nameIT: "Forma giuridica"}
   
   // dictionaries with all options of the categorical codes,
   // when an option is true it's selected, when false it's deselected
@@ -38,10 +40,10 @@ export class CategorialAttributesComponent implements OnInit {
     for (var i =0 ; i<this.CatCodeList.length; i++) {
       hideAllOptions(this.CatCodeList[i]);
     }
-    // displays default category (RForm)
-    displayDefaultOptions(this.CatCodeList[0])
-    //updateCatOptions(this.CatCodeList[0]);
     
+    // displays default category (RForm)
+    updateCatOptions(this.DefaultCategory);
+    setDefaultOptionSelection(this.allDict);
   }
 
   // updates the selected/deselected options and give the information to mapInitializer

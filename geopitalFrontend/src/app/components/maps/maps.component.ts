@@ -76,9 +76,6 @@ export class MapsComponent implements OnInit, AfterViewChecked {
         this.hospitalService.getAll()
         .subscribe(hospitals => {
           this.hospitalsList = hospitals;
-          console.log("Retrieved hospital data from backend");
-          console.log(this.hospitalsList);
-          console.log("-------------------------");
           mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
         });
 
