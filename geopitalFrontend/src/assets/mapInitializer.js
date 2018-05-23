@@ -148,16 +148,80 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
 
 /**
- * Draws circles on map
+ * Stores data in array for displaying it. Builds up array with the important information.
+ *
+ * @param data array that contains hospital information
+ * @param type type (from attributes) of hospitals that should be displayed
+ */
+function initData(data, type){
+
+  // initially empty array to be filled up with hospitals to be displayed on map
+  hospitalData = [];
+
+  for (var i = 0; i < data.length; i++){
+
+    // stores name, coordinates (latitude, longitude), size attribute value
+    // and type of each hospital in a variable to save in array
+    if(data[i].name!=null && data[i].latitude!=null && data[i].longitude!=null){
+      var hospitalName = data[i].name;
+      var latitude = data[i].latitude;
+      var longitude = data[i].longitude;
+
+      // access attributes of hospital
+      var attr = data[i].hospital_attributes;
+
+      // filters code attribute and saves it in variable
+      var sizeResult = attr.filter(function( obj ) {
+        return obj.code == currentNumAttribute.code;
+      });
+
+      // saves value of code attribute in variable
+      if(sizeResult[0]!=null && sizeResult[0].value!=null){
+        var sizeAttribute = Number(sizeResult[0].value);
+      } else {
+        continue;
+      }
+
+      // filters type attribute and saves it in variable
+      var typResult = attr.filter(function ( obj ) {
+        return obj.code == "Typ";
+      });
+
+      // saves value of type attribute in variable
+      if(typResult[0]!=null && typResult[0].value!=null){
+        var typAttribute = String(typResult[0].value);
+      }
+
+      // store only hospitals with right attribute type in array
+      // type "none" stands for default value (all hospitals)
+      for(var j = 0; j < type.length; j++){
+        if(type[j]!="none"){
+          if(typAttribute==type[j]){
+            var basicInformation = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
+            hospitalData.push(basicInformation);
+          }
+        }
+        if(type[j]=="none"){
+          var basicInformation = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
+          hospitalData.push(basicInformation);
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * Draws circles on svg layer on map
+ *
+ * @param hospitalData data that is visualized as circles (with x- and y-coordinates and radius r)
  */
 var initCircles = function(hospitalData){
 
-  console.log("---INIT CIRCLES");
-  console.log(hospitalData);
-  console.log("...end");
-
+  // get maximal value of radius to calculate radius of circles
   var maxValue = getMaxValue(hospitalData);
 
+  // define circles
   circles = svg.selectAll('circle')
     .data(hospitalData)
     .enter()
@@ -188,6 +252,7 @@ var initCircles = function(hospitalData){
       return callCharComponent(d);
      })
 };
+
 
 // support the CharacteristicsComponent with necessary data to show in characteristics(Steckbrief)
 function callCharComponent(clickedHospital) {
@@ -359,67 +424,6 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
   initCircles(hospitalData);
 };
 
-/**
- * Stores data in array for displaying it. Builds up array with the important information.
- * TODO: Improve function --> make it possible to select which attributes should be store in array (except for coordinates and name)
- * @param data data from backend (JSON)
- * @param type type of hospitals that should be displayed (improvement)
- * @param code String that defines the size of the circles
- */
-function initData(data, type){
-  // initially empty array to be filled up with hospitals to be displayed on map
-  hospitalData = [];
-
-  for (var i = 0; i < data.length; i++){
-
-    // stores name, coordinates (latitude, longitude), size attribute value
-    // and type of each hospital in a variable to save in array
-    if(data[i].latitude!=null && data[i].longitude!=null){
-      var hospitalName = data[i].name;
-      var latitude = data[i].latitude;
-      var longitude = data[i].longitude;
-
-      // access attributes of hospital
-      var attr = data[i].hospital_attributes;
-
-      // filters code attribute and saves it in variable
-      var sizeResult = attr.filter(function( obj ) {
-        return obj.code == currentNumAttribute.code;
-      });
-
-      // saves value of code attribute in variable
-      if(sizeResult[0]!=null && sizeResult[0].value!=null){
-        var sizeAttribute = Number(sizeResult[0].value);
-      } else {
-        continue;
-      }
-
-      // filters type attribute and saves it in variable
-      var typResult = attr.filter(function ( obj ) {
-        return obj.code == "Typ";
-      });
-      // saves value of type attribute in variable
-      if(typResult[0]!=null && typResult[0].value!=null){
-        var typAttribute = String(typResult[0].value);
-      }
-
-      // store only hospitals with right attribute type in array
-      // type "none" stands for default value (all hospitals)
-      for(var j = 0; j < type.length; j++){
-        if(type[j]!="none"){
-          if(typAttribute==type[j]){
-            var newCoordinates = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
-            hospitalData.push(newCoordinates);
-          }
-        }
-        if(type[j]=="none"){
-          var newCoordinates = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
-          hospitalData.push(newCoordinates);
-        }
-      }
-    }
-  }
-}
 
 /**
  * Updates the current numerical attribute for characteristics (Steckbrief)
