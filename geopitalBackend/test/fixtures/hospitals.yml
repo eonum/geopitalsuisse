@@ -1,0 +1,22 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+Insel:
+  name: Inselspital
+  streetAndNumber: Freiburgstrasse 18
+  zipCodeAndCity: 3010 Bern
+  latitude: 7.4386372
+  longitude: 46.951081
+
+Linde:
+  name: Hirslanden Klinik Linde
+  streetAndNumber: Blumenrain 105
+  zipCodeAndCity: 2501 Biel
+  latitude: 7.4386374
+  longitude: 46.951083
+
+NoCoords:
+  name: Hirslanden Klinik Linde
+  streetAndNumber: Blumenrain 105
+  zipCodeAndCity: 2501 Biel
+  latitude:
+  longitude:

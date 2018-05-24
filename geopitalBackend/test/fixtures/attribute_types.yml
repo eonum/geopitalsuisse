@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+KT:
+  code: KT
+  category: string
+  nameDE: Kanton
+  nameFR: Canton
+  nameIT: Cantone
+
+LA:
+  code: LA
+  category: string
+  nameDE: Kanton
+  nameFR: Canton
+  nameIT: Cantone
+
+Ops:
+  code: Ops
+  category: number
+  nameDE: Anzahl Operationssäle
+  nameFR: Nombre de salles d’opération
+  nameIT: Sale operatorie
+

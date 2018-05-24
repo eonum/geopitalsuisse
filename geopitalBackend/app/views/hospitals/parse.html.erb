@@ -1,0 +1,8 @@
+<h1>Parse hospitals</h1>
+<%= link_to 'Index', {action:'index'}%>
+<p><%= @hosps.length %> hospital(s) have been newly created</p>
+<ul>
+  <% @hosps.each do |row| %>
+  <li><%= row.name %></li>
+  <% end %>
+</ul>
