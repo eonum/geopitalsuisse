@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {HospitalComponent} from "./components/hospital/hospital.component";
+// import {HospitalComponent} from "./components/hospital/hospital.component";
 import {MapsComponent} from "./components/maps/maps.component";
 
 const routes: Routes = [
   { path: '', component: MapsComponent},
-  { path: 'hospital', component: HospitalComponent},
+  // { path: 'hospital', component: HospitalComponent},
   { path: 'maps', component: MapsComponent}
 
 
