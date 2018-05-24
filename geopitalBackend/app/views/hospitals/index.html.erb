@@ -1,0 +1,45 @@
+<h1>Hospitals</h1>
+<%= link_to 'Geocode hospitals', {action: 'coords'}%>
+<h2>Kennzahlen</h2>
+<table class = "table table-bordered table-striped">
+  <tr>
+    <td>Spitäler in DB</td>
+    <td><%=@hospitals.length%></td>
+  </tr>
+  <tr>
+    <td>Spitäler mit Koordinaten</td>
+    <td><%=@hospitals.select{|l| l.latitude.present?}.count%></td>
+  </tr>
+  <tr>
+    <td>Spitäler mit Addressen</td>
+    <td><%=@hospitals.select{|l| l.streetAndNumber.present?}.count%></td>
+  </tr>
+  <tr>
+    <td>Spitäler mit Attributen</td>
+    <td><%=@hospitals.select{|l| l.hospital_attributes.length > 0}.count%></td>
+  </tr>
+  <tr>
+    <td>Spitäler mit Locations</td>
+    <td><%=@hospitals.select{|l| l.hospital_locations.length > 0}.count%></td>
+  </tr>
+</table>
+
+<h2>Hospitals</h2>
+  <table class = "table table-bordered table-striped">
+    <tr>
+      <th>Name</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Number of attributes</th>
+      <th>Number of locations</th>
+    </tr>
+    <% @hospitals.each do |h| %>
+    <tr>
+      <td><%=link_to h.name, {action: 'details', :id => h.id}%></td>
+      <td><%= h.latitude %></td>
+      <td><%= h.longitude %></td>
+      <td><%= h.hospital_attributes.length %></td>
+      <td><%= h.hospital_locations.length %></td>
+    </tr>
+    <%end%>
+  </table>

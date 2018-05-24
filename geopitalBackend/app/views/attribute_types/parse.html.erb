@@ -1,0 +1,8 @@
+<h1>Parsing AttributeTypes</h1>
+<p>Following AttributeTypes have been parsed.</p>
+<p><%= @types.count %> AttributeType in Database inserted.</p>
+<ul>
+  <% @types.each do |code| %>
+  <li><%= code.code %></li>
+  <% end %>
+</ul>

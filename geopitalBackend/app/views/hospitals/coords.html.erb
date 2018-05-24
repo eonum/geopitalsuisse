@@ -1,0 +1,12 @@
+<h1>Coords</h1>
+<ul>
+  <% @errors.each do |error| %>
+  <li><%= error %>
+  <% end %>
+</ul>
+<ul>
+  <% @hospitals.each do |hospital| %>
+  <li><%=link_to hospital.name, {action: 'details', :id => hospital.id}%></li>
+  <li><%= hospital.hospital_attributes.length %>
+  <% end %>
+</ul>
