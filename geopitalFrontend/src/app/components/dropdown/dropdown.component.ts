@@ -3,7 +3,6 @@ import { CharacteristicsService } from "../../services/characteristics.service";
 import {Attributes} from "../../models/attributes.model";
 declare function updateCircleRadius(attribute): any;
 declare function showCatOptions(attribute): any;
-declare function setNumAttribute(attribute): any;
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.
@@ -58,7 +57,6 @@ export class DropdownComponent implements OnInit {
    * @param numericalAttribute selected numerical attribute from dropdown2
    */
   selectedNumAttribute(numericalAttribute){
-    setNumAttribute(numericalAttribute);
     updateCircleRadius(numericalAttribute);
   }
 

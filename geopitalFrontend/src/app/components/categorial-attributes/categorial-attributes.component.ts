@@ -44,16 +44,12 @@ export class CategorialAttributesComponent implements OnInit {
     
     // displays default category (RForm)
     updateCatOptions(this.DefaultCategory);
+    // sets all selections initially "true"
     setDefaultOptionSelection(this.allDict);
   }
 
   // updates the selected/deselected options and give the information to mapInitializer
   selectedCatValue(category, code) {
-   // console.log(category)
-   // console.log(code)
-  // inverts boolean of selected / deselected option
-  //this.allDict[category][code] = !this.allDict[category][code]
-  //updateCirclesFromSelection(this.allDict);
     updateCirclesFromSelection(category, code);
   }
 

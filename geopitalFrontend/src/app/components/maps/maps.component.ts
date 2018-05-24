@@ -4,6 +4,9 @@ import { HospitalService } from '../../services/hospital.service';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import {Hospital} from "../../models/hospital.model";
 declare function setNumAttribute(numAttribute): any;
+declare function allowDrop(ev): any;
+declare function drag(ev): any;
+declare function drop(ev): any;
 
 
 /**
@@ -33,42 +36,17 @@ export class MapsComponent implements OnInit, AfterViewChecked {
    * and gives it to the mapDrawer() function in mapInitializer.js
    */
   ngOnInit() {
-
-    // should set num attribute to default value "EtMedL" TODO: make it work
-    // this.characteristicsService.getNumericalAttributes()
-    //   .subscribe(attributes => {
-    //     this.numericalAttributes = attributes;
-    //     for (let i of this.numericalAttributes) {
-    //       if(this.numericalAttributes.code!=null){
-    //         if(this.numericalAttributes[i].code=="EtMedL"){
-    //           console.log(this.numericalAttributes[i] + "----------------------");
-    //           setNumAttribute(this.numericalAttributes[i]);
-    //         }
-    //       }
-    //     }
-    //   });
-
-    // this.characteristicsService.getCategoricalAttributes()
-    //   .subscribe(attributes => {
-    //     this.categoricalAttributes = attributes;
-    //   })
-
-    // this.hospitalService.getAll()
-    //   .subscribe(hospitals => {
-    //     this.hospitalsList = hospitals;
-    //     mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
-    //   });
     this.characteristicsService.getNumericalAttributes()
     .subscribe(x => {
       this.numericalAttributes = x;
-      for (let i of this.numericalAttributes) {
-        if(this.numericalAttributes.code!=null){
-          if(this.numericalAttributes[i].code=="EtMedL"){
-            console.log(this.numericalAttributes[i] + "----------------------");
-            setNumAttribute(this.numericalAttributes[i]);
-          }
-        }
-      }
+      // for (let i of this.numericalAttributes) {
+      //   if(this.numericalAttributes.code!=null){
+      //     if(this.numericalAttributes[i].code=="EtMedL"){
+      //       console.log(this.numericalAttributes[i] + "----------------------");
+      //       setNumAttribute(this.numericalAttributes[i]);
+      //     }
+      //   }
+      // }
       this.characteristicsService.getCategoricalAttributes()
       .subscribe(y => {
         this.categoricalAttributes = y;
@@ -92,5 +70,22 @@ export class MapsComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked() {
 
   }
+
+  allowDrop(ev) {
+    ev.preventDefault();
+  }
+  
+  drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+  
+  drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendParent(document.getElementById(data));
+    ev.preventDefault();
+
+  }
+
 
 }
