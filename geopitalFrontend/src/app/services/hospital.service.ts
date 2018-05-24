@@ -3,9 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { Hospital} from '../models/hospital.model';
-import 'rxjs/add/operator/map';
-import {Attributes} from "../models/attributes.model";
-
 
 /**
  * Loads data from backend with the corresponding route defined in backend
@@ -25,21 +22,12 @@ export class HospitalService {
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/' + 'api/hospital/all/data')
+    //return this.http.get<Hospital[]>('https://geopital.herokuapp.com/' + 'api/hospitals')
+    return this.http.get<Hospital[]>('https://geopital.herokuapp.com/api/hospitals')
     .map(res => {
-      return res['data'] as Hospital[];
-    })
-  }
+      return res as Hospital[]
 
-  /**
-   * Gets all attributes which a hospital can have
-   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
-   */
-  getAttributes(): Observable<Attributes[]> {
-    return this.http.get<Attributes[]>('http://localhost:3000/' + 'api/attributes')
-      .map(res => {
-        return res['data'] as Attributes[];
-      })
+    })
   }
 
   /**
@@ -53,4 +41,3 @@ export class HospitalService {
       })
   }
 }
-

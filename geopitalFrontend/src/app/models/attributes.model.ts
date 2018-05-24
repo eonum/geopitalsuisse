@@ -2,31 +2,18 @@ export class Attributes {
     _id: String;
 
     code: String;
+    category: String;
 
-    name: {
-          de: String;
-          fr: String;
-          it: String;
-    };
-
-    value: String;
-    // attributes: {
-    //     attributeType: {
-    //         code: String;
-    //         name: String;
-    //         group: String;
-    //       }
-    //     value: String;
-    //   }
+    nameDE: String;
+    nameFR: String;
+    nameIT: String;
 
     constructor(){
-        //this.attributeType = {code: "", name: {de:"", fr:"", it:""}, group: ""};
         this.code= "";
-        this.name={de:"",fr:"",it:""};
-        this.value = "";
-        // this.address = { street: "", streetNumber: "", plz: "", city: ""};
-        // this.attributes = { attributeType: {code: "", name: "", group: ""}, value: ""};
-
+        this.category = "";
+        this.nameDE="";
+        this.nameFR="";
+        this.nameIT="";
     }
 
 

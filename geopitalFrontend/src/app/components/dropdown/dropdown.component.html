@@ -1,22 +1,36 @@
+<div class="nav-bar-attributes">
 
-<div class="nav-bar"><nav class="navbar navbar-expand-lg navbar-dark bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-<div class="collapse navbar-collapse" id="navbarColor02">
+  <nav id="dropdown-container" class="navbar navbar-expand-lg navbar-dark bg-light">
+    <div id="attributes">
 
-    <h3>Grösse nach:</h3>
-<div class="container">
-    <div class="dropdown">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          Variable:
-        </button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#" *ngFor="let attribute of attributes" (click)="selectedAttribute()">{{ attribute }}</a>
+      <h5>Attributauswahl:</h5>
+
+        <!-- align dropdowns in group next to each other -->
+        <div class="btn-group" style="text-align: center;">
+
+          <!-- first dropdown with numeric attributes -->
+          <div id="numAttr" class="dropdown" style="padding-bottom:5px; padding-right:5px;">
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                Filter:
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" *ngFor="let attribute of categoricalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
+              </div>
+          </div>
+
+          <!-- second dropdown with categorial attributes -->
+          <div id="katAttr" class="dropdown" style="padding-bottom:5px; padding-left:5px;">
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+              Kennzahlen:
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#" *ngFor="let attribute of numericalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+            </div>
+          </div>
+
         </div>
-      </div>
-  </div>
 
-</div>
-</nav>
+    </div>
+  </nav>
+
 </div>

@@ -1,33 +1,38 @@
 export class Hospital {
 
   _id: String;
-  year: number;
   name: String;
-  address:{
-    street: String;
-    streetNumber: String;
-    plz: String;
-    city: String;
-  }
+  streetAndNumber: String;
+  plzAndCity: String;
+  latitude: String;
+  longitude: String;
 
-  coordinates: {
-    latitude: String;
-    longitude: String;
-  }
 
   //attributes: any[];
-  attributes: {
+  hospital_attributes: {
     value: String;
-    name: String[];
+    year: number;
     code: String;
   }
 
+  hospital_locations: {
+    name: String;
+    streetAndNumber: String;
+    plzAndCity: String;
+    latitude: String;
+    longitude: String;
+    la: String;
+    kanton: String;
+  }
+
   constructor(){
-    this.year = 0;
     this.name = "";
-    this.address = { street: "", streetNumber: "", plz: "", city: ""};
-    this.coordinates = { latitude: "", longitude: ""};
-    // this.attributes = { attributeType: { code: "", name: "", group: ""}, value: ""};
+    this.streetAndNumber = "";
+    this.plzAndCity = "";
+    this.latitude = "";
+    this.longitude = "";
+    this.hospital_attributes = { code: "", value: "", year: 0};
+    this.hospital_locations = {name: "", streetAndNumber: "", plzAndCity: "", latitude: "", longitude: "", la: "", kanton: ""}
   }
 
 }

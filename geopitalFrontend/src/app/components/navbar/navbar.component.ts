@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {HospitalService} from "../../services/hospital.service";
 import {Hospital} from "../../models/hospital.model";
-declare function updateMap(data, type, numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
+declare function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
 
 /**
  * Handles checkbox-events implemented in the html-file of this component.
@@ -24,6 +24,7 @@ export class NavbarComponent implements OnInit{
   private numRehaKl: number = 0;
   private numSpezKl: number = 0;
 
+
   constructor(private hospitalService: HospitalService) {
 
   }
@@ -45,57 +46,34 @@ export class NavbarComponent implements OnInit{
 
     if (hospitalType == 'K111') {
       this.numUniSp = this.numUniSp+1;
-      this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-        })
+      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
       }
 
     if (hospitalType == 'K112') {
       this.numZentSp = this.numZentSp+1;
-      this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-        })
+      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType == 'K121' || hospitalType == 'K122' || hospitalType == 'K123') {
       this.numGrundVers = this.numGrundVers+1;
-      this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-        })
+      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType == 'K211' || hospitalType == 'K212') {
       this.numPsychKl = this.numPsychKl+1;
-      this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-        })
+      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType == 'K221') {
       this.numRehaKl = this.numRehaKl+1;
-      this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-        })
+      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType == 'K231' || hospitalType == 'K232' || hospitalType == 'K233'
     || hospitalType == 'K234' || hospitalType == 'K235') {
       this.numSpezKl = this.numSpezKl+1;
-      this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-        updateMap(this.hospitalsList, hospitalType, this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-        })
+      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
   }
+
 }

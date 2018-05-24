@@ -1,15 +1,33 @@
-.nav-bar{
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    height:400px;
+#char-container{
+    height:250px;
     width:300px;
-    z-index:5000;
-    float: right;;
+    position:relative;
+    z-index:4000;
+    float:right;
     margin-right:0px;
-    margin-bottom:-180px;
+    margin-top:0px;
+    border: 0.5px solid #f1f1f1;
   }
 
-  
+#characteristics{
+  /* relative to height of char-container (?)*/
+    max-height:250px;
+}
 
-  
+.table-wrapper {
+  display: block;
+  position: relative;
+  margin-bottom: 0px;
+  margin-right: 0px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  max-height:150px;
+  overflow-y:scroll;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+
+}
+

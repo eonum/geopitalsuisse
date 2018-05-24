@@ -1,23 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef } from '@angular/core';
-import { AgmCoreModule } from '@agm/core';
 import { FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from "./app-routing.module";
+
 import { AppComponent } from './app.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { CharacteristicsComponent } from './components/characteristics/characteristics.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import {HttpClientModule} from '@angular/common/http';
-import {MapService} from './services/map.service';
-import {CharacteristicsService} from './services/characteristics.service';
-import { HospitalComponent } from './components/hospital/hospital.component';
-import { AddressComponent } from './components/address/address.component';
-import {environment} from "../environments/environment";
-import {HospitalService} from "./services/hospital.service";
-import {AddressService} from "./services/address.service";
-import {AppRoutingModule} from "./app-routing.module";
-import { AttributesComponent } from './components/attributes/attributes.component';
+// import { HospitalComponent } from './components/hospital/hospital.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { CategorialAttributesComponent } from './components/categorial-attributes/categorial-attributes.component';
+
+import {CharacteristicsService} from './services/characteristics.service';
+import {HospitalService} from "./services/hospital.service";
+
 
 @NgModule({
   declarations: [
@@ -25,10 +23,9 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     MapsComponent,
     CharacteristicsComponent,
     NavbarComponent,
-    HospitalComponent,
-    AddressComponent,
-    AttributesComponent,
+    // HospitalComponent,
     DropdownComponent,
+    CategorialAttributesComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,10 +36,8 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 
   ],
   providers: [
-    MapService,
     CharacteristicsService,
-    HospitalService,
-    AddressService
+    HospitalService
   ],
   bootstrap: [AppComponent]
 })

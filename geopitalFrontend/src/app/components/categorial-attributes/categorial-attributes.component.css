@@ -1,0 +1,86 @@
+/* contains the navbar with the checkboxes */
+#checkboxes-container{
+    height:150px;
+    width:300px;
+    position:relative;
+    z-index:4000;
+    float:right;
+    margin-right:0px;
+    margin-top:0px;
+    padding-top: 0px;
+    border: 0.5px solid #f1f1f1;
+  }
+
+  /* places the inner block according to the height of the container */
+  #attributes{
+    max-height:120px;
+  }
+
+  .wrapper {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    width: 290;
+    height: 90px;
+    overflow-y:scroll;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    /* overflow: auto; */
+    
+    
+  }
+  /* container for the checkboxes */
+  .container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+  }
+
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Create a custom checkbox */
+  .checkmark1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color:#443f3f;
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark1:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark1:after {
+    display: block;
+  }
+
+  /* Style the checkmark/indicator */
+  .container .checkmark1:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+

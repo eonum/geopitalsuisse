@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HospitalService } from '../../services/hospital.service';
-import { Hospital } from '../../models/hospital.model';
+
 
 
 @Component({
@@ -10,38 +10,15 @@ import { Hospital } from '../../models/hospital.model';
 })
 export class CharacteristicsComponent implements OnInit {
 
-  characteristicsList: Hospital[];
-  private hospitalsList: Hospital[];
-  private attributes: any[] = [];
-  private coordinates: any[] = [];
+
 
   constructor(private hospitalService: HospitalService) {
 
   }
  
   ngOnInit() {
-    this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.hospitalsList = hospitals;
-
-        // store name of attributes (de, it, fr) in array to display in dropdown
-        for(let i in this.hospitalsList){
-            var coor = this.hospitalsList[i].coordinates;
-            this.coordinates.push(coor);
-            console.log(this.coordinates)
-        }
-      });
-
 
   }
 
-showCharacteristics(Coordinates): void {
-  console.log("function called")
-}
-
-
-showHp(): void {
-console.log(this.characteristicsList);
-}
-
+  
 }

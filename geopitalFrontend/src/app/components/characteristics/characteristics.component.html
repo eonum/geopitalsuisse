@@ -1,42 +1,32 @@
+<div class="nav-bar-characteristics">
+  <nav id="char-container" class="navbar navbar-expand-lg navbar-dark bg-light">
 
-<div class="nav-bar"><nav class="navbar navbar-expand-lg navbar-dark bg-light">
-  <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarColor01">
-
-      <div class="container">
-          <h4>{{ hospitalsList[0].name }}</h4>
-          <table class="table table-striped">
-            <thead>
+    <div id="characteristics">
+          <h5 id="hospitalName"></h5>
+          <div class="table-wrapper">
+          <table class="table table-responsive-md">
+            <thead class="mdb-color lighten-4">
               <tr>
                 <th></th>
                 <th></th>
               </tr>
-               
               </thead>
             <tbody>
               <tr>
                 <td>Adresse:</td>
-                <td>{{ hospitalsList[0].address.street }} {{ hospitalsList[0].address.streetNumber }} <br>
-                    {{ hospitalsList[0].address.plz }} {{ hospitalsList[0].address.city }}</td>
-                
+                <td id="hospitalAddress"></td>
               </tr>
               <tr>
-                <td>{{ hospitalsList[0].attributes[0].name.de}}:</td>
-                <td>{{ hospitalsList[0].attributes[0].value}}</td>
-                
+                  <td id="numericalAttributeName"></td>
+                  <td id="numericalAttributeValue"></td>
               </tr>
               <tr>
-                <td>July</td>
-                <td>Dooley</td>
-                
+                <td id="categoricalAttributeName"></td>
+                <td id="categoricalAttributeValue"></td>
               </tr>
             </tbody>
           </table>
         </div>
-
   </div>
 </nav>
 </div>
