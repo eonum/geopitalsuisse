@@ -1,6 +1,6 @@
-import {AfterViewChecked, Component, OnInit} from '@angular/core';
-import {HospitalService} from "../../services/hospital.service";
-import {Hospital} from "../../models/hospital.model";
+import { Component, OnInit } from '@angular/core';
+import { HospitalService } from "../../services/hospital.service";
+import { Hospital } from "../../models/hospital.model";
 
 // The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;

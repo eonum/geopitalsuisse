@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {} from 'jasmine';
 import { CategorialAttributesComponent } from './categorial-attributes.component';
-import {CharacteristicsService} from "../../services/characteristics.service";
+import { CharacteristicsService } from "../../services/characteristics.service";
 
 describe('CategorialAttributesComponent', () => {
   let component: CategorialAttributesComponent;

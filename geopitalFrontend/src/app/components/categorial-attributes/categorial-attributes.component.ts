@@ -54,9 +54,4 @@ export class CategorialAttributesComponent implements OnInit {
   selectedCatValue(category, code) {
     updateCirclesFromSelection(category, code);
   }
-
-
-
-
-
 }

@@ -1,7 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { CharacteristicsService } from './characteristics.service';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 
 describe('CharacteristicsService', () => {
   beforeEach(() => {

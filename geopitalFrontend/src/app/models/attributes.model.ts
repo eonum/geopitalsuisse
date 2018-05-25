@@ -1,4 +1,5 @@
 export class Attributes {
+
     _id: String;
 
     code: String;
@@ -15,6 +16,4 @@ export class Attributes {
         this.nameFR="";
         this.nameIT="";
     }
-
-
 }

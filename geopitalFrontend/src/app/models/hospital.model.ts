@@ -34,5 +34,4 @@ export class Hospital {
     this.hospital_attributes = { code: "", value: "", year: 0};
     this.hospital_locations = {name: "", streetAndNumber: "", plzAndCity: "", latitude: "", longitude: "", la: "", kanton: ""}
   }
-
 }

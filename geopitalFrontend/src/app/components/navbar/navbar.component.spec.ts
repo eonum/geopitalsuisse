@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NavbarComponent } from './navbar.component';
-import {HospitalService} from "../../services/hospital.service";
+import { HospitalService } from "../../services/hospital.service";
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;

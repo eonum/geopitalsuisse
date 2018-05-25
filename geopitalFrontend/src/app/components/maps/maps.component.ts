@@ -1,7 +1,7 @@
-import {AfterViewChecked, Component, OnInit} from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { HospitalService } from '../../services/hospital.service';
 import { CharacteristicsService } from "../../services/characteristics.service";
-import {Hospital} from "../../models/hospital.model";
+import { Hospital } from "../../models/hospital.model";
 
 // The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function mapDrawer(hospitals, numAttributes, catAttributes): any;

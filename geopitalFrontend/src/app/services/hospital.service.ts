@@ -10,11 +10,8 @@ import { Hospital} from '../models/hospital.model';
  */
 @Injectable()
 export class HospitalService {
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
-
 
   constructor(private http: HttpClient) {
-
   }
 
   /**
@@ -26,7 +23,6 @@ export class HospitalService {
     return this.http.get<Hospital[]>('https://geopital.herokuapp.com/api/hospitals')
     .map(res => {
       return res as Hospital[]
-
     })
   }
 

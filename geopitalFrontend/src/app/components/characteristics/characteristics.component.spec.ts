@@ -1,7 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CharacteristicsComponent } from './characteristics.component';
-
 import {HospitalService} from "../../services/hospital.service";
 
 describe('CharacteristicsComponent', () => {

@@ -1,6 +1,5 @@
-import {Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CharacteristicsService } from "../../services/characteristics.service";
-import {Attributes} from "../../models/attributes.model";
 
 // The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function updateCircleRadius(attribute): any;
@@ -61,6 +60,4 @@ export class DropdownComponent implements OnInit {
   selectedNumAttribute(numericalAttribute){
     updateCircleRadius(numericalAttribute);
   }
-
-
 }
