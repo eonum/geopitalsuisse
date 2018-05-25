@@ -3,12 +3,19 @@ import { MapsComponent } from './maps.component';
 import { DropdownComponent } from "../dropdown/dropdown.component";
 import { CategorialAttributesComponent } from "../categorial-attributes/categorial-attributes.component";
 import { NavbarComponent } from "../navbar/navbar.component";
+import {AppModule} from "../../app.module";
+import { APP_BASE_HREF } from "@angular/common";
+import {CharacteristicsComponent} from "../characteristics/characteristics.component";
+import {HospitalService} from "../../services/hospital.service";
+import {CharacteristicsService} from "../../services/characteristics.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 describe('MapsComponent', () => {
-  let component1: MapsComponent;
-  let component2: DropdownComponent;
-  let component3: CategorialAttributesComponent;
-  let component4: NavbarComponent;
+  let component: MapsComponent;
+  let client: HttpClient;
+  let charService: CharacteristicsService;
+  let hosService: HospitalService;
+
 
   let fixture: ComponentFixture<MapsComponent>;
 
@@ -16,12 +23,22 @@ describe('MapsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MapsComponent,
-
-      ],
-      imports: [
         DropdownComponent,
         CategorialAttributesComponent,
-        NavbarComponent
+        NavbarComponent,
+        CharacteristicsComponent,
+      ],
+      imports: [
+        HttpClientModule
+
+      ],
+
+      providers: [
+
+        HospitalService,
+        CharacteristicsService,
+        HttpClient
+
       ]
     })
     .compileComponents();
@@ -29,11 +46,16 @@ describe('MapsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MapsComponent);
-    component1 = fixture.componentInstance;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
+  beforeEach(() => {
+    hosService = new HospitalService(client);
+    charService = new CharacteristicsService(client);
+  });
+
   it('should create', () => {
-    expect(component1).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });

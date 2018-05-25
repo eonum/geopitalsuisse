@@ -22,9 +22,11 @@ export class HospitalService {
     //return this.http.get<Hospital[]>('https://geopital.herokuapp.com/' + 'api/hospitals')
     return this.http.get<Hospital[]>('https://geopital.herokuapp.com/api/hospitals')
     .map(res => {
-      return res as Hospital[]
+      return res as Hospital[];
     })
+
   }
+
 
   /**
    * Gets all dummy hospitals
