@@ -39,6 +39,16 @@ import {HospitalService} from "./services/hospital.service";
     CharacteristicsService,
     HospitalService
   ],
+  exports: [
+    AppComponent,
+    MapsComponent,
+    CharacteristicsComponent,
+    NavbarComponent,
+    // HospitalComponent,
+    DropdownComponent,
+    CategorialAttributesComponent,
+  ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

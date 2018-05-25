@@ -1,11 +1,14 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { HospitalService } from './hospital.service';
+import {HttpClient} from "@angular/common/http";
 
 describe('HospitalService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [HospitalService]
+      providers: [
+        HospitalService,
+        HttpClient]
     });
   });
 

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {} from 'jasmine';
 import { CategorialAttributesComponent } from './categorial-attributes.component';
+import {CharacteristicsService} from "../../services/characteristics.service";
 
 describe('CategorialAttributesComponent', () => {
   let component: CategorialAttributesComponent;
@@ -8,9 +9,10 @@ describe('CategorialAttributesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategorialAttributesComponent ]
+      declarations: [ CategorialAttributesComponent ],
+      providers: [{provide: CharacteristicsService}]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DropdownComponent } from './dropdown.component';
+import {CharacteristicsService} from "../../services/characteristics.service";
 
 describe('DropdownComponent', () => {
   let component: DropdownComponent;
@@ -8,7 +9,8 @@ describe('DropdownComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DropdownComponent ]
+      declarations: [ DropdownComponent ],
+      providers: [{provide: CharacteristicsService}]
     })
     .compileComponents();
   }));
