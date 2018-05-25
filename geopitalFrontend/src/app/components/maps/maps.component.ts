@@ -1,8 +1,10 @@
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
-declare function mapDrawer(hospitals, numAttributes, catAttributes): any;
 import { HospitalService } from '../../services/hospital.service';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import {Hospital} from "../../models/hospital.model";
+
+// The declare function call is to get the D3 logic from the mapinizializer.js file
+declare function mapDrawer(hospitals, numAttributes, catAttributes): any;
 declare function setNumAttribute(numAttribute): any;
 declare function allowDrop(ev): any;
 declare function drag(ev): any;
@@ -74,11 +76,11 @@ export class MapsComponent implements OnInit, AfterViewChecked {
   allowDrop(ev) {
     ev.preventDefault();
   }
-  
+
   drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
   }
-  
+
   drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
