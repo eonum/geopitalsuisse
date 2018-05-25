@@ -34,7 +34,6 @@ describe('MapsComponent', () => {
       ],
 
       providers: [
-
         HospitalService,
         CharacteristicsService,
         HttpClient
@@ -58,4 +57,22 @@ describe('MapsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+/*  it('should not be empty', () => {
+    const comp = component.ngOnInit();
+    expect(comp).to();
+  });
+
+  it('numerical attribute to be right', () => {
+    const catAttr = charService.getNumericalAttributes();
+    const comp = component.ngOnInit();
+    expect(x)
+  });
+
+  it('numerical attribute to be right', () => {
+    const comp = component.ngOnInit();
+    const numAttr = charService.getCategoricalAttributes();
+  });*/
+
+
 });
