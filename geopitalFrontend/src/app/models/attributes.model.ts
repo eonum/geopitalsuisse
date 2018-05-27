@@ -9,11 +9,19 @@ export class Attributes {
     nameFR: String;
     nameIT: String;
 
-    constructor(){
+    /*constructor(){
         this.code= "";
         this.category = "";
         this.nameDE="";
         this.nameFR="";
         this.nameIT="";
+    }*/
+
+    constructor(code, category, nameDE, nameFR, nameIT){
+      this.code = code;
+      this.category = category;
+      this.nameDE = nameDE;
+      this.nameFR = nameFR;
+      this.nameIT = nameIT;
     }
 }

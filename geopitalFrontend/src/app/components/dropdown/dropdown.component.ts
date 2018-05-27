@@ -16,8 +16,8 @@ declare function showCatOptions(attribute): any;
 })
 export class DropdownComponent implements OnInit {
 
-  private categoricalAttributes: any[] = [];
-  private numericalAttributes: any[] = [];
+  public categoricalAttributes: any[] = [];
+  public numericalAttributes: any[] = [];
 
 
   constructor(private characteristicsService: CharacteristicsService) {  }
