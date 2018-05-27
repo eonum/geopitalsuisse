@@ -1,6 +1,6 @@
 <h1>Parse: <%= @upload.name %></h1>
 <ul>
   <%= @data.worksheets.each do |sheet| %>
-  <li><h2><%= link_to sheet.name, {:action => 'parse', :id => @upload.id, :sheet=> sheet.name} %></h2></li>
+  <li><h2><%= link_to sheet.name, {:action => 'parse', :id => @upload.id, :sheet=> sheet.name} , class: "btn btn-primary" %></h2></li>
   <% end %>
 </ul>

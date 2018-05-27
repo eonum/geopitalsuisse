@@ -1,10 +1,10 @@
 <h1><%= @hospital.name %></h1>
-<%= link_to 'Index', {action:'index'}%>
-<%= button_to 'Delete Hospital', {action: 'delete', :id => @hospital.id}%>
+<%= link_to 'Index', {action:'index'}, class: "btn btn-primary" %>
+<%= button_to 'Delete Hospital', {action: 'delete', :id => @hospital.id}, class: "btn btn-danger" %>
 <p>This hospital has <%= @hospital.hospital_attributes.length %> attributes </p>
 <p><%if @hospital.longitude == nil%>
   <strong> This hospital has no geocoding</strong>
-  <%= button_to 'Geocode!', {action: 'coords_single', :id => @hospital.id}%>
+  <%= button_to 'Geocode!', {action: 'coords_single', :id => @hospital.id}, class: "btn btn-primary" %>
   <% end %>
 </p>
 <h2><%= @hospital.name%></h2>

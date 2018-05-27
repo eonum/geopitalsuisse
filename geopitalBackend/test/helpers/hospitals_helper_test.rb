@@ -18,7 +18,7 @@ class HospitalsHelperTest < ActionDispatch::IntegrationTest
 
     hosps = read_and_store_hospitals(sheet, sheet_name)
     hospital = Hospital.find_by_name("RehaClinic Baden")
-    assert hosps.count == 3
+    assert hosps.count == 2
     assert_not_nil hospital
     assert_not_nil HospitalAttribute.where(:hospital_id => hospital.id, :year => 2016)
   end

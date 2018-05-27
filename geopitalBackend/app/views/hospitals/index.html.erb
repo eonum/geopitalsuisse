@@ -1,5 +1,5 @@
 <h1>Hospitals</h1>
-<%= link_to 'Geocode hospitals', {action: 'coords'}%>
+<%= link_to 'Geocode hospitals', {action: 'coords'}, class: "btn btn-primary" %>
 <h2>Kennzahlen</h2>
 <table class = "table table-bordered table-striped">
   <tr>
@@ -35,7 +35,7 @@
     </tr>
     <% @hospitals.each do |h| %>
     <tr>
-      <td><%=link_to h.name, {action: 'details', :id => h.id}%></td>
+      <td><%=link_to h.name, {action: 'details', :id => h.id}, class: "btn btn-primary" %></td>
       <td><%= h.latitude %></td>
       <td><%= h.longitude %></td>
       <td><%= h.hospital_attributes.length %></td>
