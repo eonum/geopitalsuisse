@@ -5,7 +5,6 @@ import { Hospital } from "../../models/hospital.model";
 
 // The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function mapDrawer(hospitals, numAttributes, catAttributes): any;
-declare function setNumAttribute(numAttribute): any;
 declare function allowDrop(ev): any;
 declare function drag(ev): any;
 declare function drop(ev): any;
@@ -41,14 +40,7 @@ export class MapsComponent implements OnInit, AfterViewChecked {
     this.characteristicsService.getNumericalAttributes()
     .subscribe(x => {
       this.numericalAttributes = x;
-      // for (let i of this.numericalAttributes) {
-      //   if(this.numericalAttributes.code!=null){
-      //     if(this.numericalAttributes[i].code=="EtMedL"){
-      //       console.log(this.numericalAttributes[i] + "----------------------");
-      //       setNumAttribute(this.numericalAttributes[i]);
-      //     }
-      //   }
-      // }
+
       this.characteristicsService.getCategoricalAttributes()
       .subscribe(y => {
         this.categoricalAttributes = y;
@@ -61,11 +53,6 @@ export class MapsComponent implements OnInit, AfterViewChecked {
 
       })
     });
-
-
-
-
-
   }
 
   // everything in here is getting triggered every time the map is touched (click/hover)
@@ -86,8 +73,5 @@ export class MapsComponent implements OnInit, AfterViewChecked {
     var data = ev.dataTransfer.getData("text");
     ev.target.appendParent(document.getElementById(data));
     ev.preventDefault();
-
   }
-
-
 }

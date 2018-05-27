@@ -33,7 +33,7 @@ describe('DropdownComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set numberic attributes and string attributes without attribute Typ', () => {
+  it('should set numeric attributes and string attributes without attribute Typ', () => {
     component.ngOnInit();
     expect(component.numericalAttributes).toEqual(ATTRIBUTES_NUMERIC)
     expect(component.categoricalAttributes).toEqual(ATTRIBUTES_STRING)
