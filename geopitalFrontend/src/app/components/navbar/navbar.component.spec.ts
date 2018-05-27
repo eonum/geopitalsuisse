@@ -24,4 +24,14 @@ describe('NavbarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call selectHospitalType function if checkbox is selected', async(() => {
+    spyOn(component, 'selectHospitalType');
+    let link = fixture.debugElement.nativeElement.querySelector('input');
+    link.click();
+
+    fixture.whenStable().then(() => {
+      expect(component.selectHospitalType).toHaveBeenCalled();
+    })
+  }));
 });
