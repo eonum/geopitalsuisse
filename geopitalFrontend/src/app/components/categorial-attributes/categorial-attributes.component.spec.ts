@@ -24,4 +24,14 @@ describe('CategorialAttributesComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call selectedCatValue function if string attribute is chosen', async(() => {
+    spyOn(component, 'selectedCatValue');
+    let link = fixture.debugElement.nativeElement.querySelector('input');
+    link.click();
+
+    fixture.whenStable().then(() => {
+      expect(component.selectedCatValue).toHaveBeenCalled();
+    })
+  }));
 });
