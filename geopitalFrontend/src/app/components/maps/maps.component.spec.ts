@@ -58,21 +58,15 @@ describe('MapsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-/*  it('should not be empty', () => {
-    const comp = component.ngOnInit();
-    expect(comp).to();
+  it('hospital service have been called', () => {
+      component.ngOnInit();
+      expect(hosService.getAll).toBeDefined();
   });
 
-  it('numerical attribute to be right', () => {
-    const catAttr = charService.getNumericalAttributes();
-    const comp = component.ngOnInit();
-    expect(x)
+  it('characteristics service has been called', () => {
+    component.ngOnInit();
+    expect(charService.getCategoricalAttributes).toBeDefined();
+    expect(charService.getNumericalAttributes).toBeDefined();
   });
-
-  it('numerical attribute to be right', () => {
-    const comp = component.ngOnInit();
-    const numAttr = charService.getCategoricalAttributes();
-  });*/
-
 
 });
