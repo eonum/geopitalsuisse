@@ -16,7 +16,7 @@
       <% @uploads.each do |upload| %>
          <tr>
             <td><%= upload.name  %></td>
-            <td><%= link_to "Parse file", {:controller=>'parsers', :action => 'details', :id => upload.id} %></td>
+            <td><%= link_to "Parse file", {:controller=>'parsers', :action => 'details', :id => upload.id}, class: "btn btn-primary" %></td>
             <td><%= button_to "Delete",  upload, method: :delete, class: "btn btn-danger", confirm: "Are you sure that you wish to delete #{upload.name}?" %></td>
          </tr>
       <% end %>

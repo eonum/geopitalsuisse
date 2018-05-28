@@ -1,12 +1,12 @@
 <h1><%= @sheet.name %></h1>
 <% if @sheet.name == 'Kennzahlen' %>
-  <%=button_to 'Parse',{:controller=>'attribute_types', :action => 'parse', :id => @upload.id, :sheet=> @sheet.name}%>
+  <%=button_to 'Parse',{:controller=>'attribute_types', :action => 'parse', :id => @upload.id, :sheet=> @sheet.name}, class: "btn btn-primary" %>
 <% end %>
 <% if @sheet.name[0..4] == 'KZ201' %>
-  <%=button_to 'Parse',{:controller=>'hospitals', :action => 'parse', :id => @upload.id, :sheet=> @sheet.name}%>
+  <%=button_to 'Parse',{:controller=>'hospitals', :action => 'parse', :id => @upload.id, :sheet=> @sheet.name}, class: "btn btn-primary" %>
 <% end %>
 <% if @sheet.name[0..4] == ('Stand') %>
-  <%=button_to 'Parse',{:controller=>'locations', :action => 'parse', :id => @upload.id, :sheet=> @sheet.name}%>
+  <%=button_to 'Parse',{:controller=>'locations', :action => 'parse', :id => @upload.id, :sheet=> @sheet.name}, class: "btn btn-primary" %>
 <% end %>
 
 <h2>Data</h2>

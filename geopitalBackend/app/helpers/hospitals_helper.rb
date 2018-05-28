@@ -41,7 +41,7 @@ module HospitalsHelper
         @hospData.delete("Amb, Stat")
         i += 1
       end
-      if @hospData["Inst"] != nil
+      if @hospData["Inst"] != nil && @hospData["Inst"] != "Inst"
         if !Hospital.exists?(name: @hospData["Inst"])
           @hosp = Hospital.create(name:@hospData["Inst"], streetAndNumber:@hospData["Adr"], zipCodeAndCity:@hospData["Ort"])
           @hosps << @hosp

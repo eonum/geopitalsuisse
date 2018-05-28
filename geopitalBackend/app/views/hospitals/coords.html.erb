@@ -6,7 +6,7 @@
 </ul>
 <ul>
   <% @hospitals.each do |hospital| %>
-  <li><%=link_to hospital.name, {action: 'details', :id => hospital.id}%></li>
+  <li><%=link_to hospital.name, {action: 'details', :id => hospital.id}, class: "btn btn-primary" %></li>
   <li><%= hospital.hospital_attributes.length %>
   <% end %>
 </ul>

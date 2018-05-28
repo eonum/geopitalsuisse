@@ -8,6 +8,6 @@ class LocationsController < ApplicationController
     sheet = data.worksheet params[:sheet]
     returns = read_and_store_locations(sheet)
     @locs = returns[0]
-    @errors = errors[1]
+    @errors = returns[1]
   end
 end

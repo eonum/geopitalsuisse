@@ -29,7 +29,7 @@ module AttributeTypesHelper
       if @code == 'SA'
         s = 'string'
       end
-      if @code == 'Amb' || @code == 'Stat' || @code == 'Amb, Stat' || @code == 'Inst, Adr, Ort' || @code == 'KT' || @code == 'Typ' || @code.equal?('KZ-Code')
+      if @code == 'Amb' || @code == 'Stat' || @code == 'Amb, Stat' || @code == 'Inst, Adr, Ort' || @code == 'KT' || @code == 'Standort' || @code.equal?('KZ-Code')
         i += 1
         next
       end
