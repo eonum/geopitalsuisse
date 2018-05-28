@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NavbarComponent } from './navbar.component';
+import { HospitalService } from "../../services/hospital.service";
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -8,7 +8,9 @@ describe('NavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ]
+      declarations: [ NavbarComponent ],
+      providers: [{ provide: HospitalService}]
+
     })
     .compileComponents();
   }));
@@ -22,4 +24,14 @@ describe('NavbarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call selectHospitalType function if checkbox is selected', async(() => {
+    spyOn(component, 'selectHospitalType');
+    let link = fixture.debugElement.nativeElement.querySelector('input');
+    link.click();
+
+    fixture.whenStable().then(() => {
+      expect(component.selectHospitalType).toHaveBeenCalled();
+    })
+  }));
 });

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+
+// The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function selectedCatValue(value): any;
 declare function hideAllOptions(categories): any;
 declare function updateCatOptions(defaultCategory): any;
@@ -16,7 +18,7 @@ export class CategorialAttributesComponent implements OnInit {
   private CatCodeList = ["RForm", "Akt", "SL", "WB", "SA", "LA"];
   // default category to show on loaded site
   private DefaultCategory = {code:"RForm", nameDE:"Rechtsform", nameFR: "Forme juridique", nameIT: "Forma giuridica"}
-  
+
   // dictionaries with all options of the categorical codes,
   // when an option is true it's selected, when false it's deselected
   RformDict = {'R1':true, 'R2':true, 'R3':true, 'R4':true};
@@ -25,7 +27,7 @@ export class CategorialAttributesComponent implements OnInit {
   WBDict = {'Arzt':true, 'BGs':true, 'MSt':true};
   SADict = {'Angio':true, 'CC':true, 'CT':true, 'Dia':true,
               'LB':true, 'Lito':true, 'MRI':true, 'PET':true};
-  LADict = {'Stat':true, 'Amb':true};              
+  LADict = {'Stat':true, 'Amb':true};
 
   allDict = {'RForm':this.RformDict,
               'Akt':this.AktDict,
@@ -41,7 +43,7 @@ export class CategorialAttributesComponent implements OnInit {
     for (var i =0 ; i<this.CatCodeList.length; i++) {
       hideAllOptions(this.CatCodeList[i]);
     }
-    
+
     // displays default category (RForm)
     updateCatOptions(this.DefaultCategory);
     // sets all selections initially "true"
@@ -52,9 +54,4 @@ export class CategorialAttributesComponent implements OnInit {
   selectedCatValue(category, code) {
     updateCirclesFromSelection(category, code);
   }
-
-
-
-
-
 }

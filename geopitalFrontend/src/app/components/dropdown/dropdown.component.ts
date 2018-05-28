@@ -1,6 +1,7 @@
-import {Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CharacteristicsService } from "../../services/characteristics.service";
-import {Attributes} from "../../models/attributes.model";
+
+// The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function updateCircleRadius(attribute): any;
 declare function showCatOptions(attribute): any;
 
@@ -15,8 +16,8 @@ declare function showCatOptions(attribute): any;
 })
 export class DropdownComponent implements OnInit {
 
-  private categoricalAttributes: any[] = [];
-  private numericalAttributes: any[] = [];
+  public categoricalAttributes: any[] = [];
+  public numericalAttributes: any[] = [];
 
 
   constructor(private characteristicsService: CharacteristicsService) {  }
@@ -31,13 +32,13 @@ export class DropdownComponent implements OnInit {
     this.characteristicsService.getCategoricalAttributes()
       .subscribe(attributes => {
         this.categoricalAttributes = attributes;
-        
+
         // extract the categorical attribute "Typ" since its not used in this selection
         this.categoricalAttributes = this.categoricalAttributes.filter(attribute => {
         return attribute.code !== "Typ";
         })
       });
-      
+
     this.characteristicsService.getNumericalAttributes()
       .subscribe(attributes => {
         this.numericalAttributes = attributes;
@@ -59,6 +60,4 @@ export class DropdownComponent implements OnInit {
   selectedNumAttribute(numericalAttribute){
     updateCircleRadius(numericalAttribute);
   }
-
-
 }

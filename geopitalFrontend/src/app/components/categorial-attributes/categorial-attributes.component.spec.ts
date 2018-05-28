@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {} from 'jasmine';
 import { CategorialAttributesComponent } from './categorial-attributes.component';
+import { CharacteristicsService } from "../../services/characteristics.service";
 
 describe('CategorialAttributesComponent', () => {
   let component: CategorialAttributesComponent;
@@ -8,9 +9,10 @@ describe('CategorialAttributesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategorialAttributesComponent ]
+      declarations: [ CategorialAttributesComponent ],
+      providers: [{provide: CharacteristicsService}]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -22,4 +24,14 @@ describe('CategorialAttributesComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call selectedCatValue function if string attribute is chosen', async(() => {
+    spyOn(component, 'selectedCatValue');
+    let link = fixture.debugElement.nativeElement.querySelector('input');
+    link.click();
+
+    fixture.whenStable().then(() => {
+      expect(component.selectedCatValue).toHaveBeenCalled();
+    })
+  }));
 });
