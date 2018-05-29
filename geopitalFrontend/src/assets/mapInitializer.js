@@ -104,8 +104,6 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
   function projectPoint(x, y) {
-   // console.log("projectPoint");
-   // console.log(x + ":" + y);
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
     return point;
   }
@@ -280,7 +278,7 @@ function callCharComponent(clickedHospital) {
     catResult = 0;
   }
 
-  // displays the name and address of the clickes hospital in characteristics (Steckbrief)
+  // displays the name and address of the clicked hospital in characteristics (Steckbrief)
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
   if (clickedHospitalData.streetAndNumber != null) {
     document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
@@ -508,11 +506,12 @@ function setDefaultOptionSelection(AllDict) {
 }
 
 /**
- * Initializes the dataset for showing just the hospitals according to the
+ * Initializes the dataset for displaying only the hospitals according to the
  * selected options from the categorical attributes.
- * @param allDict the dictionary of the activated/deactivated options
+ * @param category the categorical attribute
+ * @param code the code of the selected/deselected option
  */
-//function updateCirclesFromSelection(allDict){
+
 function updateCirclesFromSelection(category, code){
 
   // toggle dictionary entry of selected/deselected checkbox, described by category and code
