@@ -13,7 +13,7 @@ import { HospitalService } from '../../services/hospital.service';
 })
 export class CharacteristicsComponent implements OnInit {
 
-  constructor(private hospitalService: HospitalService) {
+  constructor() {
 
   }
 

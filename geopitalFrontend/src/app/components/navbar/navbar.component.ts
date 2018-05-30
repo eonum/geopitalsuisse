@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit{
   private numSpezKl: number = 0;
 
 
-  constructor(private hospitalService: HospitalService) {
+  constructor() {
 
   }
 
