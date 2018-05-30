@@ -23,10 +23,8 @@
     height: 90px;
     overflow-y:scroll;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    /* overflow: auto; */
-    
-    
   }
+
   /* container for the checkboxes */
   .container {
     display: block;
@@ -39,7 +37,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    
+
   }
 
   /* Hide the browser's default checkbox */

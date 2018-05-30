@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HospitalService } from '../../services/hospital.service';
 
 /**
  * Component for the short information (Steckbrief) of the selected hospital.

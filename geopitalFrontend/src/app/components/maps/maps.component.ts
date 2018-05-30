@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HospitalService } from '../../services/hospital.service';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import { Hospital } from "../../models/hospital.model";

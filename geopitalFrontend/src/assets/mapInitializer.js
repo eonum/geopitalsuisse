@@ -54,7 +54,6 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // stores initially all data from all hospitals
   allHospitalData = hospitals;
 
-  // TODO: construct something that numAttributes and catAttributes are never null, maybe solved?
   // sets default numerical attribute (EtMedL)
   currentNumAttribute = numAttributes.find(function ( obj ) {
     return obj.code == "EtMedL";
@@ -407,7 +406,7 @@ var updateCircleRadius = function(numericalAttribute) {
 };
 
 /**
- * Updates the current categorical attribute and the characteristics of the 
+ * Updates the current categorical attribute and the characteristics of the
  * selected hospital (Steckbrief), resets the previous selection of filter options
  * and shows the new options for the selected categorical attribute
  * @param categoricalAttribute selected categorical Attribute from Dropdown1
@@ -415,7 +414,7 @@ var updateCircleRadius = function(numericalAttribute) {
 var showCatOptions = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   callCharComponent(selectedHospital);
-  
+
   // reset selection when changing the category
   resetCheckBoxes();
 
@@ -437,7 +436,7 @@ function resetCheckBoxes(){
   var allContainers = document.getElementsByName('checkbox');
   for (var i = 0; i<allContainers.length; i++){
     allContainers[i].checked = true
-  } 
+  }
 
   // update the check box dictionary accordingly to true for all values
   for (var key in checkBoxDictionary){
@@ -534,13 +533,13 @@ function updateCirclesFromSelection(category, code){
  */
 function filter(hospitalDataToFilter, allDict){
    var filteredHospitalData = [];
-   
+
    // consider all hospitals to be eligable
    for (var i = 0; i < hospitalDataToFilter.length; i++){
       var skip = true;
       // loop over all attributes of the i-th hospital
       for (var j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
- 
+
         var currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
         var checkPerformed = false;
         // check only the attributes who are the current selected attribute
