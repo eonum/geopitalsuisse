@@ -8,10 +8,11 @@
 	Dominic Schweizer
 ## Setup
 ### Backend
- 1. Install rails
+ 1. Install rails - http://installrails.com/ (DB SQLite included)
+ 2. Optional: To use PostgreSQL database - https://www.digitalocean.com/community/tutorials/how-to-setup-ruby-on-rails-with-postgres
  3. Clone Repository
  4. Change to geopitalBackend
- 5. Insert your API-Key into geopitalBackend/config/initializers/geocoder.rb 'GEO-KEY'
+ 5. Insert your API-Key into geopitalBackend/config/initializers/geocoder.rb 'GEO-KEY': get google API key here - https://developers.google.com/maps/documentation/geocoding/get-api-key?hl=de
  6. start rails server
 
 ## Frontend
