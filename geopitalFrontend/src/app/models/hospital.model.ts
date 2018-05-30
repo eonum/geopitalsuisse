@@ -6,7 +6,6 @@ export class Hospital {
   zipCodeAndCity: String;
   latitude: String;
   longitude: String;
-
   hospital_attributes: {
     value: String;
     year: number;
