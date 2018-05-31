@@ -7,7 +7,7 @@
 	Angela Keller
 	Dominic Schweizer
 ## Setup 
-Please visit https://github.com/eonum/geopitalsuisse/wiki/Setup for setup guidance
+Please visit https://github.com/eonum/geopitalsuisse/wiki/StepByStepSetup(Dev) for a stepy by step setup guidance
 
 ## Frontend
 The frontend is documented here: https://github.com/eonum/geopitalsuisse/wiki/Frontend-Angular-en
