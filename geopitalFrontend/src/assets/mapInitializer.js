@@ -594,7 +594,7 @@ function getCircleRadius(d, maxValue) {
   if (d.radius == 0) {
     return 3*zoomLevel*zoomLevel/100; // circles with value 0 have radius 3
   } else {
-    return (Math.sqrt(d.radius/maxValue)*10+5)*zoomLevel*zoomLevel/100;
+    return ((d.radius/maxValue)*40+5)*zoomLevel*zoomLevel/100;
   }
 }
 
