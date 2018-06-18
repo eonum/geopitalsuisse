@@ -11,12 +11,20 @@
 
 #attributes{
   max-height:90px;
+  max-width: 300px;
 }
 
 .dropdown {
   position: relative;
   display: inline-block;
   z-index:5000;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+#catAttrButton, #numAttrButton {
+  padding-bottom:5px;
+  padding-right:5px;
 }
 
 .container {

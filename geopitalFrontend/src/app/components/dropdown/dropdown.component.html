@@ -9,22 +9,23 @@
         <div class="btn-group" style="text-align: center;">
 
           <!-- first dropdown with numeric attributes -->
-          <div id="numAttr" class="dropdown" style="padding-bottom:5px; padding-right:5px;">
-              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+          <div id="catAttr" class="dropdown">
+              <button type="button" id="catAttrButton" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                 Filter:
               </button>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="#" *ngFor="let attribute of categoricalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
+                <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of categoricalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
               </div>
           </div>
 
           <!-- second dropdown with categorial attributes -->
-          <div id="katAttr" class="dropdown" style="padding-bottom:5px; padding-left:5px;">
-            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+          <div id="numAttr" class="dropdown">
+            <button type="button" id="numAttrButton" class="btn btn-default btn-sm dropdown-toggle " data-toggle="dropdown">
               Kennzahlen:
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#" *ngFor="let attribute of numericalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+              <input class="form-control" type="text" placeholder="Search" id="searchCatAttr" (keyup)="filterNumAttr()">
+              <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>
             </div>
           </div>
 

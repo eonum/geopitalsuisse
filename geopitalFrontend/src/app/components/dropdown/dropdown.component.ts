@@ -51,6 +51,7 @@ export class DropdownComponent implements OnInit {
    */
   selectedCatAttribute(categorcialAttribute) {
     showCatOptions(categorcialAttribute);
+    this.handleDropdownHighlight(categorcialAttribute, "catAttr");
   }
 
   /**
@@ -59,5 +60,33 @@ export class DropdownComponent implements OnInit {
    */
   selectedNumAttribute(numericalAttribute){
     updateCircleRadius(numericalAttribute);
+    this.handleDropdownHighlight(numericalAttribute, "numAttr");
+  }
+
+  filterNumAttr() {
+    const input = document.getElementById("searchNumAttr");
+    const filter = input.value.toUpperCase();
+    const div = document.getElementById("numAttr");
+    const a = div.getElementsByTagName("a");
+
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1){
+        a[i].style.display = "";
+      } else {
+        a[i].style.display = "none";
+      }
+    }
+  }
+
+  handleDropdownHighlight(attribute: any, id: string): void {
+    const div = document.getElementById(id);
+    const a = div.getElementsByTagName("a");
+
+    for (let  i = 0; i < a.length; i++) {
+      if (a[i].classList.contains("active")) {
+        a[i].classList.remove("active");
+      }
+    }
+    document.getElementById(attribute.nameDE).classList.add("active");
   }
 }
