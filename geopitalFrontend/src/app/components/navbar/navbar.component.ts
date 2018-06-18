@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HospitalService } from "../../services/hospital.service";
 
 // The declare function call is to get the D3 logic from the mapinizializer.js file
 declare function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
@@ -25,7 +24,7 @@ export class NavbarComponent implements OnInit{
   private numSpezKl: number = 0;
 
 
-  constructor(private hospitalService: HospitalService) {
+  constructor() {
 
   }
 
