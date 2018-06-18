@@ -293,7 +293,8 @@ function callCharComponent(clickedHospital) {
   // displays the values of the current numerical and categorical attribute of clicked hospital
   if (sizeResult != null) {
     document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
-    document.getElementById('numericalAttributeValue').innerHTML = sizeResult.value;
+    // document.getElementById('numericalAttributeValue').innerHTML = sizeResult.value;
+    document.getElementById('numericalAttributeValue').innerHTML = formatValues(currentNumAttribute, sizeResult.value);
   } else {
     document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
     document.getElementById('numericalAttributeValue').innerHTML = "Keine Daten";
@@ -308,6 +309,17 @@ function callCharComponent(clickedHospital) {
   }
 }
 
+function formatValues(attribute, value) {
+  if (attribute.nameDE.includes("Anteil")) {
+    if (parseFloat(value) > 1) {
+      return parseFloat(value / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3})
+    } else {
+      return parseFloat(value).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3})
+    }
+  } else {
+    return parseFloat(value).toLocaleString('de-CH', { maximumFractionDigits: 3})
+  }
+}
 
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
@@ -409,7 +421,7 @@ var updateCircleRadius = function(numericalAttribute) {
 };
 
 /**
- * Updates the current categorical attribute and the characteristics of the 
+ * Updates the current categorical attribute and the characteristics of the
  * selected hospital (Steckbrief), resets the previous selection of filter options
  * and shows the new options for the selected categorical attribute
  * @param categoricalAttribute selected categorical Attribute from Dropdown1
@@ -417,7 +429,7 @@ var updateCircleRadius = function(numericalAttribute) {
 var showCatOptions = function(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   callCharComponent(selectedHospital);
-  
+
   // reset selection when changing the category
   resetCheckBoxes();
 
@@ -439,7 +451,7 @@ function resetCheckBoxes(){
   var allContainers = document.getElementsByName('checkbox');
   for (var i = 0; i<allContainers.length; i++){
     allContainers[i].checked = true
-  } 
+  }
 
   // update the check box dictionary accordingly to true for all values
   for (var key in checkBoxDictionary){
@@ -535,13 +547,13 @@ function updateCirclesFromSelection(category, code){
  */
 function filter(hospitalDataToFilter, allDict){
    var filteredHospitalData = [];
-   
+
    // consider all hospitals to be eligable
    for (var i = 0; i < hospitalDataToFilter.length; i++){
       var skip = true;
       // loop over all attributes of the i-th hospital
       for (var j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
- 
+
         var currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
         var checkPerformed = false;
         // check only the attributes who are the current selected attribute
