@@ -1,14 +1,12 @@
+import { Component } from "@angular/core";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MapsComponent } from './maps.component';
-import { DropdownComponent } from "../dropdown/dropdown.component";
-import { CategorialAttributesComponent } from "../categorial-attributes/categorial-attributes.component";
-import { NavbarComponent } from "../navbar/navbar.component";
-import {AppModule} from "../../app.module";
-import { APP_BASE_HREF } from "@angular/common";
-import {CharacteristicsComponent} from "../characteristics/characteristics.component";
-import {HospitalService} from "../../services/hospital.service";
-import {CharacteristicsService} from "../../services/characteristics.service";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import { HospitalService } from "../../services/hospital.service";
+import { CharacteristicsService } from "../../services/characteristics.service";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+
+@Component({selector: 'app-sidebar', template: ''})
+class SidebarComponentStubComponent {}
 
 describe('MapsComponent', () => {
   let component: MapsComponent;
@@ -23,21 +21,15 @@ describe('MapsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MapsComponent,
-        DropdownComponent,
-        CategorialAttributesComponent,
-        NavbarComponent,
-        CharacteristicsComponent,
+        SidebarComponentStubComponent
       ],
       imports: [
         HttpClientModule
-
       ],
-
       providers: [
         HospitalService,
         CharacteristicsService,
         HttpClient
-
       ]
     })
     .compileComponents();
