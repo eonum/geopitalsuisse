@@ -45,7 +45,7 @@ export class DropdownComponent implements OnInit {
     this.characteristicsService.getNumericalAttributes()
       .subscribe(attributes => {
         this.numericalAttributes = attributes;
-        this.selectedNumAttribute = this.numericalAttributes[0].nameDE
+        this.selectedNumAttribute = this.numericalAttributes[0].nameDE;
       });
   }
 
@@ -55,7 +55,7 @@ export class DropdownComponent implements OnInit {
    */
   selectCatAttribute(categorcialAttribute) {
     showCatOptions(categorcialAttribute);
-    this.handleDropdownHighlight(categorcialAttribute, "catAttr");
+    this.handleDropdownHighlight(categorcialAttribute.nameDE, "catAttr");
     this.selectedCatAttribute = categorcialAttribute.nameDE;
   }
 
@@ -65,7 +65,7 @@ export class DropdownComponent implements OnInit {
    */
   selectNumAttribute(numericalAttribute){
     updateCircleRadius(numericalAttribute);
-    this.handleDropdownHighlight(numericalAttribute, "numAttr");
+    this.handleDropdownHighlight(numericalAttribute.nameDE, "numAttr");
     this.selectedNumAttribute = numericalAttribute.nameDE;
   }
 
@@ -93,6 +93,6 @@ export class DropdownComponent implements OnInit {
         a[i].classList.remove("active");
       }
     }
-    document.getElementById(attribute.nameDE).classList.add("active");
+    document.getElementById(attribute).classList.add("active");
   }
 }
