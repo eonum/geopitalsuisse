@@ -64,7 +64,7 @@ export class DropdownComponent implements OnInit {
   }
 
   filterNumAttr() {
-    const input = document.getElementById("searchNumAttr");
+    const input = (<HTMLInputElement>document.getElementById("searchNumAttr"));
     const filter = input.value.toUpperCase();
     const div = document.getElementById("numAttr");
     const a = div.getElementsByTagName("a");
