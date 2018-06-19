@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DropdownComponent } from './dropdown.component';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import { MockCharacteristicsService } from "../../../mock/mock.characteristics.service"
-import {Attributes} from "../../models/attributes.model";
+import {Attributes} from "../../models/attribute.model";
 
 const ATTRIBUTES_STRING = [new Attributes("KT", "string", "Kanton", "Cantone", "Cantone")]
 const ATTRIBUTES_NUMERIC = [new Attributes("Gebs", "number", "Gebärsäle", "Gebärsäle", "sale parto"), new Attributes("Ops", "number", "Operationssäle", "salles d’opération", "Sale operatorie")]
