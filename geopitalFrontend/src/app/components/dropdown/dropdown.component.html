@@ -1,29 +1,25 @@
 <div id="dropdown-container">
-  <h5>Attributauswahl:</h5>
+  <h6>Attributauswahl:</h6>
 
-  <!-- align dropdowns in group next to each other -->
-  <div class="btn-group" style="text-align: center;">
-
-    <!-- first dropdown with numeric attributes -->
-    <div id="catAttr" class="dropdown">
-      <button type="button" id="catAttrButton" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-        Filter:
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of categoricalAttributes" (click)="selectedCatAttribute(attribute)">{{ attribute.nameDE }}</a>
-      </div>
+  <!-- first dropdown with numeric attributes -->
+  <div id="catAttr" class="dropdown">
+    <button type="button" id="catAttrButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+      {{selectedCatAttribute}}
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of categoricalAttributes" (click)="selectCatAttribute(attribute)">{{ attribute.nameDE }}</a>
     </div>
-
-    <!-- second dropdown with categorial attributes -->
-    <div id="numAttr" class="dropdown">
-      <button type="button" id="numAttrButton" class="btn btn-default btn-sm dropdown-toggle " data-toggle="dropdown">
-        Kennzahlen:
-      </button>
-      <div class="dropdown-menu">
-        <input class="form-control" type="text" placeholder="Search" id="searchNumAttr" (keyup)="filterNumAttr()">
-        <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectedNumAttribute(attribute)">{{ attribute.nameDE }}</a>
-      </div>
-    </div>
-
   </div>
+
+  <!-- second dropdown with categorial attributes -->
+  <div id="numAttr" class="dropdown">
+    <button type="button" id="numAttrButton" class="btn btn-secondary btn-sm dropdown-toggle " data-toggle="dropdown">
+      {{selectedNumAttribute}}
+    </button>
+    <div class="dropdown-menu">
+      <input class="form-control" type="text" placeholder="Search" id="searchNumAttr" (keyup)="filterNumAttr()">
+      <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+    </div>
+  </div>
+
 </div>

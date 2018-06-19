@@ -19,6 +19,8 @@ export class DropdownComponent implements OnInit {
   public categoricalAttributes: any[] = [];
   public numericalAttributes: any[] = [];
 
+  private selectedCatAttribute: string;
+  private selectedNumAttribute: string;
 
   constructor(private characteristicsService: CharacteristicsService) {  }
 
@@ -35,13 +37,15 @@ export class DropdownComponent implements OnInit {
 
         // extract the categorical attribute "Typ" since its not used in this selection
         this.categoricalAttributes = this.categoricalAttributes.filter(attribute => {
-        return attribute.code !== "Typ";
-        })
+          return attribute.code !== "Typ";
+        });
+        this.selectedCatAttribute = this.categoricalAttributes[0].nameDE;
       });
 
     this.characteristicsService.getNumericalAttributes()
       .subscribe(attributes => {
         this.numericalAttributes = attributes;
+        this.selectedNumAttribute = this.numericalAttributes[0].nameDE
       });
   }
 
@@ -49,18 +53,20 @@ export class DropdownComponent implements OnInit {
    * Function is called when user selects an attribute in the dropdown1 from the html.
    * @param categorcialAttribute selected categorical attribute from dropdown1
    */
-  selectedCatAttribute(categorcialAttribute) {
+  selectCatAttribute(categorcialAttribute) {
     showCatOptions(categorcialAttribute);
     this.handleDropdownHighlight(categorcialAttribute, "catAttr");
+    this.selectedCatAttribute = categorcialAttribute.nameDE;
   }
 
   /**
    * Function is called when user selects an attribute in the dropdown2 from the html.
    * @param numericalAttribute selected numerical attribute from dropdown2
    */
-  selectedNumAttribute(numericalAttribute){
+  selectNumAttribute(numericalAttribute){
     updateCircleRadius(numericalAttribute);
     this.handleDropdownHighlight(numericalAttribute, "numAttr");
+    this.selectedNumAttribute = numericalAttribute.nameDE;
   }
 
   filterNumAttr() {
