@@ -3,7 +3,7 @@
 #checkboxes-container {
   margin:0;
   padding: .5rem;
-  border: .0625rem solid #f1f1f1;
+  border-bottom: .0625rem solid #f1f1f1;
 }
 
 /* container for the checkboxes */

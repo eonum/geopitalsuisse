@@ -1,18 +1,18 @@
 
 #dropdown-container {
-  max-height: 15vh;
   margin: 0;
   padding: .5rem;
-  border: .0625rem solid #f1f1f1;
+  border-bottom: .0625rem solid #f1f1f1;
 }
 
 .dropdown {
-  display: inline-block;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  white-space: normal;
 }
 
-
-#catAttrButton {
-  margin-right: .5rem;
+#catAttrButton, #numAttrButton {
+  white-space: normal;
 }
 
 .dropdown-menu {

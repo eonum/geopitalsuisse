@@ -4,7 +4,7 @@
   max-height: 25vh;
   margin: 0;
   padding: 0.5rem;
-  border: .0625rem solid #f1f1f1;
+  border-bottom: .0625rem solid #f1f1f1;
   overflow-y: auto;
 }
 
