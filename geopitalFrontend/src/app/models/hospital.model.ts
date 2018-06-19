@@ -1,16 +1,16 @@
 export class Hospital {
 
-  _id: String;
-  name: String;
-  streetAndNumber: String;
-  zipCodeAndCity: String;
-  latitude: String;
-  longitude: String;
+  _id: string;
+  name: string;
+  streetAndNumber: string;
+  zipCodeAndCity: string;
+  latitude: string;
+  longitude: string;
   hospital_attributes: {
-    value: String;
+    value: string;
     year: number;
-    code: String;
-  }
+    code: string;
+  };
 
   constructor(name, streetAndNumber, zipCodeAndCity, latitude, longitude, attr_code, attr_value, attr_year){
     this.name = name;
@@ -18,6 +18,6 @@ export class Hospital {
     this.zipCodeAndCity = zipCodeAndCity;
     this.latitude = latitude;
     this.longitude = longitude;
-    this.hospital_attributes = { code: attr_code, value: attr_code, year: attr_year};
+    this.hospital_attributes = { code: attr_code, value: attr_value, year: attr_year};
   }
 }
