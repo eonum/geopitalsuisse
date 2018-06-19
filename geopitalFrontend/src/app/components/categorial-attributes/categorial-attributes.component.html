@@ -1,147 +1,142 @@
-<div class="nav-bar-checkboxes">
-  <nav id="checkboxes-container" class="navbar navbar-expand-lg navbar-dark bg-light">
-    <div id="attributes">
-      
-    <h6 id ="catTitle"></h6>
+<div id="checkboxes-container">
 
-    <div id="RForm">
-     <fieldset>
-        <div class="wrapper">
-          <label class="container"> R1: AG / GmbH
-            <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R1')">
-            <span  class="checkmark1"></span>
-          </label>
-          <label class="container"> R2: Verein / Stiftung
-            <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R2')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> R3: Einzelfirma / Gesellschaft
-            <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R3')">
-            <span class="checkmark1"></span>
-          </label>
-          <label class="container"> R4: Öffentliches Unternehmen
-            <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R4')">
-            <span class="checkmark1"></span>
-          </label>
+  <h6 id ="catTitle"></h6>
+
+  <div id="RForm">
+    <fieldset>
+      <div class="wrapper">
+        <label class="container"> R1: AG / GmbH
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R1')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> R2: Verein / Stiftung
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R2')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> R3: Einzelfirma / Gesellschaft
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R3')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> R4: Öffentliches Unternehmen
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('RForm','R4')">
+          <span class="checkmark1"></span>
+        </label>
       </div>
-     </fieldset>
-    </div>
-
-    <div id="Akt">
-        <fieldset>
-            <div class="wrapper">
-              <label class="container"> A: Akutbehandlung
-                <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','A')">
-                <span  class="checkmark1"></span>
-              </label>
-              <label class="container"> B: Geburtshaus
-                  <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','B')">
-                  <span  class="checkmark1"></span>
-              </label>
-              <label class="container"> P: Psychiatrie
-                  <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','P')">
-                  <span  class="checkmark1"></span>
-                </label>
-                <label class="container"> R: Rehabilitation / Geriatrie
-                    <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','R')">
-                    <span  class="checkmark1"></span>
-              </label>
-            </div>
-        </fieldset>
-    </div>
-
-    <div id="SL">
-        <fieldset>
-
-            <div class="wrapper">
-              <label class="container"> IPS: Intensivpflegestation
-                <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('SL','IPS')">
-                <span  class="checkmark1"></span>
-              </label>
-              <label class="container"> NF: Notfallaufnahme
-                <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SL','NF')">
-                <span class="checkmark1"></span>
-              </label>
-            </div>
-        </fieldset>
-    </div>
-
-    <div id="WB">
-        <fieldset>
-
-            <div class="wrapper">
-              <label class="container"> Arzt: Ärzte
-                <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('WB','Arzt')">
-                <span  class="checkmark1"></span>
-              </label>
-              <label class="container"> BGs: Gesundheitssektor
-                <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('WB','BGs')">
-                <span class="checkmark1"></span>
-              </label>
-              <label class="container"> MSt: Medizinstudenten
-                  <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('WB','MSt')">
-                  <span class="checkmark1"></span>
-                </label>
-            </div>
-        </fieldset>
-    </div>
-
-    <div id="SA">
-        <fieldset>
-
-            <div class="wrapper">
-              <label class="container"> Angio: Angiographie
-                <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('SA','Angio')">
-                <span  class="checkmark1"></span>
-              </label>
-              <label class="container"> CC:  Gamma Camera inkl. Szintigraphie und SPECT-Scanner
-                <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','CC')">
-                <span class="checkmark1"></span>
-              </label>
-              <label class="container"> CT: Computertomograph
-                <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','CT')">
-                <span class="checkmark1"></span>
-              </label>
-              <label class="container"> Dia: Dialyse
-                  <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','Dia')">
-                  <span class="checkmark1"></span>
-                </label>
-                <label class="container"> LB: Linearbeschleuniger
-                  <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','LB')">
-                  <span class="checkmark1"></span>
-                </label>
-              <label class="container"> Lito: Lithotriptor
-                  <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','Lito')">
-                  <span class="checkmark1"></span>
-              </label>
-              <label class="container"> MRI: Magnetresonanztomograph
-                  <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','MRI')">
-                  <span class="checkmark1"></span>
-              </label>
-              <label class="container"> PET: Positronen-Emissions-Tomograph
-                <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','PET')">
-                <span class="checkmark1"></span>
-              </label>
-            </div>
-        </fieldset>
-    </div>
-
-    <div id="LA">
-        <fieldset>
-
-            <div class="wrapper">
-              <label class="container"> Stat: Stationär
-                <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('LA','Stat')">
-                <span  class="checkmark1"></span>
-              </label>
-              <label class="container"> Amb: Ambulant
-                <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('LA','Amb')">
-                <span class="checkmark1"></span>
-              </label>
-            </div>
-          </fieldset>
-    </div>
+    </fieldset>
   </div>
-  </nav>
 
+  <div id="Akt">
+    <fieldset>
+      <div class="wrapper">
+        <label class="container"> A: Akutbehandlung
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','A')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> B: Geburtshaus
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','B')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> P: Psychiatrie
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','P')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> R: Rehabilitation / Geriatrie
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('Akt','R')">
+          <span  class="checkmark1"></span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="SL">
+    <fieldset>
+
+      <div class="wrapper">
+        <label class="container"> IPS: Intensivpflegestation
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('SL','IPS')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> NF: Notfallaufnahme
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SL','NF')">
+          <span class="checkmark1"></span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="WB">
+    <fieldset>
+
+      <div class="wrapper">
+        <label class="container"> Arzt: Ärzte
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('WB','Arzt')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> BGs: Gesundheitssektor
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('WB','BGs')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> MSt: Medizinstudenten
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('WB','MSt')">
+          <span class="checkmark1"></span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="SA">
+    <fieldset>
+
+      <div class="wrapper">
+        <label class="container"> Angio: Angiographie
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('SA','Angio')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> CC:  Gamma Camera inkl. Szintigraphie und SPECT-Scanner
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','CC')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> CT: Computertomograph
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','CT')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> Dia: Dialyse
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','Dia')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> LB: Linearbeschleuniger
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','LB')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> Lito: Lithotriptor
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','Lito')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> MRI: Magnetresonanztomograph
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','MRI')">
+          <span class="checkmark1"></span>
+        </label>
+        <label class="container"> PET: Positronen-Emissions-Tomograph
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('SA','PET')">
+          <span class="checkmark1"></span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="LA">
+    <fieldset>
+
+      <div class="wrapper">
+        <label class="container"> Stat: Stationär
+          <input type="checkbox" name="checkbox"  checked="checked" (change)="selectedCatValue('LA','Stat')">
+          <span  class="checkmark1"></span>
+        </label>
+        <label class="container"> Amb: Ambulant
+          <input type="checkbox" name="checkbox" checked="checked" (change)="selectedCatValue('LA','Amb')">
+          <span class="checkmark1"></span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
 </div>
