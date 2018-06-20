@@ -494,9 +494,6 @@ function updateCatOptions(categoricalAttribute) {
   }
   // only display the selected one
   toggleOptions(categoricalAttribute.code);
-
-  // change the category title accordingly
-  document.getElementById('catTitle').innerHTML = categoricalAttribute.nameDE;
 }
 
 /**

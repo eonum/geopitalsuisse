@@ -3,8 +3,7 @@
 #checkboxes-container {
   max-height: 25vh;
   margin: 0;
-  padding: 0.5rem;
-  border-bottom: .0625rem solid #f1f1f1;
+  padding: 0 0 .5rem 0;
   overflow-y: auto;
 }
 
@@ -17,7 +16,7 @@
 .container {
   display: block;
   position: relative;
-  padding-left: 2.5rem;
+  padding-left: 2rem;
   margin-bottom: .5rem;
   cursor: pointer;
   font-size: .875rem;

@@ -1,7 +1,7 @@
 
 #dropdown-container {
   margin: 0;
-  padding: .5rem;
+  padding: .5rem .5rem .5rem .5rem;
   border-bottom: .0625rem solid #f1f1f1;
 }
 

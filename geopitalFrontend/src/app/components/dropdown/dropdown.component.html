@@ -2,16 +2,6 @@
   <h6>Attributauswahl:</h6>
 
   <!-- first dropdown with numeric attributes -->
-  <div id="catAttr" class="dropdown">
-    <button type="button" id="catAttrButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-      {{selectedCatAttribute}}
-    </button>
-    <div class="dropdown-menu">
-      <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of categoricalAttributes" (click)="selectCatAttribute(attribute)">{{ attribute.nameDE }}</a>
-    </div>
-  </div>
-
-  <!-- second dropdown with categorial attributes -->
   <div id="numAttr" class="dropdown">
     <button type="button" id="numAttrButton" class="btn btn-secondary btn-sm dropdown-toggle " data-toggle="dropdown">
       {{selectedNumAttribute}}
@@ -21,5 +11,18 @@
       <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectNumAttribute(attribute)">{{ attribute.nameDE }}</a>
     </div>
   </div>
+
+
+  <!-- second dropdown with categorial attributes -->
+  <div id="catAttr" class="dropdown">
+    <button type="button" id="catAttrButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+      {{selectedCatAttribute}}
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of categoricalAttributes" (click)="selectCatAttribute(attribute)">{{ attribute.nameDE }}</a>
+    </div>
+  </div>
+
+  <app-categorial-attributes></app-categorial-attributes>
 
 </div>
