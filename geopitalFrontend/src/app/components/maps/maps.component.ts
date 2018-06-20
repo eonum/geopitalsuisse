@@ -4,7 +4,7 @@ import { CharacteristicsService } from "../../services/characteristics.service";
 import { Hospital } from "../../models/hospital.model";
 
 // The declare function call is to get the D3 logic from the mapinizializer.js file
-declare function mapDrawer(hospitals, numAttributes, catAttributes): any;
+declare const mapDrawer;
 
 /**
  * Loads data from backend with hospitalService and calls function for the further use of data.
