@@ -1,7 +1,6 @@
 #char-container{
   max-height: 25vh;
-  margin: 0;
+  margin: .5rem 0 0 0;
   padding: .5rem;
-  border: .0625rem solid #f1f1f1;
   overflow-y: auto;
 }
