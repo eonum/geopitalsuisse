@@ -6,21 +6,21 @@
  * and visualized correctly.
  */
 
-// variables that we need globally that are initialized in a function at one point
-var map;
-var allHospitalData; // initialized in function mapDrawer, contains all hospital data, must not be changed after it is initialized
-var div;
-var circles;
-var hospitalData = [];
-var currentNumAttribute; // numerical attribute that defines the radius of the circles
-var currentCatAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
-var allCatAttributes = [];
-var checkBoxDictionary; // contains all options of categorical attributes with "true" (checked) and "false" (unchecked) values
-var svg;
-var type;
-var selectedHospital;
-var filteredHospitals; // contains hospitals filtered according to the selection of the categorical attributes
 
+// variables that we need globally that are initialized in a function at one point
+let map;
+let allHospitalData; // initialized in function mapDrawer, contains all hospital data, must not be changed after it is initialized
+let div;
+let circles;
+let hospitalData = [];
+let currentNumAttribute; // numerical attribute that defines the radius of the circles
+let currentCatAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
+let allCatAttributes = [];
+let checkBoxDictionary; // contains all options of categorical attributes with "true" (checked) and "false" (unchecked) values
+let svg;
+let type;
+let selectedHospital;
+let filteredHospitals; // contains hospitals filtered according to the selection of the categorical attributes
 
 /**
  * Initializes map with the correct design.
@@ -30,7 +30,7 @@ var filteredHospitals; // contains hospitals filtered according to the selection
  * @param numAttributes array, contains all numerical attributes a hospital can have (name, value, code)
  * @param catAttributes array, contains all categorical attributes a hospital can have (name, value, code)
  */
-var mapDrawer = function(hospitals, numAttributes, catAttributes) {
+function mapDrawer(hospitals, numAttributes, catAttributes) {
 
   //------------------------------------------------------
   // Initialize map
@@ -47,7 +47,6 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
     id: 'mapbox.streets'
   }).addTo(map);
 
-
   //------------------------------------------------------
   // Initialize data
 
@@ -56,11 +55,11 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // sets default numerical attribute (EtMedL)
   currentNumAttribute = numAttributes.find(function ( obj ) {
-    return obj.code == "EtMedL";
+    return obj.code === "EtMedL";
   });
   // sets default categorical attribute (Typ)
   currentCatAttribute = catAttributes.find(function ( obj ) {
-    return obj.code == "RForm";
+    return obj.code === "RForm";
   });
 
   // initialize array with "none" so we know that no hospitals have been filtered yet
@@ -76,7 +75,7 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
   // defines hospital types (type attribute) that are displayed as circles, since at first we want all types
   // we give here "none" as none specific types have to be selected (see function initData)
   type = [];
-  this.type.push("none");
+  type.push("none");
 
   // initializes data so we can work with it for the visualisation (see function initData)
   initData(hospitals, type);
@@ -97,24 +96,43 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
     .attr("class", "tooltip")
     .style("opacity", 0.0);
 
+  /*
+  div.append("h6").attr("id", "hospitalName");
+
+
+  var table = div.append("table").attr("class", "table table-responsive-md")
+    .append("tbody");
+
+  var row1 = table.append("tr");
+  row1.append("td").text("Adresse");
+  row1.append("td").attr("id", "hospitalAddress");
+
+  var row2 = table.append("tr");
+  row2.append("td").attr("id", "numericalAttributeName");
+  row2.append("td").attr("id", "numericalAttributeValue");
+
+  var row3 = table.append("tr");
+  row3.append("td").attr("id", "categoricalAttributeName");
+  row3.append("td").attr("id", "categoricalAttributeValue");
+  */
+
   // initialize circles on map
   initCircles(hospitalData);
 
   // adapt Leaflet’s API to fit D3 with custom geometric transformation
   // calculates x and y coordinate in pixels for given coordinates (wgs84)
   function projectPoint(x, y) {
-    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-    return point;
+    return map.latLngToLayerPoint(new L.LatLng(y, x));
   }
 
   // we have to calculate the width and the height of the svg element.
   // calculate the y max and x max value for all datapoints and add a padding.
   // xmax is width and ymax is height of svg-layer
   function calculateSVGBounds(hospitals) {
-    var xMax = 0;
-    var yMax = 0;
-    var heightPadding = 100;
-    var widthPadding = 300;
+    let xMax = 0;
+    let yMax = 0;
+    let heightPadding = 100;
+    let widthPadding = 300;
     hospitals.forEach(function(d) {
       xMax = Math.max(projectPoint(d.longitude, d.latitude).x, xMax);
       yMax = Math.max(projectPoint(d.longitude, d.latitude).y, yMax);
@@ -133,7 +151,7 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
 
   // makes points visible again after user has finished zooming
   map.on('zoomend', function() {
-    var maxValue = getMaxValue(hospitalData);
+    let maxValue = getMaxValue(hospitalData);
     circles
       .attr("cx", function(d) {return projectPoint(d.longitude, d.latitude).x})
       .attr("cy", function(d) {return projectPoint(d.longitude, d.latitude).y})
@@ -142,7 +160,7 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
     calculateSVGBounds(hospitalData);
     d3.select('#circleSVG').style('visibility', 'visible');
   });
-};
+}
 
 
 /**
@@ -151,58 +169,60 @@ var mapDrawer = function(hospitals, numAttributes, catAttributes) {
  * @param data array that contains hospital information
  * @param type type (from attributes) of hospitals that should be displayed
  */
-function initData(data, type){
-
+function initData(data, type) {
   // initially empty array to be filled up with hospitals to be displayed on map
   hospitalData = [];
 
-  for (var i = 0; i < data.length; i++){
+  for (let i = 0; i < data.length; i++) {
 
     // stores name, coordinates (latitude, longitude), size attribute value
     // and type of each hospital in a variable to save in array
-    if(data[i].name!=null && data[i].latitude!=null && data[i].longitude!=null){
-      var hospitalName = data[i].name;
-      var latitude = data[i].latitude;
-      var longitude = data[i].longitude;
+    if(data[i].name !== null && data[i].latitude !== null && data[i].longitude !== null) {
+      let hospitalName = data[i].name;
+      let latitude = data[i].latitude;
+      let longitude = data[i].longitude;
+
 
       // access attributes of hospital
-      var attr = data[i].hospital_attributes;
+      let attr = data[i].hospital_attributes;
+      let sizeAttribute;
+      let typAttribute;
 
       // filters code attribute and saves it in variable
-      var sizeResult = attr.filter(function( obj ) {
-        return obj.code == currentNumAttribute.code;
+      let sizeResult = attr.filter(function( obj ) {
+        return obj.code === currentNumAttribute.code;
       });
 
-      // saves value of code attribute in variable
-      if(sizeResult[0]!=null && sizeResult[0].value!=null){
-        var sizeAttribute = Number(sizeResult[0].value);
-      } else {
+      if (sizeResult == null || sizeResult[0] == null ||sizeResult[0].value == null) {
         continue;
+      } else {
+        sizeAttribute = Number(sizeResult[0].value);
       }
 
       // filters type attribute and saves it in variable
-      var typResult = attr.filter(function ( obj ) {
-        return obj.code == "Typ";
+      let typResult = attr.filter(function ( obj ) {
+        return obj.code === "Typ";
       });
 
-      // saves value of type attribute in variable
-      if(typResult[0]!=null && typResult[0].value!=null){
-        var typAttribute = String(typResult[0].value);
+      if (typResult == null || typResult[0] == null || typResult[0].value == null) {
+        typResult = null;
       } else {
-        continue;
+        typAttribute = String(typResult[0].value);
       }
+
 
       // store only hospitals with right attribute type in array
       // type "none" stands for default value (all hospitals)
-      for(var j = 0; j < type.length; j++){
-        if(type[j]!="none"){
-          if(typAttribute==type[j]){
-            var basicInformation = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
+      let basicInformation;
+      for(let j = 0; j < type.length; j++) {
+        if(type[j] !== "none") {
+          if(typAttribute === type[j]) {
+            basicInformation = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
             hospitalData.push(basicInformation);
           }
         }
-        if(type[j]=="none"){
-          var basicInformation = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
+        if(type[j] === "none") {
+          basicInformation = {longitude: longitude, latitude: latitude, name:hospitalName, radius: sizeAttribute, Typ: typAttribute};
           hospitalData.push(basicInformation);
         }
       }
@@ -216,10 +236,10 @@ function initData(data, type){
  *
  * @param hospitalData data that is visualized as circles (with x- and y-coordinates and radius r)
  */
-var initCircles = function(hospitalData){
+function initCircles(hospitalData) {
 
   // get maximal value of radius to calculate radius of circles
-  var maxValue = getMaxValue(hospitalData);
+  let maxValue = getMaxValue(hospitalData);
 
   // define circles
   circles = svg.selectAll('circle')
@@ -242,62 +262,67 @@ var initCircles = function(hospitalData){
     .attr("cy", function(d) {
       return projectPoint(d.longitude, d.latitude).y;
     })
-    .on("mouseover", function(d) {
+    .on("mouseover", function (d) {
       return showTooltip(d);
     })
-    .on("mouseout", function(d) {
-      return removeTooltip(d);
+    .on("mouseout", function () {
+      return removeTooltip();
     })
     .on("click", function(d) {
       return callCharComponent(d);
      })
-};
+}
 
 
 // support the CharacteristicsComponent with necessary data to show in characteristics(Steckbrief)
 function callCharComponent(clickedHospital) {
   selectedHospital = clickedHospital;
 
-  var clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
+  let clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
+  let sizeResult = {};
+  let catResult = {};
 
   /*  filters only the current numerical attribute from clicked hospital */
-  if (currentNumAttribute != null) {
-    var sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
-      return obj.code == currentNumAttribute.code;
+  if (currentNumAttribute !== null) {
+    sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
+      return obj.code === currentNumAttribute.code;
     });
-  } else {
-    sizeResult = 0;
   }
+
+  if (currentNumAttribute === null || sizeResult == null) {
+    sizeResult = null;
+  }
+
   /*  filters only the current categorical attribute from clicked hospital */
-  if (currentCatAttribute != null) {
-    var catResult = clickedHospitalData.hospital_attributes.find(function ( obj ) {
-      return obj.code == currentCatAttribute.code;
+  if (currentCatAttribute !== null) {
+    catResult = clickedHospitalData.hospital_attributes.find(function ( obj ) {
+      return obj.code === currentCatAttribute.code;
     });
-  } else {
-    catResult = 0;
+  }
+
+  if (currentCatAttribute === null || catResult == null) {
+    catResult = null;
   }
 
   // displays the name and address of the clicked hospital in characteristics (Steckbrief)
   document.getElementById('hospitalName').innerHTML = clickedHospital.name;
-  if (clickedHospitalData.streetAndNumber != null) {
+  if (clickedHospitalData.streetAndNumber !== '') {
     document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + "<br/>"
     + clickedHospitalData.zipCodeAndCity;
   } else {
     document.getElementById('hospitalAddress').innerHTML = "" + clickedHospitalData.zipCodeAndCity;
   }
 
-
   // displays the values of the current numerical and categorical attribute of clicked hospital
-  if (sizeResult != null) {
+  if (sizeResult !== null) {
     document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
-    // document.getElementById('numericalAttributeValue').innerHTML = sizeResult.value;
     document.getElementById('numericalAttributeValue').innerHTML = formatValues(currentNumAttribute, sizeResult.value);
   } else {
     document.getElementById('numericalAttributeName').innerHTML = currentNumAttribute.nameDE;
     document.getElementById('numericalAttributeValue').innerHTML = "Keine Daten";
   }
 
-  if (catResult != null) {
+  if (catResult !== null) {
     document.getElementById('categoricalAttributeName').innerHTML = currentCatAttribute.nameDE;
     document.getElementById('categoricalAttributeValue').innerHTML = catResult.value;
   } else {
@@ -321,19 +346,18 @@ function formatValues(attribute, value) {
 // adapt Leaflet’s API to fit D3 with custom geometric transformation
 // calculates x and y coordinate in pixels for given coordinates (wgs84)
 function projectPoint(x, y) {
-  var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-  return point;
+  return map.latLngToLayerPoint(new L.LatLng(y, x));
 }
 
 
 /**
  * Removes circles and all attributes that has been assigned to them.
  */
-var removeCircles = function(){
-  if(svg!=null && svg.selectAll!=null){
+function removeCircles() {
+  if(svg !== null && svg.selectAll !== null) {
     svg.selectAll('circle').remove();
   }
-};
+}
 
 
 /**
@@ -348,15 +372,14 @@ var removeCircles = function(){
  * @param numRehaKl
  * @param numSpezKl
  */
-var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
 
-  var data;
+  let data;
 
   // use only filtered hospitals (categorical attributes) but only if a filter is active
-  if(filteredHospitals[0]!="none"){
+  if(filteredHospitals[0] !== "none") {
     data = filteredHospitals;
-  }
-  else{
+  } else {
     data = allHospitalData;
   }
 
@@ -369,29 +392,29 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
   // build up data array
   // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
   if ((numUniSp % 2) === 0) {
-    this.type.push("K111");
+    type.push("K111");
   }
-  if((numZentSp % 2) === 0){
-    this.type.push("K112");
+  if((numZentSp % 2) === 0) {
+    type.push("K112");
   }
-  if((numGrundVers % 2) === 0){
-    this.type.push("K121", "K122", "K123");
+  if((numGrundVers % 2) === 0) {
+    type.push("K121", "K122", "K123");
   }
-  if((numPsychKl % 2) === 0){
-    this.type.push("K211", "K212");
+  if((numPsychKl % 2) === 0) {
+    type.push("K211", "K212");
   }
-  if((numRehaKl % 2) === 0){
-    this.type.push("K221");
+  if((numRehaKl % 2) === 0) {
+    type.push("K221");
   }
-  if((numSpezKl % 2) === 0){
-    this.type.push("K231", "K232", "K233", "K234", "K235");
+  if((numSpezKl % 2) === 0) {
+    type.push("K231", "K232", "K233", "K234", "K235");
   }
 
-  initData(data, this.type);
+  initData(data, type);
 
   // draw circles with the data that is build above
   initCircles(hospitalData);
-};
+}
 
 
 /**
@@ -400,22 +423,21 @@ var updateMap = function(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaK
  * numerical attribute
  * @param numericalAttribute selected numerical Attribute from Dropdown1
  */
-var updateCircleRadius = function(numericalAttribute) {
+function updateCircleRadius(numericalAttribute) {
   currentNumAttribute = numericalAttribute;
 
-  var data;
-  if(filteredHospitals[0]!="none"){
+  let data;
+  if(filteredHospitals[0] !== "none") {
     data = filteredHospitals;
-  }
-  else{
+  } else {
     data = allHospitalData;
   }
 
   removeCircles();
-  initData(data, this.type);
+  initData(data, type);
   initCircles(hospitalData);
   callCharComponent(selectedHospital);
-};
+}
 
 /**
  * Updates the current categorical attribute and the characteristics of the
@@ -423,7 +445,7 @@ var updateCircleRadius = function(numericalAttribute) {
  * and shows the new options for the selected categorical attribute
  * @param categoricalAttribute selected categorical Attribute from Dropdown1
  */
-var showCatOptions = function(categoricalAttribute) {
+function showCatOptions(categoricalAttribute) {
   currentCatAttribute = categoricalAttribute;
   callCharComponent(selectedHospital);
 
@@ -433,26 +455,26 @@ var showCatOptions = function(categoricalAttribute) {
   updateCatOptions(categoricalAttribute);
   filteredHospitals = ["none"];
   removeCircles();
-  initData(allHospitalData, this.type);
+  initData(allHospitalData, type);
   initCircles(hospitalData);
-};
+}
 
 /**
  * Resets the deactivated options on a categorical attribute when the category changes.
  * Checks all checkboxes grafically and fills up the checkbox-dictionary with "true"
  * for all options
  */
-function resetCheckBoxes(){
+function resetCheckBoxes() {
 
   // mark all graphical checkboxes as "checked"
-  var allContainers = document.getElementsByName('checkbox');
-  for (var i = 0; i<allContainers.length; i++){
+  let allContainers = document.getElementsByName('checkbox');
+  for (let i = 0; i<allContainers.length; i++) {
     allContainers[i].checked = true
   }
 
   // update the check box dictionary accordingly to true for all values
-  for (var key in checkBoxDictionary){
-    for (var innerKey in checkBoxDictionary[key]){
+  for (let key in checkBoxDictionary) {
+    for (let innerKey in checkBoxDictionary[key]) {
       checkBoxDictionary[key][innerKey] = true
     }
   }
@@ -467,7 +489,7 @@ function resetCheckBoxes(){
 function updateCatOptions(categoricalAttribute) {
 
   // hide all categorical attributes
-  for(var i = 0; i<allCatAttributes.length; i++){
+  for(let i = 0; i<allCatAttributes.length; i++) {
     hideAllOptions(allCatAttributes[i].code);
   }
   // only display the selected one
@@ -481,17 +503,16 @@ function updateCatOptions(categoricalAttribute) {
  * Displays only the options for the selected categorical attribute
  * @param inputCode selected categorical Attribute from Dropdown1
  */
-function toggleOptions(inputCode){
-  try{
-    var x = document.getElementById(inputCode);
+function toggleOptions(inputCode) {
+  try {
+    let x = document.getElementById(inputCode);
 
-    if(x.style.display == "none"){
+    if(x.style.display === "none") {
       x.style.display = "block"
     } else {
       x.style.display = "none";
     }
   } catch(err) {
-    return
   }
 }
 
@@ -499,12 +520,11 @@ function toggleOptions(inputCode){
  * Hides all options of all categorical attributes before displaying
  * the default or the selected one
  */
-function hideAllOptions(inputCode){
-  try{
-    var x = document.getElementById(inputCode);
+function hideAllOptions(inputCode) {
+  try {
+    let x = document.getElementById(inputCode);
     x.style.display = "none";
-  }catch(err){
-    return;
+  } catch(err){
   }
 }
 
@@ -512,8 +532,8 @@ function hideAllOptions(inputCode){
  * Initially stores the dictionary with all options as "true" (checked) as global variable,
  * @param allDict the dictionary of all options activated from categorial-attributes.component
  */
-function setDefaultOptionSelection(AllDict) {
-  checkBoxDictionary = AllDict;
+function setDefaultOptionSelection(allDict) {
+  checkBoxDictionary = allDict;
 }
 
 /**
@@ -523,14 +543,14 @@ function setDefaultOptionSelection(AllDict) {
  * @param code the code of the selected/deselected option
  */
 
-function updateCirclesFromSelection(category, code){
+function updateCirclesFromSelection(category, code) {
 
   // toggle dictionary entry of selected/deselected checkbox, described by category and code
-  checkBoxDictionary[category][code] = !checkBoxDictionary[category][code]
+  checkBoxDictionary[category][code] = !checkBoxDictionary[category][code];
 
   // update the dataset of hospitals who match to the selected options
   filteredHospitals = filter(allHospitalData, checkBoxDictionary);
-  initData(filteredHospitals, this.type);
+  initData(filteredHospitals, type);
 
   //update circles accordingly
   removeCircles();
@@ -543,30 +563,27 @@ function updateCirclesFromSelection(category, code){
  * @param hospitalDataToFilter all hospitals to filter according the selected options
  * @param allDict the dictionary of the activated/deactivated options
  */
-function filter(hospitalDataToFilter, allDict){
-   var filteredHospitalData = [];
+function filter(hospitalDataToFilter, allDict) {
+   let filteredHospitalData = [];
 
    // consider all hospitals to be eligable
-   for (var i = 0; i < hospitalDataToFilter.length; i++){
-      var skip = true;
+   for (let i = 0; i < hospitalDataToFilter.length; i++){
+      let skip = true;
       // loop over all attributes of the i-th hospital
-      for (var j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
+      for (let j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
 
-        var currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
-        var checkPerformed = false;
+        let currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
+        let checkPerformed = false;
         // check only the attributes who are the current selected attribute
         // and who are part of the categorical attributes (in allDict)
-        if((currentCode == currentCatAttribute.code)  && (currentCode in allDict)){
-          for (var key in allDict[currentCode]){
+        if((currentCode === currentCatAttribute.code)  && (currentCode in allDict)){
+          for (let key in allDict[currentCode]){
           // keep hospital if checkbox(dictionary) entry is true and contained in hospital attribute
            if(allDict[currentCode][key] &&
               hospitalDataToFilter[i].hospital_attributes[j].value.includes(key)){
                 skip = false;
                 checkPerformed = true;
                 break;
-            } else {
-                // checkbox entry is false or hospital doesn't contain the value
-                continue;
             }
           }
         checkPerformed = true;
@@ -580,10 +597,7 @@ function filter(hospitalDataToFilter, allDict){
         }
       }
       // if skip is true, we don't add the hospital and continue with the next
-      if(skip){
-        continue;
-      } else {
-      // we don't skip the hospital and add it to the selection
+      if(!skip) {
         filteredHospitalData.push(hospitalDataToFilter[i]);
       }
     }
@@ -599,11 +613,12 @@ function filter(hospitalDataToFilter, allDict){
 /**
  * Gives markers different radius according to the numerical attribute
  * @param d data which is displayed as a circle
+ * @param maxValue
  * @returns {number} radius of the marker (according numerical attribute)
  */
 function getCircleRadius(d, maxValue) {
-  var zoomLevel = map.getZoom();
-  if (d.radius == 0) {
+  let zoomLevel = map.getZoom();
+  if (d.radius === 0) {
     return 3*zoomLevel*zoomLevel/100; // circles with value 0 have radius 3
   } else {
     return ((d.radius/maxValue)*40+5)*zoomLevel*zoomLevel/100;
@@ -616,15 +631,12 @@ function getCircleRadius(d, maxValue) {
  * @returns {number} maximal radius of the chosen attribute
  */
 function getMaxValue(hospitalData) {
-  var maxValue = 0;
+  let maxValue = 0;
   // get max value of radius attribute (to calculate radius of circles)
-  for(var i=0; i<hospitalData.length; i++){
-    if(hospitalData[i]!=null && hospitalData[i].radius!=null){
+  for(let i=0; i<hospitalData.length; i++){
+    if(hospitalData[i] !== null && hospitalData[i].radius !== null){
       if(hospitalData[i].radius>maxValue){
         maxValue = hospitalData[i].radius;
-      }
-      else{
-        continue;
       }
     }
   }
@@ -637,17 +649,17 @@ function getMaxValue(hospitalData) {
  * @returns {string} color of the marker (according to type)
  */
 function getCircleColour(d)  {
-  if (d.Typ == "K111") // Universitätspitäler
+  if (d.Typ === "K111") // Universitätspitäler
     return ('#a82a2a');
-  if (d.Typ == "K112") // Zentrumsspitäler
+  if (d.Typ === "K112") // Zentrumsspitäler
     return ('#a89f2a');
-  if (d.Typ == "K121" || d.Typ == "K122" || d.Typ == "K123") // Grundversorgung
+  if (d.Typ === "K121" || d.Typ === "K122" || d.Typ === "K123") // Grundversorgung
     return ('#2ca82a');
-  if (d.Typ == "K211" || d.Typ == "K212") // Psychiatrische Kliniken
+  if (d.Typ === "K211" || d.Typ === "K212") // Psychiatrische Kliniken
     return ('#2a8ea8');
-  if (d.Typ == "K221") // Rehabilitationskliniken
+  if (d.Typ === "K221") // Rehabilitationskliniken
     return ('#2c2aa8');
-  if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
+  if (d.Typ === "K231" || d.Typ === "K232" || d.Typ === "K233" || d.Typ === "K234" || d.Typ === "K235") //Spezialkliniken
     return ('#772aa8');
   else
     return ('#d633ff');
@@ -659,18 +671,18 @@ function getCircleColour(d)  {
   * @returns {string} color of the border of the marker (according to type)
   */
 function getCircleBorderColour(d) {
-  if (d.Typ == "K111") // Universitätspitäler
-    return ('#a82a2a')
-  if (d.Typ == "K112") // Zentrumsspitäler
-    return ('#a89f2a')
-  if (d.Typ == "K121" || d.Typ == "K122" || d.Typ == "K123") // Grundversorgung
-    return ('#2ca82a')
-  if (d.Typ == "K211" || d.Typ == "K212") // Psychiatrische Kliniken
-    return ('#2a8ea8')
-  if (d.Typ == "K221") // Rehabilitationskliniken
-    return ('#2c2aa8')
-  if (d.Typ == "K231" || d.Typ == "K232" || d.Typ == "K233" || d.Typ == "K234" || d.Typ == "K235") //Spezialkliniken
-    return ('#772aa8')
+  if (d.Typ === "K111") // Universitätspitäler
+    return ('#a82a2a');
+  if (d.Typ === "K112") // Zentrumsspitäler
+    return ('#a89f2a');
+  if (d.Typ === "K121" || d.Typ === "K122" || d.Typ === "K123") // Grundversorgung
+    return ('#2ca82a');
+  if (d.Typ === "K211" || d.Typ === "K212") // Psychiatrische Kliniken
+    return ('#2a8ea8');
+  if (d.Typ === "K221") // Rehabilitationskliniken
+    return ('#2c2aa8');
+  if (d.Typ === "K231" || d.Typ === "K232" || d.Typ === "K233" || d.Typ === "K234" || d.Typ === "K235") //Spezialkliniken
+    return ('#772aa8');
   else
     return ('#d633ff');
 }
@@ -681,54 +693,102 @@ function getCircleBorderColour(d) {
   * @param d data which is displayed as a circle
   */
 function showTooltip(d) {
-  div.transition()
-        .duration(1)
-        .style("opacity", .98);
-      div.html(d.name)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 0) + "px");
+   div.transition()
+     .duration(1)
+     .style("opacity", .98);
+   div.html(d.name)
+     .style("left", d3.event.pageX + "px")
+     .style("top", d3.event.pageY + "px");
 }
+
 
  /**
   * Let's the tooltip disappear when hovering out of a marker
-  * @param d data which is displayed as a circle
   */
-function removeTooltip(d) {
+function removeTooltip() {
   div.transition()
         .duration(500)
         .style("opacity", 0);
 }
 
+/*
+function initTooltipData(clickedHospital) {
+  selectedHospital = clickedHospital;
+
+  let clickedHospitalData = getAllDataForClickedHospital(clickedHospital);
+
+  //  filters only the current numerical attribute from clicked hospital
+  if (currentNumAttribute != null) {
+    let sizeResult = clickedHospitalData.hospital_attributes.find(function( obj ) {
+      return obj.code == currentNumAttribute.code;
+    });
+  } else {
+    sizeResult = 0;
+  }
+
+  // filters only the current categorical attribute from clicked hospital
+  if (currentCatAttribute != null) {
+    let catResult = clickedHospitalData.hospital_attributes.find(function ( obj ) {
+      return obj.code == currentCatAttribute.code;
+    });
+  } else {
+    catResult = 0;
+  }
+
+  d3.select("#hospitalName").text(clickedHospital.name);
+  if (clickedHospitalData.streetAndNumber != null) {
+    d3.select('#hospitalAddress').text(clickedHospitalData.streetAndNumber + "<br/>"
+      + clickedHospitalData.zipCodeAndCity)
+  } else {
+    d3.select('#hospitalAddress').text("" + clickedHospitalData.zipCodeAndCity);
+  }
+
+
+  // displays the values of the current numerical and categorical attribute of clicked hospital
+  d3.select('#numericalAttributeName').text(currentNumAttribute.nameDE)
+  if (sizeResult != null) {
+    d3.select('#numericalAttributeValue').text(formatValues(currentNumAttribute, sizeResult.value))
+  } else {
+    d3.select('#numericalAttributeValue').text("Keine Daten")
+  }
+
+  d3.select('#categoricalAttributeName').text(currentCatAttribute.nameDE)
+
+  if (catResult != null) {
+    d3.select('#categoricalAttributeValue').text(catResult.valueE)
+  } else {
+    d3.select('#categoricalAttributeValue').text("Keine Daten")
+  }
+}
+*/
 
 //------------------------------------------------------
 // get and setter methods
 
 // sets numerical attribute to the currently selected in dropdown
-function setNumAttribute(attributeArray){
-  if(attributeArray!=null){
-    this.currentNumAttribute = attributeArray;
+function setNumAttribute(attributeArray) {
+  if(attributeArray !== null) {
+    currentNumAttribute = attributeArray;
   }
 }
 
 // gets currently selected numerical attribute
-function getNumAttribute(){
-  return this.currentNumAttribute;
+function getNumAttribute() {
+  return currentNumAttribute;
 }
 
-function setCatAttribute(attributeArray){
-  if(attributeArray!=null){
-    this.currentCatAttribute = attributeArray;
+function setCatAttribute(attributeArray) {
+  if(attributeArray !== null) {
+    currentCatAttribute = attributeArray;
   }
 }
 
 // returns an array with all data of the clicked hospital
 function getAllDataForClickedHospital(clickedHospital) {
-  var attr = allHospitalData;
   // finds array according to clickedHospital
-  var attrResult = attr.find(function( obj ) {
-    return obj.name == clickedHospital.name;
+  return allHospitalData.find(function( obj ) {
+    return obj.name === clickedHospital.name;
   });
-  return attrResult;
 }
 
 
