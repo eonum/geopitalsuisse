@@ -19,8 +19,8 @@ export class DropdownComponent implements OnInit {
   public categoricalAttributes: any[] = [];
   public numericalAttributes: any[] = [];
 
-  private selectedCatAttribute: string;
-  private selectedNumAttribute: string;
+  selectedCatAttribute: string;
+  selectedNumAttribute: string;
 
   constructor(private characteristicsService: CharacteristicsService) {  }
 
