@@ -12,7 +12,7 @@ module GeopitalBackend
     config.load_defaults 5.2
 
     config.action_dispatch.default_headers.merge!({
-                                                      'Access-Control-Allow-Origin' => 'http://localhost:4200',
+                                                      'Access-Control-Allow-Origin' => '*',
                                                   })
 
     # Settings in config/environments/* take precedence over those specified here.
