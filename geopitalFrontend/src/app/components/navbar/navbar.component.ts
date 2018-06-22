@@ -43,33 +43,32 @@ export class NavbarComponent implements OnInit {
    */
   selectHospitalType(hospitalType) {
 
-    if (hospitalType === 'K111') {
+    if (hospitalType === 'uniSp') {
       this.numUniSp = this.numUniSp + 1;
       updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
       }
 
-    if (hospitalType === 'K112') {
+    if (hospitalType === 'zentSp') {
       this.numZentSp = this.numZentSp + 1;
       updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'K121' || hospitalType === 'K122' || hospitalType === 'K123') {
+    if (hospitalType === 'grundVers') {
       this.numGrundVers = this.numGrundVers + 1;
       updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'K211' || hospitalType === 'K212') {
+    if (hospitalType === 'psychKl') {
       this.numPsychKl = this.numPsychKl + 1;
       updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'K221') {
+    if (hospitalType === 'rehaKl') {
       this.numRehaKl = this.numRehaKl + 1;
       updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'K231' || hospitalType === 'K232' || hospitalType === 'K233'
-    || hospitalType === 'K234' || hospitalType === 'K235') {
+    if (hospitalType === 'spezKl') {
       this.numSpezKl = this.numSpezKl + 1;
       updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
