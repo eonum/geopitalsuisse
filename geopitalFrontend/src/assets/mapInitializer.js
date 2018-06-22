@@ -390,23 +390,23 @@ function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, num
   type = [];
 
   // build up data array
-  // even numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
-  if ((numUniSp % 2) === 0) {
+  // odd numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
+  if ((numUniSp % 2) === 1) {
     type.push("K111");
   }
-  if((numZentSp % 2) === 0) {
+  if((numZentSp % 2) === 1) {
     type.push("K112");
   }
-  if((numGrundVers % 2) === 0) {
+  if((numGrundVers % 2) === 1) {
     type.push("K121", "K122", "K123");
   }
-  if((numPsychKl % 2) === 0) {
+  if((numPsychKl % 2) === 1) {
     type.push("K211", "K212");
   }
-  if((numRehaKl % 2) === 0) {
+  if((numRehaKl % 2) === 1) {
     type.push("K221");
   }
-  if((numSpezKl % 2) === 0) {
+  if((numSpezKl % 2) === 1) {
     type.push("K231", "K232", "K233", "K234", "K235");
   }
 
@@ -469,13 +469,13 @@ function resetCheckBoxes() {
   // mark all graphical checkboxes as "checked"
   let allContainers = document.getElementsByName('checkbox');
   for (let i = 0; i<allContainers.length; i++) {
-    allContainers[i].checked = true
+    allContainers[i].checked = false
   }
 
   // update the check box dictionary accordingly to true for all values
   for (let key in checkBoxDictionary) {
     for (let innerKey in checkBoxDictionary[key]) {
-      checkBoxDictionary[key][innerKey] = true
+      checkBoxDictionary[key][innerKey] = false
     }
   }
 }
