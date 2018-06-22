@@ -554,7 +554,7 @@ function updateCirclesFromSelection(category, code) {
 
   // update the dataset of hospitals who match to the selected options
   // filteredHospitals = filter(allHospitalData, checkBoxDictionary);
-  filteredHospitals = newFilter(allHospitalData, checkBoxDictionary)
+  filteredHospitals = filter(allHospitalData, checkBoxDictionary)
   initData(filteredHospitals, type);
 
   //update circles accordingly
