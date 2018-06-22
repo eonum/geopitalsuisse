@@ -1,11 +1,15 @@
+import { Component } from "@angular/core";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DropdownComponent } from './dropdown.component';
 import { CharacteristicsService } from "../../services/characteristics.service";
 import { MockCharacteristicsService } from "../../../mock/mock.characteristics.service"
-import {Attributes} from "../../models/attribute.model";
+import { Attribute } from "../../models/attribute.model";
 
-const ATTRIBUTES_STRING = [new Attributes("KT", "string", "Kanton", "Cantone", "Cantone")]
-const ATTRIBUTES_NUMERIC = [new Attributes("Gebs", "number", "Gebärsäle", "Gebärsäle", "sale parto"), new Attributes("Ops", "number", "Operationssäle", "salles d’opération", "Sale operatorie")]
+const ATTRIBUTE_STRING = [new Attribute("KT", "string", "Kanton", "Cantone", "Cantone")]
+const ATTRIBUTE_NUMERIC = [new Attribute("Gebs", "number", "Gebärsäle", "Gebärsäle", "sale parto"), new Attribute("Ops", "number", "Operationssäle", "salles d’opération", "Sale operatorie")]
+
+@Component({selector: 'app-categorial-attributes', template: ''})
+class CategorialAttributesStubComponent {}
 
 describe('DropdownComponent', () => {
   let component: DropdownComponent;
@@ -14,7 +18,10 @@ describe('DropdownComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DropdownComponent ],
+      declarations: [
+        DropdownComponent,
+        CategorialAttributesStubComponent
+      ],
       providers: [
         {provide: CharacteristicsService, useClass: MockCharacteristicsService}
       ]
@@ -35,17 +42,17 @@ describe('DropdownComponent', () => {
 
   it('should set numeric attributes and string attributes without attribute Typ', () => {
     component.ngOnInit();
-    expect(component.numericalAttributes).toEqual(ATTRIBUTES_NUMERIC)
-    expect(component.categoricalAttributes).toEqual(ATTRIBUTES_STRING)
-  })
+    expect(component.numericalAttributes).toEqual(ATTRIBUTE_NUMERIC);
+    expect(component.categoricalAttributes).toEqual(ATTRIBUTE_STRING);
+  });
 
-  it('should call selectedCatAttribute function if string attribute is choosen', async(() => {
-    spyOn(component, 'selectedCatAttribute')
-    let link = fixture.debugElement.nativeElement.querySelector('a');
+  it('should call selectCatAttribute function if string attribute is chosen', async(() => {
+    spyOn(component, 'selectCatAttribute');
+    let link = fixture.debugElement.nativeElement.querySelector('#Kanton');
     link.click();
 
     fixture.whenStable().then(() => {
-      expect(component.selectedCatAttribute).toHaveBeenCalled();
+      expect(component.selectCatAttribute).toHaveBeenCalled();
     })
   }));
 
