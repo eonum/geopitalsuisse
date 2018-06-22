@@ -22,6 +22,8 @@ let type;
 let selectedHospital;
 let filteredHospitals; // contains hospitals filtered according to the selection of the categorical attributes
 
+const singleClassCategories = ['RForm'];
+const multiClassCategories = ['Akt', 'SL', 'WB', 'SA', 'LA'];
 /**
  * Initializes map with the correct design.
  * Draws circles from the provided data and implements zoom-function for these circles.
@@ -377,6 +379,7 @@ function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, num
   let data;
 
   // use only filtered hospitals (categorical attributes) but only if a filter is active
+  console.log('filteredHospitals', filteredHospitals, filteredHospitals[0])
   if(filteredHospitals[0] !== "none") {
     data = filteredHospitals;
   } else {
@@ -546,7 +549,8 @@ function updateCirclesFromSelection(category, code) {
   checkBoxDictionary[category][code] = !checkBoxDictionary[category][code];
 
   // update the dataset of hospitals who match to the selected options
-  filteredHospitals = filter(allHospitalData, checkBoxDictionary);
+  // filteredHospitals = filter(allHospitalData, checkBoxDictionary);
+  filteredHospitals = newFilter(allHospitalData, checkBoxDictionary)
   initData(filteredHospitals, type);
 
   //update circles accordingly
@@ -561,48 +565,78 @@ function updateCirclesFromSelection(category, code) {
  * @param allDict the dictionary of the activated/deactivated options
  */
 function filter(hospitalDataToFilter, allDict) {
-   let filteredHospitalData = [];
+  let filteredHospitalData = [];
 
-   // consider all hospitals to be eligable
-   for (let i = 0; i < hospitalDataToFilter.length; i++){
-      let skip = true;
-      // loop over all attributes of the i-th hospital
-      for (let j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++){
+  // consider all hospitals to be eligable
+  for (let i = 0; i < hospitalDataToFilter.length; i++) {
+    let skip = true;
+    // loop over all attributes of the i-th hospital
+    for (let j = 0; j < hospitalDataToFilter[i].hospital_attributes.length; j++) {
 
-        let currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
-        let checkPerformed = false;
-        // check only the attributes who are the current selected attribute
-        // and who are part of the categorical attributes (in allDict)
-        if((currentCode === currentCatAttribute.code)  && (currentCode in allDict)){
-          for (let key in allDict[currentCode]){
-          // keep hospital if checkbox(dictionary) entry is true and contained in hospital attribute
-           if(allDict[currentCode][key] &&
-              hospitalDataToFilter[i].hospital_attributes[j].value.includes(key)){
-                skip = false;
-                checkPerformed = true;
-                break;
-            }
+      let currentCode = hospitalDataToFilter[i].hospital_attributes[j].code;
+      let checkPerformed = false;
+
+      // check only the attributes who are the current selected attribute
+      // and who are part of the categorical attributes (in allDict)
+      if((currentCode === currentCatAttribute.code)  && (currentCode in allDict)) {
+
+        let checkedAttributes = [];
+        for (let key in allDict[currentCode]) {
+          if (allDict[currentCode][key]) {
+            checkedAttributes.push(key)
           }
-        checkPerformed = true;
-        } else {
-          // attribute is not part of the filter dictionary
-          continue;
         }
-        // if we checked the currentCatAttribute we are done
-        if(checkPerformed){
+
+
+        if (checkedAttributes.length === 0) {
+          skip = false;
+          checkPerformed = true;
           break;
         }
+
+        if (singleClassCategories.indexOf(currentCatAttribute.code) >= 0) {
+          for (let key = 0; key < checkedAttributes.length; key++) {
+            if (hospitalDataToFilter[i].hospital_attributes[j].value.includes(checkedAttributes[key])) {
+              skip = false;
+              checkPerformed = true;
+              break;
+            }
+          }
+          checkPerformed = true;
+        } else if (multiClassCategories.indexOf(currentCatAttribute.code) >= 0) {
+          let containsEverySelectedKey = true;
+
+          for (let key = 0; key < checkedAttributes.length; key++) {
+            if (!hospitalDataToFilter[i].hospital_attributes[j].value.includes(checkedAttributes[key])) {
+              containsEverySelectedKey = false;
+            }
+          }
+
+          if (containsEverySelectedKey) {
+            skip = false;
+          }
+
+          checkPerformed = true;
+        }
+
+
+      } else {
+        // attribute is not part of the filter dictionary
+        continue;
       }
-      // if skip is true, we don't add the hospital and continue with the next
-      if(!skip) {
-        filteredHospitalData.push(hospitalDataToFilter[i]);
+      // if we checked the currentCatAttribute we are done
+      if(checkPerformed){
+        break;
       }
     }
-    return filteredHospitalData;
+
+    // if skip is true, we don't add the hospital and continue with the next
+    if(!skip) {
+      filteredHospitalData.push(hospitalDataToFilter[i]);
+    }
+  }
+  return filteredHospitalData;
 }
-
-
-
 
 //------------------------------------------------------
 // outsourced functions for initCircles
