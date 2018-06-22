@@ -1,11 +1,11 @@
-export class Attributes {
+export class Attribute {
 
-    _id: String;
-    code: String;
-    category: String;
-    nameDE: String;
-    nameFR: String;
-    nameIT: String;
+    _id: string;
+    code: string;
+    category: string;
+    nameDE: string;
+    nameFR: string;
+    nameIT: string;
 
     constructor(code, category, nameDE, nameFR, nameIT){
       this.code = code;

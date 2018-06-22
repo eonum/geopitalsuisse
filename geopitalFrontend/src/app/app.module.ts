@@ -14,6 +14,7 @@ import { CategorialAttributesComponent } from './components/categorial-attribute
 
 import {CharacteristicsService} from './services/characteristics.service';
 import {HospitalService} from "./services/hospital.service";
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {HospitalService} from "./services/hospital.service";
     NavbarComponent,
     DropdownComponent,
     CategorialAttributesComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,

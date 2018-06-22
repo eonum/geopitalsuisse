@@ -1,0 +1,20 @@
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: auto;
+}
+
+#sidebarCollapse {
+  width: 100%;
+  overflow: auto;
+  margin-top: 2rem;
+  padding: 0;
+}
+
+.navbar-toggler {
+  position: fixed;
+  right: 0;
+  top: 0;
+}

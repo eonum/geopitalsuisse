@@ -1,17 +1,15 @@
 <!-- show map defined in mapInitializer.js on screen -->
-<div id="mapid" style="width: 100%; height: 100%; position: absolute"></div>
+<div class="wrapper">
+  <div id="content">
+    <div id="mapid"></div>
+  </div>
 
-<!-- contains checkbox and dropdown menu -->
-<div style="float:right; width:300px; max-height:100%;">
-  <!-- shows navbar on the map -->
-  <app-navbar></app-navbar>
-  <!-- shows dropdown on the map -->
-  <app-dropdown></app-dropdown>
-  <!-- shows the options for the selected categorial attribute -->
-  <app-categorial-attributes></app-categorial-attributes>
-  <!-- shows the characteristics on the map -->
-  <app-characteristics></app-characteristics>
+  <div id="sidebar">
+    <app-sidebar></app-sidebar>
+  </div>
 </div>
+
+
 
 
 

@@ -9,13 +9,16 @@ body { font: 12px Arial;}
 div.tooltip {
   position: absolute;
   text-align: center;
-  width: 200px;
-  height: 60px;
-  padding: 2px;
+  width: auto;
+  height: auto;
+  max-width: 20rem;
+  overflow-wrap: break-word;
+  padding: 1rem;
+  line-height: 1.5;
   font: 15px sans-serif;
-  background: rgb(81, 131, 189);
-  border: 2px;
-  border-radius: 15px;
+  background: #4E5D6C;
+  border: 0.125rem;
+  border-radius: .5rem;
   pointer-events: none;
   color: rgb(255, 255, 255)
 }
