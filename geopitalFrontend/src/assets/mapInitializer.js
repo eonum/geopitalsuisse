@@ -375,11 +375,9 @@ function removeCircles() {
  * @param numSpezKl
  */
 function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
-
   let data;
 
   // use only filtered hospitals (categorical attributes) but only if a filter is active
-  console.log('filteredHospitals', filteredHospitals, filteredHospitals[0])
   if(filteredHospitals[0] !== "none") {
     data = filteredHospitals;
   } else {
@@ -412,6 +410,12 @@ function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, num
   if((numSpezKl % 2) === 1) {
     type.push("K231", "K232", "K233", "K234", "K235");
   }
+
+  if (((numUniSp % 2) === 0) && ((numZentSp % 2) === 0) && ((numGrundVers % 2) === 0) && ((numPsychKl % 2) === 0) &&
+    ((numRehaKl % 2) === 0) && ((numSpezKl % 2) === 0)) {
+   type.push("K111", "K112", "K121", "K122", "K123", "K211", "K212", "K221", "K231", "K232", "K233", "K234", "K235");
+  }
+
 
   initData(data, type);
 
