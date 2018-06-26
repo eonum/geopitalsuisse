@@ -27,7 +27,6 @@
         "../node_modules/popper.js/dist/umd/popper.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "assets/mapInitializer.js",
-        "assets/d3.min.js",
         "assets/leaflet.js",
         "assets/leafletAdd.js",
         "assets/scatterplot.js"
