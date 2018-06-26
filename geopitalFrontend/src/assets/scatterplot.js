@@ -1,8 +1,7 @@
-
-let allHospitals; // initialized in function mapDrawer, contains all hospital data, must not be changed after it is initialized
+let allHospitals;
 let modifiedHospitals = [];
-let xCoordinateNumAttribute; // numerical attribute that defines the radius of the circles
-let yCoordinateNumAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
+let xCoordinateNumAttribute;
+let yCoordinateNumAttribute;
 let allNumAttributes = [];
 let allXCoordValues = [];
 let allYCoordValues = [];
@@ -33,7 +32,6 @@ function drawGraph(hospitals, numAttributes) {
 
   // setup fill color
   let cValue = function(d) { return getCircleColour(d);};
-  // let color = d3.scale.category10();
 
   // setup x
   let xScale = d3.scale.linear().range([0, width]);
@@ -100,7 +98,7 @@ function drawGraph(hospitals, numAttributes) {
     .datum(data)
     .attr("class", "line")
     .attr("d", line);
-  
+
   // draw dots
   svg.selectAll(".dot")
     .data(data)
@@ -130,7 +128,6 @@ function drawGraph(hospitals, numAttributes) {
 
 
 function initScatterPlotData() {
-  // initially empty array to be filled up with hospitals to be displayed on map
   modifiedHospitals = [];
 
   for (let i = 0; i < allHospitals.length; i++) {
@@ -167,7 +164,6 @@ function initScatterPlotData() {
       allYCoordValues.push(yCoordValue);
     }
 
-    // filters type attribute and saves it in variable
     let typResult = attr.filter(function ( obj ) {
       return obj.code === "Typ";
     });
@@ -205,7 +201,6 @@ function calculateBestFitLine() {
   let y_intercept = (yMean - (m * xMean));
 
   // perform regression
-  // fit line using coefficients
   for (let i = 0; i < modifiedHospitals.length; i++) {
     modifiedHospitals[i].yhat = Math.floor((y_intercept + (allXCoordValues[i] * m)))
   }
