@@ -22,6 +22,8 @@ export class MapsComponent implements OnInit {
   private numericalAttributes: any;
   private categoricalAttributes: any;
 
+  changeToView: string = "Scatterplot";
+
   constructor(
     private hospitalService: HospitalService,
     private characteristicsService: CharacteristicsService) {
