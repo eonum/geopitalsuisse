@@ -2,4 +2,28 @@
 
 <div class="container">
   <div id="graph"></div>
+
+  <div id="sidebar">
+
+    <div id="xAxisNumAttr" class="dropdown">
+      <button type="button" id="xCoordinateNumAttribute" class="btn btn-primary btn-sm dropdown-toggle " data-toggle="dropdown">
+        {{xCoordinateNumAttribute}}
+      </button>
+      <div class="dropdown-menu">
+        <input class="form-control" type="text" placeholder="Search" id="searchXNumAttr" (keyup)="filterNumAttr('x')">
+        <a class="dropdown-item" id="x-{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectXNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+      </div>
+    </div>
+
+    <div id="yAxisNumAttr" class="dropdown">
+      <button type="button" id="yCoordinateNumAttribute" class="btn btn-primary btn-sm dropdown-toggle " data-toggle="dropdown">
+        {{yCoordinateNumAttribute}}
+      </button>
+      <div class="dropdown-menu">
+        <input class="form-control" type="text" placeholder="Search" id="searchYNumAttr" (keyup)="filterNumAttr('y')">
+        <a class="dropdown-item" id="y-{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectYNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+      </div>
+    </div>
+
+  </div>
 </div>
