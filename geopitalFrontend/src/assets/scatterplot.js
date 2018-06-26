@@ -4,7 +4,10 @@ let modifiedHospitals = [];
 let xCoordinateNumAttribute; // numerical attribute that defines the radius of the circles
 let yCoordinateNumAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
 let allNumAttributes = [];
-
+let allXCoordValues = [];
+let allYCoordValues = [];
+let sumOfXValues = 0;
+let sumOfYValues = 0;
 
 function drawGraph(hospitals, numAttributes) {
 
@@ -20,9 +23,9 @@ function drawGraph(hospitals, numAttributes) {
   });
 
   let margin = {
-      top: 100,
+      top: 20,
       right: 100,
-      bottom: 100,
+      bottom: 20,
       left: 100
     },
     width = 960 - margin.left - margin.right,
@@ -52,25 +55,19 @@ function drawGraph(hospitals, numAttributes) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
   // add the tooltip area to the webpage
   let tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+  initScatterPlotData();
+  calculateBestFitLine();
 
-  initScatterPlotData(allHospitals);
   let data = modifiedHospitals;
 
-  /*
   let line = d3.svg.line()
-    .x(function(d) {
-      return x(d.x);
-    })
-    .y(function(d) {
-      return y(d.yhat);
-    });
-  */
+    .x(function(d) { return xScale(d.x); })
+    .y(function(d) { return yScale(d.yhat); });
 
   xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
   yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
@@ -99,6 +96,11 @@ function drawGraph(hospitals, numAttributes) {
     .style("text-anchor", "end")
     .text(yCoordinateNumAttribute.nameDE);
 
+  svg.append("path")
+    .datum(data)
+    .attr("class", "line")
+    .attr("d", line);
+  
   // draw dots
   svg.selectAll(".dot")
     .data(data)
@@ -124,76 +126,17 @@ function drawGraph(hospitals, numAttributes) {
         .duration(500)
         .style("opacity", 0);
     });
-
-
-  /*
-  svg.append("path")
-    .datum(data)
-    .attr("class", "line")
-    .attr("d", line);
-
-
-  function create_data(nsamples) {
-    let x = [];
-    let y = [];
-    let n = nsamples;
-    let x_mean = 0;
-    let y_mean = 0;
-    let term1 = 0;
-    let term2 = 0;
-    let noise_factor = 100;
-    let noise = 0;
-    // create x and y values
-    for (let i = 0; i < n; i++) {
-      noise = noise_factor * Math.random();
-      noise *= Math.round(Math.random()) == 1 ? 1 : -1;
-      y.push(i / 5 + noise);
-      x.push(i + 1);
-      x_mean += x[i]
-      y_mean += y[i]
-    }
-    // calculate mean x and y
-    x_mean /= n;
-    y_mean /= n;
-    // calculate coefficients
-    let xr = 0;
-    let yr = 0;
-    for (i = 0; i < x.length; i++) {
-      xr = x[i] - x_mean;
-      yr = y[i] - y_mean;
-      term1 += xr * yr;
-      term2 += xr * xr;
-    }
-    let b1 = term1 / term2;
-    let b0 = y_mean - (b1 * x_mean);
-    // perform regression
-    yhat = [];
-    // fit line using coeffs
-    for (i = 0; i < x.length; i++) {
-      yhat.push(b0 + (x[i] * b1));
-    }
-    let data = [];
-    for (i = 0; i < y.length; i++) {
-      data.push({
-        "yhat": yhat[i],
-        "y": y[i],
-        "x": x[i]
-      })
-    }
-    return (data);
-  }
-  */
 }
 
 
-function initScatterPlotData(data) {
+function initScatterPlotData() {
   // initially empty array to be filled up with hospitals to be displayed on map
   modifiedHospitals = [];
 
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < allHospitals.length; i++) {
 
-    let hospitalName = data[i].name;
-    let attr = data[i].hospital_attributes;
+    let hospitalName = allHospitals[i].name;
+    let attr = allHospitals[i].hospital_attributes;
     let xCoordValue;
     let yCoordValue;
     let type;
@@ -207,6 +150,8 @@ function initScatterPlotData(data) {
       continue;
     } else {
       xCoordValue = Number(xCoord[0].value);
+      sumOfXValues += xCoordValue;
+      allXCoordValues.push(xCoordValue)
     }
 
     // get value for y coord
@@ -218,6 +163,8 @@ function initScatterPlotData(data) {
       continue;
     } else {
       yCoordValue = Number(yCoord[0].value);
+      sumOfYValues += yCoordValue;
+      allYCoordValues.push(yCoordValue);
     }
 
     // filters type attribute and saves it in variable
@@ -231,7 +178,35 @@ function initScatterPlotData(data) {
       type = String(typResult[0].value);
     }
 
-    modifiedHospitals.push({name: hospitalName, x: xCoordValue, y: yCoordValue, Typ: type});
+    modifiedHospitals.push({name: hospitalName, x: xCoordValue, y: yCoordValue, Typ: type, yhat: null});
 
+  }
+}
+
+function calculateBestFitLine() {
+  let xMean = sumOfXValues / modifiedHospitals.length;
+  let yMean = sumOfYValues / modifiedHospitals.length;
+
+  let term1 = 0;
+  let term2 = 0;
+  let yhat = [];
+
+  // calculate coefficients
+  let xr = 0;
+  let yr = 0;
+  for (let i = 0; i < modifiedHospitals.length; i++) {
+    xr = (allXCoordValues[i] - xMean);
+    yr = (allYCoordValues[i] - yMean);
+    term1 += (xr * yr);
+    term2 += (xr * xr);
+  }
+
+  let m = (term1 / term2);
+  let y_intercept = (yMean - (m * xMean));
+
+  // perform regression
+  // fit line using coefficients
+  for (let i = 0; i < modifiedHospitals.length; i++) {
+    modifiedHospitals[i].yhat = Math.floor((y_intercept + (allXCoordValues[i] * m)))
   }
 }
