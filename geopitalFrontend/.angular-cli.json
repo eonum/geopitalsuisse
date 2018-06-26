@@ -29,7 +29,8 @@
         "assets/mapInitializer.js",
         "assets/d3.min.js",
         "assets/leaflet.js",
-        "assets/leafletAdd.js"
+        "assets/leafletAdd.js",
+        "assets/scatterplot.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
