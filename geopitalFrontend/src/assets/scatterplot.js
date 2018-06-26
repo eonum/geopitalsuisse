@@ -1,6 +1,6 @@
 
 let allHospitals; // initialized in function mapDrawer, contains all hospital data, must not be changed after it is initialized
-let hospitals = [];
+let modifiedHospitals = [];
 let xCoordinateNumAttribute; // numerical attribute that defines the radius of the circles
 let yCoordinateNumAttribute; // categorical attribute to be displayed in Steckbrief and for filtering
 let allNumAttributes = [];
@@ -10,8 +10,6 @@ function drawGraph(hospitals, numAttributes) {
 
   allHospitals = hospitals;
   allNumAttributes = numAttributes;
-  xCoordinateNumAttribute = null;
-  yCoordinateNumAttribute = null;
 
   xCoordinateNumAttribute = numAttributes.find(function ( obj ) {
     return obj.code === "AnzStand";
@@ -22,17 +20,17 @@ function drawGraph(hospitals, numAttributes) {
   });
 
   let margin = {
-      top: 20,
-      right: 20,
-      bottom: 30,
-      left: 40
+      top: 100,
+      right: 100,
+      bottom: 100,
+      left: 100
     },
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   // setup fill color
-  let cValue = function(d) { return d.Manufacturer;};
-  let color = d3.scale.category10();
+  let cValue = function(d) { return getCircleColour(d);};
+  // let color = d3.scale.category10();
 
   // setup x
   let xScale = d3.scale.linear().range([0, width]);
@@ -46,10 +44,11 @@ function drawGraph(hospitals, numAttributes) {
   let yValue = function (d) { return d.y };
   let yMap = function (d) { return yScale(yValue(d))};
 
-// add the graph canvas to the body of the webpage
+  // add the graph canvas to the body of the webpage
   let svg = d3.select("#graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .style("background-color", "white")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -60,9 +59,10 @@ function drawGraph(hospitals, numAttributes) {
     .style("opacity", 0);
 
 
-  initData(allHospitals);
-  let data = hospitalData;
+  initScatterPlotData(allHospitals);
+  let data = modifiedHospitals;
 
+  /*
   let line = d3.svg.line()
     .x(function(d) {
       return x(d.x);
@@ -70,14 +70,10 @@ function drawGraph(hospitals, numAttributes) {
     .y(function(d) {
       return y(d.yhat);
     });
+  */
 
-  xScale.domain(d3.extent(data, function(d) {
-    return d.x;
-  }));
-
-  yScale.domain(d3.extent(data, function(d) {
-    return d.y;
-  }));
+  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
 
   // x-axis
   svg.append("g")
@@ -89,7 +85,7 @@ function drawGraph(hospitals, numAttributes) {
     .attr("x", width)
     .attr("y", -6)
     .style("text-anchor", "end")
-    .text("X-Value");
+    .text(xCoordinateNumAttribute.nameDE);
 
   // y-axis
   svg.append("g")
@@ -101,7 +97,7 @@ function drawGraph(hospitals, numAttributes) {
     .attr("y", 6)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
-    .text("Y-Value");
+    .text(yCoordinateNumAttribute.nameDE);
 
   // draw dots
   svg.selectAll(".dot")
@@ -111,6 +107,9 @@ function drawGraph(hospitals, numAttributes) {
     .attr("r", 3.5)
     .attr("cx", xMap)
     .attr("cy", yMap)
+    .style("fill", function(d) {
+      return cValue(d);
+    })
     .on("mouseover", function(d) {
       tooltip.transition()
         .duration(200)
@@ -187,9 +186,9 @@ function drawGraph(hospitals, numAttributes) {
 }
 
 
-function initData(data) {
+function initScatterPlotData(data) {
   // initially empty array to be filled up with hospitals to be displayed on map
-  hospitals = [];
+  modifiedHospitals = [];
 
   for (let i = 0; i < data.length; i++) {
 
@@ -197,6 +196,7 @@ function initData(data) {
     let attr = data[i].hospital_attributes;
     let xCoordValue;
     let yCoordValue;
+    let type;
 
     // get value for x coord
     let xCoord = attr.filter(function( obj ) {
@@ -220,7 +220,18 @@ function initData(data) {
       yCoordValue = Number(yCoord[0].value);
     }
 
-    hospitalData.push({name: hospitalName, x: xCoordValue, y: yCoordValue});
+    // filters type attribute and saves it in variable
+    let typResult = attr.filter(function ( obj ) {
+      return obj.code === "Typ";
+    });
+
+    if (typResult == null || typResult[0] == null || typResult[0].value == null) {
+      typResult = null;
+    } else {
+      type = String(typResult[0].value);
+    }
+
+    modifiedHospitals.push({name: hospitalName, x: xCoordValue, y: yCoordValue, Typ: type});
 
   }
 }
