@@ -15,6 +15,7 @@ import { CategorialAttributesComponent } from './components/categorial-attribute
 import {CharacteristicsService} from './services/characteristics.service';
 import {HospitalService} from "./services/hospital.service";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     DropdownComponent,
     CategorialAttributesComponent,
     SidebarComponent,
+    ScatterplotComponent,
   ],
   imports: [
     BrowserModule,
