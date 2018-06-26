@@ -7,6 +7,18 @@ let allXCoordValues = [];
 let allYCoordValues = [];
 let sumOfXValues = 0;
 let sumOfYValues = 0;
+let graphSvg;
+let tooltip;
+
+const width = window.innerWidth / 3;
+const height = width / 1.5;
+const margin = { top: 20, right: 100, bottom: 20, left: 100 };
+
+const xScale = d3.scale.linear().range([0, width]);
+const yScale = d3.scale.linear().range([height, 0]);
+
+const xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+const yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 function drawGraph(hospitals, numAttributes) {
 
@@ -21,57 +33,54 @@ function drawGraph(hospitals, numAttributes) {
     return obj.code === "PtageStatMST";
   });
 
-  let margin = {
-      top: 20,
-      right: 100,
-      bottom: 20,
-      left: 100
-    },
-    width = window.innerWidth / 3;
-    height = width / 1.5;
-
-  // setup fill color
-  let cValue = function(d) { return getCircleColour(d);};
-
-  // setup x
-  let xScale = d3.scale.linear().range([0, width]);
-  let xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-  let xValue = function (d) { return d.x };
-  let xMap = function (d) { return xScale(xValue(d)) };
-
-  // setup y
-  let yScale = d3.scale.linear().range([height, 0]);
-  let yAxis = d3.svg.axis().scale(yScale).orient("left");
-  let yValue = function (d) { return d.y };
-  let yMap = function (d) { return yScale(yValue(d))};
-
   // add the graph canvas to the body of the webpage
-  let svg = d3.select("#graph").append("svg")
+  initializeGraph();
+
+  // add the tooltip area to the webpage
+  initializeTooltip();
+
+  // modify data
+  initScatterPlotData();
+
+  // calculate Line of Best Fit (Least Square Method)
+  calculateBestFitLine();
+
+  // scale axes so they do not overlap
+  scale(modifiedHospitals);
+
+  // draw x and y axis
+  drawAxes();
+
+  // draw a dot for every hospital
+  drawDots(modifiedHospitals);
+
+  // draw regression line
+  drawLine(modifiedHospitals);
+}
+
+function initializeGraph() {
+  graphSvg = d3.select("#graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .style("background-color", "white")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+}
 
-  // add the tooltip area to the webpage
-  let tooltip = d3.select("body").append("div")
+function initializeTooltip() {
+  tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
+}
 
-  initScatterPlotData();
-  calculateBestFitLine();
-
-  let data = modifiedHospitals;
-
-  let line = d3.svg.line()
-    .x(function(d) { return xScale(d.x); })
-    .y(function(d) { return yScale(d.yhat); });
-
+function scale(data) {
   xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
   yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+}
 
+function drawAxes() {
   // x-axis
-  svg.append("g")
+  graphSvg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis)
@@ -83,7 +92,7 @@ function drawGraph(hospitals, numAttributes) {
     .text(xCoordinateNumAttribute.nameDE);
 
   // y-axis
-  svg.append("g")
+  graphSvg.append("g")
     .attr("class", "y axis")
     .call(yAxis)
     .append("text")
@@ -93,20 +102,27 @@ function drawGraph(hospitals, numAttributes) {
     .attr("dy", ".71em")
     .style("text-anchor", "end")
     .text(yCoordinateNumAttribute.nameDE);
+}
 
-  svg.append("path")
+function drawLine(data) {
+  let line = d3.svg.line()
+    .x(function(d) { return xScale(d.x); })
+    .y(function(d) { return yScale(d.yhat); });
+
+  graphSvg.append("path")
     .datum(data)
     .attr("class", "line")
     .attr("d", line);
+}
 
-  // draw dots
-  svg.selectAll(".dot")
+function drawDots(data) {
+  graphSvg.selectAll(".dot")
     .data(data)
     .enter().append("circle")
     .attr("class", "dot")
     .attr("r", 3.5)
-    .attr("cx", xMap)
-    .attr("cy", yMap)
+    .attr("cx", function (d) { return xScale(xValue(d)) })
+    .attr("cy", function (d) { return yScale(yValue(d)) })
     .style("fill", function(d) {
       return cValue(d);
     })
@@ -126,6 +142,11 @@ function drawGraph(hospitals, numAttributes) {
     });
 }
 
+function cValue(d) { return getCircleColour(d); }
+
+function xValue(d) { return d.x }
+
+function yValue(d) { return d.y }
 
 function initScatterPlotData() {
   modifiedHospitals = [];
@@ -137,6 +158,8 @@ function initScatterPlotData() {
     let xCoordValue;
     let yCoordValue;
     let type;
+
+    if (hospitalName === 'Ganze Schweiz') { continue; }
 
     // get value for x coord
     let xCoord = attr.filter(function( obj ) {
@@ -204,4 +227,51 @@ function calculateBestFitLine() {
   for (let i = 0; i < modifiedHospitals.length; i++) {
     modifiedHospitals[i].yhat = Math.floor((y_intercept + (allXCoordValues[i] * m)))
   }
+}
+
+function updateXCoordinateNumAttribute(attribute) {
+  if (attribute !== null) {
+    xCoordinateNumAttribute = attribute;
+    updateGraph();
+  }
+}
+
+function updateYCoordinateNumAttribute(attribute) {
+  if (attribute !== null) {
+    yCoordinateNumAttribute = attribute;
+    updateGraph();
+  }
+}
+
+function removeExistingGraph() {
+  if(graphSvg !== null && graphSvg.selectAll !== null) {
+    graphSvg.selectAll('.dot').remove();
+    graphSvg.selectAll('g').remove();
+    graphSvg.selectAll('path').remove();
+  }
+}
+
+function updateGraph() {
+  // delete everything
+  removeExistingGraph();
+  // add the tooltip area to the webpage
+  initializeTooltip();
+
+  // modify data
+  initScatterPlotData();
+
+  // calculate Line of Best Fit (Least Square Method)
+  calculateBestFitLine();
+
+  // scale axes so they do not overlap
+  scale(modifiedHospitals);
+
+  // draw x and y axis
+  drawAxes();
+
+  // draw a dot for every hospital
+  drawDots(modifiedHospitals);
+
+  // draw regression line
+  drawLine(modifiedHospitals);
 }

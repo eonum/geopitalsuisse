@@ -5,6 +5,9 @@ import { CharacteristicsService } from '../../services/characteristics.service';
 import { HospitalService } from '../../services/hospital.service';
 
 declare const drawGraph;
+declare const updateXCoordinateNumAttribute;
+declare const updateYCoordinateNumAttribute;
+
 
 @Component({
   selector: 'app-scatterplot',
@@ -74,6 +77,7 @@ export class ScatterplotComponent implements OnInit {
   selectXNumAttribute(xAxisNumAttr): void {
     ScatterplotComponent.handleDropdownHighlight(xAxisNumAttr.nameDE, 'xAxisNumAttr', 'x');
     this.xCoordinateNumAttribute = xAxisNumAttr.nameDE;
+    updateXCoordinateNumAttribute(xAxisNumAttr);
   }
 
   /**
@@ -83,5 +87,6 @@ export class ScatterplotComponent implements OnInit {
   selectYNumAttribute(yAxisNumAttr): void {
     ScatterplotComponent.handleDropdownHighlight(yAxisNumAttr.nameDE, 'yAxisNumAttr', 'y');
     this.yCoordinateNumAttribute = yAxisNumAttr.nameDE;
+    updateYCoordinateNumAttribute(yAxisNumAttr);
   }
 }
