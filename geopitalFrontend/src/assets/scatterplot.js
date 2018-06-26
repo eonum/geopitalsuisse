@@ -27,8 +27,8 @@ function drawGraph(hospitals, numAttributes) {
       bottom: 20,
       left: 100
     },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = window.innerWidth / 3;
+    height = width / 1.5;
 
   // setup fill color
   let cValue = function(d) { return getCircleColour(d);};
