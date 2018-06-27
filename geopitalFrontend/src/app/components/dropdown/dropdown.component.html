@@ -8,7 +8,13 @@
     </button>
     <div class="dropdown-menu">
       <input class="form-control" type="text" placeholder="Search" id="searchNumAttr" (keyup)="filterNumAttr()">
-      <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of numericalAttributes" (click)="selectNumAttribute(attribute)">{{ attribute.nameDE }}</a>
+      <a  *ngFor="let attribute of numericalAttributes"
+          [class.active]="attribute.nameDE === selectedNumAttribute"
+          class="dropdown-item"
+          href="#"
+          id="{{attribute.nameDE}}"
+          (click)="selectNumAttribute(attribute)">{{ attribute.nameDE }}
+      </a>
     </div>
   </div>
 
@@ -19,7 +25,13 @@
       {{selectedCatAttribute}}
     </button>
     <div class="dropdown-menu">
-      <a class="dropdown-item" href="#" id="{{attribute.nameDE}}" *ngFor="let attribute of categoricalAttributes" (click)="selectCatAttribute(attribute)">{{ attribute.nameDE }}</a>
+      <a *ngFor="let attribute of categoricalAttributes"
+         [class.active]="attribute.nameDE === selectedCatAttribute"
+         class="dropdown-item"
+         id="{{attribute.nameDE}}"
+         href="#"
+         (click)="selectCatAttribute(attribute)">{{ attribute.nameDE }}
+      </a>
     </div>
   </div>
 
