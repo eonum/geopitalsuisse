@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ApplicationRef } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { MapsComponent } from './components/maps/maps.component';
@@ -13,7 +13,8 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { CategorialAttributesComponent } from './components/categorial-attributes/categorial-attributes.component';
 
 import {CharacteristicsService} from './services/characteristics.service';
-import {HospitalService} from "./services/hospital.service";
+import {HospitalService} from './services/hospital.service';
+import { D3Service } from './services/d3.service';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';
 
@@ -39,7 +40,8 @@ import { ScatterplotComponent } from './components/scatterplot/scatterplot.compo
   ],
   providers: [
     CharacteristicsService,
-    HospitalService
+    HospitalService,
+    D3Service
   ],
   exports: [
     AppComponent,
