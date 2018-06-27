@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HospitalService } from '../../services/hospital.service';
-import { CharacteristicsService } from "../../services/characteristics.service";
-import { Hospital } from "../../models/hospital.model";
 
-// The declare function call is to get the D3 logic from the mapinizializer.js file
-declare const mapDrawer;
+import { D3Service } from '../../services/d3.service';
+
 
 /**
  * Loads data from backend with hospitalService and calls function for the further use of data.
@@ -18,38 +15,15 @@ declare const mapDrawer;
 
 export class MapsComponent implements OnInit {
 
-  private hospitalsList: Hospital[];
-  private numericalAttributes: any;
-  private categoricalAttributes: any;
+  changeToView = 'Scatterplot';
 
-  changeToView: string = "Scatterplot";
-
-  constructor(
-    private hospitalService: HospitalService,
-    private characteristicsService: CharacteristicsService) {
-
-  }
+  constructor ( private d3: D3Service ) {}
 
   /**
    * Loads all hospital data from backend with the help of hospitalService
    * and gives it to the mapDrawer() function in mapInitializer.js
    */
   ngOnInit() {
-    this.characteristicsService.getNumericalAttributes()
-    .subscribe(x => {
-      this.numericalAttributes = x;
-
-      this.characteristicsService.getCategoricalAttributes()
-      .subscribe(y => {
-        this.categoricalAttributes = y;
-
-        this.hospitalService.getAll()
-        .subscribe(hospitals => {
-          this.hospitalsList = hospitals;
-          mapDrawer(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
-        });
-
-      })
-    });
+    this.d3.initializeMap();
   }
 }
