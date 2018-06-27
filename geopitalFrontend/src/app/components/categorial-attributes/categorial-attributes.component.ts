@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-// The declare function call is to get the D3 logic from the mapinizializer.js file
-declare function selectedCatValue(value): any;
-declare function hideAllOptions(categories): any;
-declare function updateCatOptions(defaultCategory): any;
-declare function setDefaultOptionSelection(allDict): any;
-declare function updateCirclesFromSelection(category, code): any;
+import { D3Service } from '../../services/d3.service';
 
 @Component({
   selector: 'app-categorial-attributes',
@@ -34,22 +28,25 @@ export class CategorialAttributesComponent implements OnInit {
               'SA': this.SADict,
               'LA': this.LADict};
 
-  constructor() { }
+  constructor(
+    private d3: D3Service
+  ) { }
 
   ngOnInit() {
     // option panel must be wiped first
     for (let i = 0 ; i < this.CatCodeList.length; i++) {
-      hideAllOptions(this.CatCodeList[i]);
+      this.d3.hideAllOptions(this.CatCodeList[i]);
     }
 
     // displays default category (RForm)
-    updateCatOptions(this.DefaultCategory);
+    this.d3.showOptionsForSelectedCategoricalAttribute(this.DefaultCategory);
     // sets all selections initially 'true'
-    setDefaultOptionSelection(this.allDict);
+    // setDefaultOptionSelection(this.allDict);
+    this.d3.initializeCheckBoxDictionary(this.allDict);
   }
 
   // updates the selected/deselected options and give the information to mapInitializer
   selectedCatValue(category, code) {
-    updateCirclesFromSelection(category, code);
+    this.d3.updateSelectedCategoryOption(category, code);
   }
 }
