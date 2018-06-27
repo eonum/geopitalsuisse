@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-// The declare function call is to get the D3 logic from the mapinizializer.js file
-declare function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
+import { D3Service } from '../../services/d3.service';
+
 
 /**
  * Handles checkbox-events implemented in the html-file of this component.
@@ -24,7 +24,9 @@ export class NavbarComponent implements OnInit {
   private numSpezKl = 0;
 
 
-  constructor() {
+  constructor(
+    private d3: D3Service
+  ) {
 
   }
 
@@ -45,33 +47,29 @@ export class NavbarComponent implements OnInit {
 
     if (hospitalType === 'uniSp') {
       this.numUniSp = this.numUniSp + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-      }
+    }
 
     if (hospitalType === 'zentSp') {
       this.numZentSp = this.numZentSp + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType === 'grundVers') {
       this.numGrundVers = this.numGrundVers + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType === 'psychKl') {
       this.numPsychKl = this.numPsychKl + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType === 'rehaKl') {
       this.numRehaKl = this.numRehaKl + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
     if (hospitalType === 'spezKl') {
       this.numSpezKl = this.numSpezKl + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
+
+    this.d3.updateSelectedHospitalTypes(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
   }
 
 }
