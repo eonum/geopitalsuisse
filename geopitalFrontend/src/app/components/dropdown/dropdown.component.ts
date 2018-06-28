@@ -14,12 +14,11 @@ import { D3Service } from '../../services/d3.service';
 export class DropdownComponent implements OnInit {
 
   @Input() input;
-  @Input() category;
+  @Input() selectedAttribute;
+  @Input() attributes;
   @Input() name;
-  @Input() element;
+  @Input() axis?;
 
-  attributes: any;
-  selectedAttribute: any;
 
   constructor(
     private characteristicsService: CharacteristicsService,
@@ -32,24 +31,7 @@ export class DropdownComponent implements OnInit {
    * numerical and the other that contains all categorical attributes
    * The attributes are then displayed in the html.
    */
-  ngOnInit() {
-    if (this.category === 'categoricalAttributes') {
-      this.characteristicsService.getCategoricalAttributes()
-        .subscribe(attributes => {
-          this.attributes = attributes;
-
-          // extract the categorical attribute 'Typ' since its not used in this selection
-          this.attributes = this.attributes.filter(attribute => attribute.code !== 'Typ');
-        });
-      this.selectedAttribute = D3Service.getDefaultCategoricalAttribute();
-    } else if (this.category === 'numericalAttributes') {
-      this.characteristicsService.getNumericalAttributes()
-        .subscribe(attributes => {
-          this.attributes = attributes;
-        });
-      this.selectedAttribute = D3Service.getDefaultNumericalAttribute();
-    }
-  }
+  ngOnInit() {}
 
   filterDropdownOptions() {
     const input = (<HTMLInputElement>document.getElementById('searchField'));
@@ -68,6 +50,22 @@ export class DropdownComponent implements OnInit {
 
   selectAttribute(attribute) {
     this.selectedAttribute = attribute;
-    this.d3.updateAttribute(attribute, this.element, this.category);
+    console.log('is numerical attribute', )
+
+    if (D3Service.showMap()) {
+      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
+        this.d3.setCurrentCategoricalAttribute(attribute);
+      }
+
+      if (this.characteristicsService.isNumericalAttribute(attribute)) {
+        this.d3.setCurrentNumericalAttribute(attribute);
+      }
+
+      this.d3.updateAttribute(attribute,null);
+
+    } else {
+      this.d3.updateAttribute(attribute, this.axis);
+
+    }
   }
 }
