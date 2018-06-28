@@ -6,6 +6,12 @@ import { axisBottom, axisLeft} from 'd3-axis';
 
 
 import { Hospital } from '../models/hospital.model';
+import { Observable } from 'rxjs/Observable';
+import { Attribute } from '../models/attribute.model';
+import { Subject } from 'rxjs/Subject';
+import { CharacteristicsService } from './characteristics.service';
+
+
 
 declare const L;
 
@@ -31,7 +37,6 @@ export class D3Service {
   private selectedHospitalTypes = [];
 
   private circles;
-  private checkBoxDictionary;
 
   private singleClassCategories = ['RForm'];
   private multiClassCategories = ['Akt', 'SL', 'WB', 'SA', 'LA'];
@@ -53,7 +58,38 @@ export class D3Service {
   private xAxis = d3.axisBottom(this.xScale);
   private yAxis = d3.axisLeft(this.yScale);
 
-  constructor() {}
+  private RformDict = {'R1': false, 'R2': false, 'R3': false, 'R4': false};
+  private AktDict   = {'A': false, 'B': false, 'P': false, 'R': false};
+  private SLDict    = {'IPS': false, 'NF': false};
+  private WBDict    = {'Arzt': false, 'BGs': false, 'MSt': false};
+  private SADict    = {'Angio': false, 'CC': false, 'CT': false, 'Dia': false, 'LB': false, 'Lito': false, 'MRI': false, 'PET': false};
+  private LADict    = {'Stat': false, 'Amb': false};
+
+  private checkBoxDictionary = {
+    'RForm': this.RformDict,
+    'Akt': this.AktDict,
+    'SL': this.SLDict,
+    'WB': this.WBDict,
+    'SA': this.SADict,
+    'LA': this.LADict};
+
+  // Observable string sources
+  private currentNumericalAttributeSource = new Subject<any>();
+  private currentCategoricalAttributeSource = new Subject<any>();
+  private selectedHospitalSource = new Subject<any>();
+  private xAxisAttributeSource = new Subject<any>();
+  private yAxisAttributeSource = new Subject<any>();
+
+  // Observable string streams
+  currentNumericalAttribute$ = this.currentNumericalAttributeSource.asObservable();
+  currentCategoricalAttribute$ = this.currentCategoricalAttributeSource.asObservable();
+  selectedHospital$ = this.selectedHospitalSource.asObservable();
+  xAxisAttribute$ = this.xAxisAttributeSource.asObservable();
+  yAxisAttribute$ = this.yAxisAttributeSource.asObservable();
+
+  constructor(
+    private characteristicsService: CharacteristicsService,
+  ) {}
 
 
   static getDefaultNumericalAttribute(): any {
@@ -100,7 +136,7 @@ export class D3Service {
    *
    * @returns {boolean} true if the map is shown, false if the scatterplot is shown
    */
-  private static showMap() {
+  static showMap() {
     return document.getElementById('mapid') !== null;
   }
 
@@ -127,6 +163,27 @@ export class D3Service {
     }
   }
 
+  setCurrentCategoricalAttribute(attribute: any) {
+    this.currentCategoricalAttributeSource.next(attribute);
+  }
+
+  setCurrentNumericalAttribute(attribute: any) {
+    this.currentNumericalAttributeSource.next(attribute);
+  }
+
+  setSelectedHospital(attribute: any) {
+    this.selectedHospitalSource.next(attribute);
+  }
+
+  setXAxisAttribute(attribute: any) {
+    this.xAxisAttributeSource.next(attribute);
+  }
+
+  setYAxisAttribute(attribute: any) {
+    this.yAxisAttributeSource.next(attribute);
+  }
+
+
   drawMap(hospitals, numericalAttributes, categoricalAttributes) {
     /* ------------------------ Initialize map ------------------------------------------ */
     this.initializeMap();
@@ -138,9 +195,6 @@ export class D3Service {
     this.currentNumericalAttribute = D3Service.getDefaultNumericalAttribute();
     this.currentCategoricalAttribute = D3Service.getDefaultCategoricalAttribute();
     this.initMapData(this.allHospitals, this.selectedHospitalTypes);
-
-    /* ------------------------ Initialize characteristics ------------------------------ */
-    this.createCharacteristics(this.selectedHospital);
 
     /* ------------------------ Initialize svg element, tooltip, circles and zoom ------- */
     this.addSVGelement();
@@ -303,53 +357,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
       .style('opacity', 0.0);
   }
 
-  private createCharacteristics (clickedHospital: any) {
-    this.selectedHospital = clickedHospital;
-
-    if (clickedHospital != null) {
-      const clickedHospitalData = this.getAllDataForClickedHospital(clickedHospital);
-
-      let sizeResult = clickedHospitalData.hospital_attributes.find(obj => obj.code === this.currentNumericalAttribute.code);
-      let catResult = clickedHospitalData.hospital_attributes.find(obj => obj.code === this.currentCategoricalAttribute.code);
-
-      if (sizeResult == null) {
-        sizeResult = null;
-      }
-
-      if (catResult == null) {
-        catResult = null;
-      }
-
-      // displays the name and address of the clicked hospital in characteristics (Steckbrief)
-      document.getElementById('hospitalName').innerHTML = clickedHospital.name;
-      if (clickedHospitalData.streetAndNumber !== '') {
-        document.getElementById('hospitalAddress').innerHTML = clickedHospitalData.streetAndNumber + '<br/>'
-          + clickedHospitalData.zipCodeAndCity;
-      } else {
-        document.getElementById('hospitalAddress').innerHTML = '' + clickedHospitalData.zipCodeAndCity;
-      }
-
-      // displays the values of the current numerical and categorical attribute of clicked hospital
-      if (sizeResult !== null) {
-        document.getElementById('numericalAttributeName').innerHTML = this.currentCategoricalAttribute.nameDE;
-        document.getElementById('numericalAttributeValue').innerHTML = this.formatValues(
-          this.currentCategoricalAttribute, sizeResult.value);
-      } else {
-        document.getElementById('numericalAttributeName').innerHTML = this.currentNumericalAttribute.nameDE;
-        document.getElementById('numericalAttributeValue').innerHTML = 'Keine Daten';
-      }
-
-      if (catResult !== null) {
-        document.getElementById('categoricalAttributeName').innerHTML = this.currentCategoricalAttribute.nameDE;
-        document.getElementById('categoricalAttributeValue').innerHTML = catResult.value;
-      } else {
-        document.getElementById('categoricalAttributeName').innerHTML = this.currentCategoricalAttribute.nameDE;
-        document.getElementById('categoricalAttributeValue').innerHTML = 'Keine Daten';
-      }
-    }
-  }
-
-
   /**
    * Initialize circles on the map for the given hospitals. Use the maximal radius
    * of all hospitals to calculate the circle radius for every hospital.
@@ -386,7 +393,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
         return this.removeTooltip();
       })
       .on('click', (d) => {
-        return this.createCharacteristics(d);
+        this.setSelectedHospital(d);
       });
   }
 
@@ -442,28 +449,33 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
 
     if (D3Service.showMap()) {
       this.updateMap('hospitalTypes');
+    } else {
+      this.updateGraph();
     }
   }
 
-  /**
-  * Updates the current numerical attribute for characteristics (Steckbrief)
-  * and initializes the change of circles' radius according to the chosen
-  * numerical attribute
-  * @param numericalAttribute selected numerical Attribute from Dropdown1
-  */
-  updateSelectedNumericalAttribute(numericalAttribute) {
-    this.currentNumericalAttribute = numericalAttribute;
-
+  updateAttribute(attribute: any, axis: string) {
     if (D3Service.showMap()) {
-      this.updateMap('numericalAttribute');
+
+      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
+        this.currentCategoricalAttribute = attribute;
+        this.updateMap('categoricalAttribute');
+
+      } else if (this.characteristicsService.isNumericalAttribute(attribute)) {
+        this.currentNumericalAttribute = attribute;
+        this.updateMap('numericalAttribute');
+
+      } else {
+        console.error(`Attribute ${attribute} neither categorical nor numerical attribute!`);
+      }
+    } else {
+      if (axis === 'x') {
+        this.xCoordinateNumAttribute = attribute;
+      } else {
+        this.yCoordinateNumAttribute = attribute;
+      }
+      this.updateGraph();
     }
-  }
-
-  updateSelectedCategoricalAttribute(categoricalAttribute: any) {
-    this.currentCategoricalAttribute = categoricalAttribute;
-    this.showOptionsForSelectedCategoricalAttribute(categoricalAttribute);
-
-    this.updateMap('categoricalAttribute');
   }
 
   /**
@@ -489,7 +501,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     this.removeCircles();
     this.initMapData(data, this.selectedHospitalTypes);
     this.initCircles(this.modifiedHospitals);
-    this.createCharacteristics(this.selectedHospital);
   }
 
   /**
@@ -549,18 +560,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
       .style('opacity', 0);
   }
 
-  private formatValues(attribute: any, value: string) {
-    if (attribute.nameDE.includes('Anteil')) {
-      if (parseFloat(value) > 1) {
-        return (parseFloat(value) / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
-      } else {
-        return parseFloat(value).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
-      }
-    } else {
-      return parseFloat(value).toLocaleString('de-CH', { maximumFractionDigits: 3});
-    }
-  }
-
   private resetCheckBoxes () {
     const allCheckboxContainers = document.getElementsByName('checkbox');
     for (let i = 0; i < allCheckboxContainers.length; i++) {
@@ -586,33 +585,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    */
   updateSelectedCategoryOption(category: string, code: string) {
     this.checkBoxDictionary[category][code] = !this.checkBoxDictionary[category][code];
-
-    this.showOptionsForSelectedCategoricalAttribute(
-      this.allCategoricalAttributes.filter(obj => obj.code === category)[0]
-    );
-
-    if (true) {
-      this.updateCircles();
-    }
-
-  }
-
-  initializeCheckBoxDictionary(dictionary: any) {
-    this.checkBoxDictionary = dictionary;
-  }
-
-  /**
-   * Displays the options according to the chosen categorical attribute
-   * on the menu (categorical-attributes)
-   * @param categoricalAttribute selected categorical Attribute from Dropdown1
-   */
-  showOptionsForSelectedCategoricalAttribute(categoricalAttribute) {
-    // hide all categorical attributes
-    for (let i = 0; i < this.allCategoricalAttributes.length; i++) {
-      this.hideAllOptions(this.allCategoricalAttributes[i].code);
-    }
-    // only display the selected one
-    this.toggleOptions(categoricalAttribute.code);
+    this.updateCircles();
   }
 
   /**
@@ -622,42 +595,10 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   private updateCircles() {
     this.filteredHospitals = this.filter(this.allHospitals, this.checkBoxDictionary);
     this.initMapData(this.filteredHospitals, this.selectedHospitalTypes);
-
     this.removeCircles();
     this.initCircles(this.modifiedHospitals);
   }
 
-
-  /**
-   * Displays only the options for the selected categorical attribute
-   * @param inputCode selected categorical Attribute from Dropdown1
-   */
-  toggleOptions(inputCode: string) {
-    const x = document.getElementById(inputCode);
-
-    if (x !== null) {
-      try {
-
-        if (x.style.display === 'none') {
-          x.style.display = 'block';
-        } else {
-          x.style.display = 'none';
-        }
-      } catch (err) {
-        console.error('error in toggleOptions', err);
-      }
-    }
-  }
-
-  /**
-   * Hides all options of all categorical attributes before displaying
-   * the default or the selected one
-   */
-  hideAllOptions(inputCode: string) {
-    if (document.getElementById(inputCode) !== null) {
-      document.getElementById(inputCode).style.display = 'none';
-    }
-  }
 
   private filter (hospitalsToFilter: any, checkBoxDictionary: any) {
     const filteredHospitalData = [];
@@ -729,11 +670,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     }
     return filteredHospitalData;
   }
-
-  private getAllDataForClickedHospital(clickedHospital: Hospital) {
-    return this.allHospitals.find(obj => obj.name === clickedHospital.name);
-  }
-
 
   /*
    * Methods for scatterplot
@@ -934,20 +870,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     }
   }
 
-  updateXCoordinateNumAttribute(attribute) {
-    if (attribute !== null) {
-      this.xCoordinateNumAttribute = attribute;
-      this.updateGraph();
-    }
-  }
-
-  updateYCoordinateNumAttribute(attribute) {
-    if (attribute !== null) {
-      this.yCoordinateNumAttribute = attribute;
-      this.updateGraph();
-    }
-  }
-
   private removeExistingGraph() {
     if (!D3Service.showMap() && this.svg !== null && this.svg.selectAll !== null) {
       this.svg.selectAll('.dot').remove();
@@ -980,9 +902,5 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     // draw regression line
     this.drawRegressionLine(this.modifiedHospitals);
   }
-
-
-
-
 }
 
