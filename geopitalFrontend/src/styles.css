@@ -22,3 +22,6 @@ div.tooltip {
   pointer-events: none;
   color: rgb(255, 255, 255)
 }
+.leaflet-top {
+  top: 5%;
+}
