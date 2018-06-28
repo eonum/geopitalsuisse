@@ -2,7 +2,6 @@
 #dropdown-container {
   margin: 0;
   padding: .5rem .5rem .5rem .5rem;
-  border-bottom: .0625rem solid #f1f1f1;
 }
 
 .dropdown {
@@ -11,7 +10,7 @@
   white-space: normal;
 }
 
-#catAttrButton, #numAttrButton {
+#attributeDropdownButton {
   white-space: normal;
 }
 

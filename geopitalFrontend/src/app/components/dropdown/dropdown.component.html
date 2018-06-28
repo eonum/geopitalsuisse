@@ -1,40 +1,18 @@
 <div id="dropdown-container">
-  <h6>Attributauswahl:</h6>
+  <h6>{{name}}</h6>
 
-  <!-- first dropdown with numeric attributes -->
-  <div id="numAttr" class="dropdown">
-    <button type="button" id="numAttrButton" class="btn btn-secondary btn-sm dropdown-toggle " data-toggle="dropdown">
-      {{selectedNumAttribute}}
+  <div id="attributeDropdown" class="dropdown">
+    <button type="button" id="attributeDropdownButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+      {{selectedAttribute.nameDE}}
     </button>
-    <div class="dropdown-menu">
-      <input class="form-control" type="text" placeholder="Search" id="searchNumAttr" (keyup)="filterNumAttr()">
-      <a  *ngFor="let attribute of numericalAttributes"
-          [class.active]="attribute.nameDE === selectedNumAttribute"
-          class="dropdown-item"
-          href="#"
-          id="{{attribute.nameDE}}"
-          (click)="selectNumAttribute(attribute)">{{ attribute.nameDE }}
-      </a>
-    </div>
-  </div>
 
-
-  <!-- second dropdown with categorial attributes -->
-  <div id="catAttr" class="dropdown">
-    <button type="button" id="catAttrButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-      {{selectedCatAttribute}}
-    </button>
     <div class="dropdown-menu">
-      <a *ngFor="let attribute of categoricalAttributes"
-         [class.active]="attribute.nameDE === selectedCatAttribute"
+      <input *ngIf="input" class="form-control" type="text" placeholder="Suchen..." id="searchField" (keyup)="filterDropdownOptions()">
+      <a *ngFor="let attribute of attributes"
+         [class.active]="attribute.nameDE === selectedAttribute.nameDE"
          class="dropdown-item"
          id="{{attribute.nameDE}}"
-         href="#"
-         (click)="selectCatAttribute(attribute)">{{ attribute.nameDE }}
-      </a>
+         (click)="selectAttribute(attribute)">{{attribute.nameDE}}</a>
     </div>
   </div>
-
-  <app-categorial-attributes></app-categorial-attributes>
-
 </div>

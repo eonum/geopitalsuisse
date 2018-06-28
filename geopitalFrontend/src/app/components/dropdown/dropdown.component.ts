@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
 
@@ -13,11 +13,13 @@ import { D3Service } from '../../services/d3.service';
 })
 export class DropdownComponent implements OnInit {
 
-  public categoricalAttributes: any[] = [];
-  public numericalAttributes: any[] = [];
+  @Input() input;
+  @Input() category;
+  @Input() name;
+  @Input() element;
 
-  selectedCatAttribute: string;
-  selectedNumAttribute: string;
+  attributes: any;
+  selectedAttribute: any;
 
   constructor(
     private characteristicsService: CharacteristicsService,
@@ -31,47 +33,28 @@ export class DropdownComponent implements OnInit {
    * The attributes are then displayed in the html.
    */
   ngOnInit() {
-    this.characteristicsService.getCategoricalAttributes()
-      .subscribe(attributes => {
-        this.categoricalAttributes = attributes;
+    if (this.category === 'categoricalAttributes') {
+      this.characteristicsService.getCategoricalAttributes()
+        .subscribe(attributes => {
+          this.attributes = attributes;
 
-        // extract the categorical attribute 'Typ' since its not used in this selection
-        this.categoricalAttributes = this.categoricalAttributes.filter(attribute => {
-          return attribute.code !== 'Typ';
+          // extract the categorical attribute 'Typ' since its not used in this selection
+          this.attributes = this.attributes.filter(attribute => attribute.code !== 'Typ');
         });
-      });
-
-    this.characteristicsService.getNumericalAttributes()
-      .subscribe(attributes => {
-        this.numericalAttributes = attributes;
-      });
-
-    this.selectedCatAttribute = D3Service.getDefaultCategoricalAttribute().nameDE;
-    this.selectedNumAttribute = D3Service.getDefaultNumericalAttribute().nameDE;
+      this.selectedAttribute = D3Service.getDefaultCategoricalAttribute();
+    } else if (this.category === 'numericalAttributes') {
+      this.characteristicsService.getNumericalAttributes()
+        .subscribe(attributes => {
+          this.attributes = attributes;
+        });
+      this.selectedAttribute = D3Service.getDefaultNumericalAttribute();
+    }
   }
 
-  /**
-   * Function is called when user selects an attribute in the dropdown1 from the html.
-   * @param catAttribute selected categorical attribute from dropdown1
-   */
-  selectCatAttribute(catAttribute: any) {
-    this.d3.updateSelectedCategoricalAttribute(catAttribute);
-    this.selectedCatAttribute = catAttribute.nameDE;
-  }
-
-  /**
-   * Function is called when user selects an attribute in the dropdown2 from the html.
-   * @param numAttribute selected numerical attribute from dropdown2
-   */
-  selectNumAttribute(numAttribute: any) {
-    this.d3.updateSelectedNumericalAttribute(numAttribute);
-    this.selectedNumAttribute = numAttribute.nameDE;
-  }
-
-  filterNumAttr() {
-    const input = (<HTMLInputElement>document.getElementById('searchNumAttr'));
+  filterDropdownOptions() {
+    const input = (<HTMLInputElement>document.getElementById('searchField'));
     const filter = input.value.toUpperCase();
-    const div = document.getElementById('numAttr');
+    const div = document.getElementById('attributeDropdown');
     const a = div.getElementsByTagName('a');
 
     for (let i = 0; i < a.length; i++) {
@@ -81,5 +64,10 @@ export class DropdownComponent implements OnInit {
         a[i].style.display = 'none';
       }
     }
+  }
+
+  selectAttribute(attribute) {
+    this.selectedAttribute = attribute;
+    this.d3.updateAttribute(attribute, this.element, this.category);
   }
 }
