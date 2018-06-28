@@ -13,12 +13,19 @@ import { D3Service } from '../../services/d3.service';
 })
 export class ScatterplotComponent implements OnInit {
 
-  public numericalAttributes: any[] = [];
   private hospitalsList: Hospital[];
 
   changeToView = 'Map';
-  xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute().nameDE;
-  yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute().nameDE;
+
+  name1 = 'Kennzahl x-Achse';
+  axis1 = 'x';
+  xCoordinateNumAttribute;
+
+  name2 = 'Kennzahl y-Achse';
+  axis2 = 'y';
+  yCoordinateNumAttribute;
+
+  numericalAttributes;
 
   constructor(
     private characteristicsService: CharacteristicsService,
@@ -37,39 +44,8 @@ export class ScatterplotComponent implements OnInit {
             this.d3.drawGraph(this.hospitalsList, this.numericalAttributes);
           });
       });
-  }
 
-  filterNumAttr(axis: string): void {
-    const input = (axis === 'x') ? (<HTMLInputElement>document.getElementById('searchXNumAttr')) :
-      (<HTMLInputElement>document.getElementById('searchYNumAttr'));
-    const filter = input.value.toUpperCase();
-    const div = (axis === 'x') ? document.getElementById('xAxisNumAttr') : document.getElementById('yAxisNumAttr');
-    const a = div.getElementsByTagName('a');
-
-    for (let i = 0; i < a.length; i++) {
-      if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
-        a[i].style.display = '';
-      } else {
-        a[i].style.display = 'none';
-      }
-    }
-  }
-
-  /**
-   * Function is called when user selects an attribute in the dropdown1 from the html.
-   * @param xAxisNumAttr selected categorical attribute from dropdown1
-   */
-  selectXNumAttribute(xAxisNumAttr): void {
-    this.xCoordinateNumAttribute = xAxisNumAttr.nameDE;
-    this.d3.updateXCoordinateNumAttribute(xAxisNumAttr);
-  }
-
-  /**
-   * Function is called when user selects an attribute in the dropdown2 from the html.
-   * @param yAxisNumAttr selected numerical attribute from dropdown2
-   */
-  selectYNumAttribute(yAxisNumAttr): void {
-    this.yCoordinateNumAttribute = yAxisNumAttr.nameDE;
-    this.d3.updateYCoordinateNumAttribute(yAxisNumAttr);
+    this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
+    this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
   }
 }
