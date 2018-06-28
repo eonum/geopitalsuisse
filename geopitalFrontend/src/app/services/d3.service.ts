@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import * as d3 from 'd3';
+import { scaleLinear } from 'd3-scale';
+import { axisBottom, axisLeft} from 'd3-axis';
+
+
 import { Hospital } from '../models/hospital.model';
 
 declare const L;
@@ -38,19 +42,16 @@ export class D3Service {
   private allYCoordValues = [];
   private sumOfXValues = 0;
   private sumOfYValues = 0;
-  private graphSvg;
 
-  /*
   private width = window.innerWidth / 3;
   private height = this.width / 1.5;
   private margin = { top: 20, right: 100, bottom: 20, left: 100 };
 
-  private xScale = d3.scale.linear().range([0, this.width]);
-  private yScale = d3.scale.linear().range([this.height, 0]);
+  private xScale = d3.scaleLinear().range([0, this.width]);
+  private yScale = d3.scaleLinear().range([this.height, 0]);
 
-  private xAxis = d3.svg.axis().scale(this.xScale).orient('bottom');
-  private yAxis = d3.svg.axis().scale(this.yScale).orient('left');
-  */
+  private xAxis = d3.axisBottom(this.xScale);
+  private yAxis = d3.axisLeft(this.yScale);
 
   constructor() {}
 
@@ -71,6 +72,26 @@ export class D3Service {
       nameDE: 'Rechtsform',
       nameFR: 'Forme juridique',
       nameIT: 'Forma giuridica'
+    };
+  }
+
+  static getDefaultXAxisAttribute(): any {
+    return {
+      category: 'number',
+      code: 'EtMedL',
+      nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
+      nameFR: 'Produits des hospitalisations et soins',
+      nameIT: 'Ricavi per degenze e cure'
+    };
+  }
+
+  static getDefaultYAxisAttribute(): any {
+    return {
+      category: 'number',
+      code: 'AnzStand',
+      nameDE: 'Anzahl Standorte',
+      nameFR: 'Nombre de sites',
+      nameIT: 'Numero di sedi'
     };
   }
 
@@ -105,7 +126,7 @@ export class D3Service {
       return ('#d633ff');
     }
   }
-  
+
   drawMap(hospitals, numericalAttributes, categoricalAttributes) {
     /* ------------------------ Initialize map ------------------------------------------ */
     this.initializeMap();
@@ -712,5 +733,256 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   private getAllDataForClickedHospital(clickedHospital: Hospital) {
     return this.allHospitals.find(obj => obj.name === clickedHospital.name);
   }
+
+
+  /*
+   * Methods for scatterplot
+   */
+
+  drawGraph(hospitals, numAttributes) {
+    this.allHospitals = hospitals;
+    this.allNumericalAttributes = numAttributes;
+    this.xCoordinateNumAttribute = numAttributes.find(obj =>  obj.code === 'AnzStand');
+    this.yCoordinateNumAttribute = numAttributes.find(obj => obj.code === 'PtageStatMST');
+
+    // add the graph canvas to the body of the webpage
+    this.initializeGraph();
+
+    // add the tooltip area to the webpage
+    this.initTooltip();
+
+    // modify data
+    this.initScatterPlotData();
+
+    // calculate Line of Best Fit (Least Square Method)
+    this.calculateRegression();
+
+    // scale axes so they do not overlap
+    this.scale(this.modifiedHospitals);
+
+    // draw x and y axis
+    this.drawAxes();
+
+    // draw a dot for every hospital
+    this.drawDots(this.modifiedHospitals);
+
+    // draw regression line
+    this.drawRegressionLine(this.modifiedHospitals);
+  }
+
+  private initializeGraph() {
+    this.svg = d3.select('#graph').append('svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .style('background-color', 'white')
+      .append('g')
+      .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+  }
+
+  private scale(data) {
+    this.xScale.domain([d3.min(data, this.xValue) - 1, d3.max(data, this.xValue) + 1]);
+    this.yScale.domain([d3.min(data, this.yValue) - 1, d3.max(data, this.yValue) + 1]);
+  }
+
+  private drawAxes() {
+    const xAxisGroup = this.svg.append('g')
+      .classed('x', true)
+      .classed('axis', true)
+      .attr('transform', 'translate(0,' + this.height + ')')
+      .call(this.xAxis)
+      .append('text')
+      .attr('class', 'label')
+      .attr('x', this.width)
+      .attr('y', -6)
+      .style('text-anchor', 'end')
+      .text(this.xCoordinateNumAttribute.nameDE);
+
+    const yAxisGroup = this.svg.append('g')
+      .classed('y', true)
+      .classed('axis', true)
+      .call(this.yAxis)
+      .append('text')
+      .attr('class', 'label')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 6)
+      .attr('dy', '.71em')
+      .style('text-anchor', 'end')
+      .text(this.yCoordinateNumAttribute.nameDE);
+
+  }
+
+  drawRegressionLine(data) {
+    const line = d3.line()
+      .x((d) => { return this.xScale(d.x); })
+      .y((d) => { return this.yScale(d.yhat); });
+
+    this.svg.append('path')
+      .datum(data)
+      .attr('class', 'line')
+      .attr('d', line);
+  }
+
+  drawDots(data) {
+    this.svg.selectAll('.dot')
+      .data(data)
+      .enter().append('circle')
+      .attr('class', 'dot')
+      .attr('r', 3.5)
+      .attr('cx', (d) => { return this.xScale(this.xValue(d)); })
+      .attr('cy', (d) => { return this.yScale(this.yValue(d)); })
+      .style('fill', (d) => { return this.cValue(d); })
+      .on('mouseover', (d) =>  {
+        this.tooltip.transition()
+          .duration(200)
+          .style('opacity', .9);
+        this.tooltip.html(d.name + '<br/> (' + this.xValue(d)
+          + ', ' + this.yValue(d) + ')')
+          .style('left', (d3.event.pageX + 5) + 'px')
+          .style('top', (d3.event.pageY - 28) + 'px');
+      })
+      .on('mouseout', (d) => {
+        this.tooltip.transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
+  }
+
+  private cValue(d) {
+    return D3Service.getColourBasedOnHospitalType(d);
+  }
+
+  private xValue(d) {
+    return d.x;
+  }
+
+  private yValue(d) {
+    return d.y;
+  }
+
+  private initScatterPlotData() {
+    this.modifiedHospitals = [];
+
+    for (let i = 0; i < this.allHospitals.length; i++) {
+
+      const hospitalName = this.allHospitals[i].name;
+      const attributes = this.allHospitals[i].hospital_attributes;
+      let xCoordinateValue;
+      let yCoordinateValue;
+      let type;
+
+      if (hospitalName === 'Ganze Schweiz') { continue; }
+
+      // get value for x coord
+      const xCoordinate = attributes.filter(obj =>  obj.code === this.xCoordinateNumAttribute.code);
+
+      if (xCoordinate == null || xCoordinate[0] == null || xCoordinate[0].value == null) {
+        continue;
+      } else {
+        xCoordinateValue = Number(xCoordinate[0].value);
+        this.sumOfXValues += xCoordinateValue;
+        this.allXCoordValues.push(xCoordinateValue);
+      }
+
+      // get value for y coord
+      const yCoordinate = attributes.filter(obj => obj.code === this.yCoordinateNumAttribute.code);
+
+      if (yCoordinate == null || yCoordinate[0] == null || yCoordinate[0].value == null) {
+        continue;
+      } else {
+        yCoordinateValue = Number(yCoordinate[0].value);
+        this.sumOfYValues += yCoordinateValue;
+        this.allYCoordValues.push(yCoordinateValue);
+      }
+
+      let typResult = attributes.filter(obj => obj.code === 'Typ');
+
+      if (typResult == null || typResult[0] == null || typResult[0].value == null) {
+        typResult = null;
+      } else {
+        type = String(typResult[0].value);
+      }
+
+      this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
+
+    }
+  }
+
+  private calculateRegression() {
+    const xMean = this.sumOfXValues / this.modifiedHospitals.length;
+    const yMean = this.sumOfYValues / this.modifiedHospitals.length;
+
+    let term1 = 0;
+    let term2 = 0;
+    const yhat = [];
+
+    // calculate coefficients
+    let xr = 0;
+    let yr = 0;
+    for (let i = 0; i < this.modifiedHospitals.length; i++) {
+      xr = (this.allXCoordValues[i] - xMean);
+      yr = (this.allYCoordValues[i] - yMean);
+      term1 += (xr * yr);
+      term2 += (xr * xr);
+    }
+
+    const m = (term1 / term2);
+    const y_intercept = (yMean - (m * xMean));
+
+    // perform regression
+    for (let i = 0; i < this.modifiedHospitals.length; i++) {
+      this.modifiedHospitals[i].yhat = Math.floor((y_intercept + (this.allXCoordValues[i] * m)));
+    }
+  }
+
+  updateXCoordinateNumAttribute(attribute) {
+    if (attribute !== null) {
+      this.xCoordinateNumAttribute = attribute;
+      this.updateGraph();
+    }
+  }
+
+  updateYCoordinateNumAttribute(attribute) {
+    if (attribute !== null) {
+      this.yCoordinateNumAttribute = attribute;
+      this.updateGraph();
+    }
+  }
+
+  private removeExistingGraph() {
+    if (!D3Service.showMap() && this.svg !== null && this.svg.selectAll !== null) {
+      this.svg.selectAll('.dot').remove();
+      this.svg.selectAll('g').remove();
+      this.svg.selectAll('path').remove();
+    }
+  }
+
+  private updateGraph() {
+    // delete everything
+    this.removeExistingGraph();
+    // add the tooltip area to the webpage
+    this.initTooltip();
+
+    // modify data
+    this.initScatterPlotData();
+
+    // calculate Line of Best Fit (Least Square Method)
+    this.calculateRegression();
+
+    // scale axes so they do not overlap
+    this.scale(this.modifiedHospitals);
+
+    // draw x and y axis
+    this.drawAxes();
+
+    // draw a dot for every hospital
+    this.drawDots(this.modifiedHospitals);
+
+    // draw regression line
+    this.drawRegressionLine(this.modifiedHospitals);
+  }
+
+
+
+
 }
 

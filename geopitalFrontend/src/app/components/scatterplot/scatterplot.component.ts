@@ -3,10 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Hospital } from '../../models/hospital.model';
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { HospitalService } from '../../services/hospital.service';
-
-declare const drawGraph;
-declare const updateXCoordinateNumAttribute;
-declare const updateYCoordinateNumAttribute;
+import { D3Service } from '../../services/d3.service';
 
 
 @Component({
@@ -20,26 +17,14 @@ export class ScatterplotComponent implements OnInit {
   private hospitalsList: Hospital[];
 
   changeToView = 'Map';
-  xCoordinateNumAttribute = 'Attribut x-Achse';
-  yCoordinateNumAttribute = 'Attribut y-Achse';
+  xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute().nameDE;
+  yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute().nameDE;
 
   constructor(
     private characteristicsService: CharacteristicsService,
-    private hospitalService: HospitalService
+    private hospitalService: HospitalService,
+    private d3: D3Service
   ) { }
-
-
-  private static handleDropdownHighlight(attribute: any, id: string, axis: string): void {
-    const div = document.getElementById(id);
-    const a = div.getElementsByTagName('a');
-
-    for (let  i = 0; i < a.length; i++) {
-      if (a[i].classList.contains('active')) {
-        a[i].classList.remove('active');
-      }
-    }
-    document.getElementById(axis + '-' + attribute).classList.add('active');
-  }
 
   ngOnInit() {
     this.characteristicsService.getNumericalAttributes()
@@ -49,7 +34,7 @@ export class ScatterplotComponent implements OnInit {
         this.hospitalService.getAll()
           .subscribe(hospitals => {
             this.hospitalsList = hospitals;
-            drawGraph(this.hospitalsList, this.numericalAttributes);
+            this.d3.drawGraph(this.hospitalsList, this.numericalAttributes);
           });
       });
   }
@@ -75,9 +60,8 @@ export class ScatterplotComponent implements OnInit {
    * @param xAxisNumAttr selected categorical attribute from dropdown1
    */
   selectXNumAttribute(xAxisNumAttr): void {
-    ScatterplotComponent.handleDropdownHighlight(xAxisNumAttr.nameDE, 'xAxisNumAttr', 'x');
     this.xCoordinateNumAttribute = xAxisNumAttr.nameDE;
-    updateXCoordinateNumAttribute(xAxisNumAttr);
+    this.d3.updateXCoordinateNumAttribute(xAxisNumAttr);
   }
 
   /**
@@ -85,8 +69,7 @@ export class ScatterplotComponent implements OnInit {
    * @param yAxisNumAttr selected numerical attribute from dropdown2
    */
   selectYNumAttribute(yAxisNumAttr): void {
-    ScatterplotComponent.handleDropdownHighlight(yAxisNumAttr.nameDE, 'yAxisNumAttr', 'y');
     this.yCoordinateNumAttribute = yAxisNumAttr.nameDE;
-    updateYCoordinateNumAttribute(yAxisNumAttr);
+    this.d3.updateYCoordinateNumAttribute(yAxisNumAttr);
   }
 }
