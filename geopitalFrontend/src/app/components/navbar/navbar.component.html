@@ -1,41 +1,9 @@
 <div id="checkboxes-container">
-  <fieldset>
-
-    <h6>Auswahl der Spitaltypen:</h6>
-
-    <!-- checkboxes -->
-
-    <label class="container">Universitätsspitäler
-      <input type="checkbox" (change)="selectHospitalType('uniSp')">
-      <span class="checkmark1"></span>
+  <h6>Spitaltypen:</h6>
+  <div *ngFor="let hospitalType of hospitalTypes; let i = index">
+    <label class="container">{{hospitalType}}
+      <input type="checkbox" (change)="selectHospitalType(hospitalType)">
+      <span class="checkmark{{i+1}}"></span>
     </label>
-
-    <label class="container">Zentrumsspitäler
-      <input type="checkbox" (change)="selectHospitalType('zentSp')">
-      <span class="checkmark2"></span>
-    </label>
-
-    <label class="container">Grundversorgung
-      <input type="checkbox" (change)="selectHospitalType('grundVers')">
-      <span class="checkmark3"></span>
-    </label>
-
-    <label class="container">Psychiatrische Kliniken
-      <input type="checkbox" (change)="selectHospitalType('psychKl')">
-      <span class="checkmark4"></span>
-    </label>
-
-    <label class="container">Rehabilitationskliniken
-      <input type="checkbox" (change)="selectHospitalType('rehaKl')">
-      <span class="checkmark5"></span>
-    </label>
-
-    <label class="container">Spezialkliniken
-      <input type="checkbox" (change)="selectHospitalType('spezKl')">
-      <span class="checkmark6"></span>
-    </label>
-
-    <!-- end of checkboxes -->
-
-  </fieldset>
+  </div>
 </div>

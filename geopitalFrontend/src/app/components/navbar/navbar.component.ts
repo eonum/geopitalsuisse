@@ -23,17 +23,22 @@ export class NavbarComponent implements OnInit {
   private numRehaKl = 0;
   private numSpezKl = 0;
 
+  hospitalTypes = [
+    'Universitätsspitäler',
+    'Zentrumsspitäler',
+    'Grundversorgung',
+    'Psychiatrische Kliniken',
+    'Rehabilitationskliniken',
+    'Spezialkliniken'
+  ];
 
   constructor(
     private d3: D3Service
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
 
   }
-
 
   /**
    * Is called when a click-event occurs in checkbox (html of component).
@@ -45,27 +50,27 @@ export class NavbarComponent implements OnInit {
    */
   selectHospitalType(hospitalType) {
 
-    if (hospitalType === 'uniSp') {
+    if (hospitalType === 'Universitätsspitäler') {
       this.numUniSp = this.numUniSp + 1;
     }
 
-    if (hospitalType === 'zentSp') {
+    if (hospitalType === 'Zentrumsspitäler') {
       this.numZentSp = this.numZentSp + 1;
     }
 
-    if (hospitalType === 'grundVers') {
+    if (hospitalType === 'Grundversorgung') {
       this.numGrundVers = this.numGrundVers + 1;
     }
 
-    if (hospitalType === 'psychKl') {
+    if (hospitalType === 'Psychiatrische Kliniken') {
       this.numPsychKl = this.numPsychKl + 1;
     }
 
-    if (hospitalType === 'rehaKl') {
+    if (hospitalType === 'Rehabilitationskliniken') {
       this.numRehaKl = this.numRehaKl + 1;
     }
 
-    if (hospitalType === 'spezKl') {
+    if (hospitalType === 'Spezialkliniken') {
       this.numSpezKl = this.numSpezKl + 1;
     }
 
