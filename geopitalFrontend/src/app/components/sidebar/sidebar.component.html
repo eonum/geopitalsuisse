@@ -15,7 +15,9 @@
 
       <li>
         <!-- shows dropdown on the map -->
-        <app-dropdown></app-dropdown>
+        <app-dropdown [input]="true" [category]="category2" [name]="category2Name" [element]="element"></app-dropdown>
+        <app-dropdown [input]="false" [category]="category1" [name]="category1Name" [element]="element"></app-dropdown>
+        <app-categorial-attributes></app-categorial-attributes>
       </li>
 
       <li>

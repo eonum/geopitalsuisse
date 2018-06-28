@@ -7,6 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
 
+  category1 = 'categoricalAttributes';
+  category1Name = 'Filter';
+
+  category2 = 'numericalAttributes';
+  category2Name = 'Kennzahlen';
+
+  element = 'map';
+
   constructor() { }
 
   ngOnInit() {
