@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import * as d3 from 'd3';
-import { CharacteristicsService } from './characteristics.service';
-import { HospitalService } from './hospital.service';
 import { Hospital } from '../models/hospital.model';
 
 declare const L;
@@ -54,26 +52,7 @@ export class D3Service {
   private yAxis = d3.svg.axis().scale(this.yScale).orient('left');
   */
 
-  constructor(
-    private characteristicsService: CharacteristicsService,
-    private hospitalService: HospitalService
-  ) {
-    this.characteristicsService.getNumericalAttributes()
-      .subscribe(numAttributes => {
-        this.allNumericalAttributes = numAttributes;
-      });
-
-    this.characteristicsService.getCategoricalAttributes()
-      .subscribe(catAttributes => {
-        this.allCategoricalAttributes = catAttributes;
-      });
-
-    this.hospitalService.getAll()
-      .subscribe(hospitals => {
-        this.allHospitals = hospitals;
-        this.selectedHospital = hospitals[0];
-      });
-  }
+  constructor() {}
 
 
   static getDefaultNumericalAttribute(): any {
@@ -95,63 +74,135 @@ export class D3Service {
     };
   }
 
-  private showMap() {
-    console.log('document.getElementById(\'mapid\')', document.getElementById('mapid'), document.getElementById('mapid') !== null)
+  /**
+   * Indicates whether the map or the scatterplot is active.
+   *
+   * @returns {boolean} true if the map is shown, false if the scatterplot is shown
+   */
+  private static showMap() {
     return document.getElementById('mapid') !== null;
   }
 
+  /**
+   * Gives markers different color according to its type attribute
+   * @param d data which is displayed as a circle
+   * @returns {string} color of the marker (according to type)
+   */
+  private static getColourBasedOnHospitalType(d)  {
+    if (d.Typ === 'K111') {
+      return ('#a82a2a');
+    } else if (d.Typ === 'K112') {
+      return ('#a89f2a');
+    } else if (d.Typ === 'K121' || d.Typ === 'K122' || d.Typ === 'K123') {
+      return ('#2ca82a');
+    } else if (d.Typ === 'K211' || d.Typ === 'K212') {
+      return ('#2a8ea8');
+    } else if (d.Typ === 'K221') {
+      return ('#2c2aa8');
+    } else if (d.Typ === 'K231' || d.Typ === 'K232' || d.Typ === 'K233' || d.Typ === 'K234' || d.Typ === 'K235') {
+      return ('#772aa8');
+    } else {
+      return ('#d633ff');
+    }
+  }
+  
+  drawMap(hospitals, numericalAttributes, categoricalAttributes) {
+    /* ------------------------ Initialize map ------------------------------------------ */
+    this.initializeMap();
 
-  initializeMap() {
-    // ------------------------------------------------------
-    // Initialize map
-
-    this.defineMap();
-
-    // ------------------------------------------------------
-    // Initialize data
-
+    /* --------------------- Initialize data --------------------------------- */
+    this.allHospitals = hospitals;
+    this.allNumericalAttributes = numericalAttributes;
+    this.allCategoricalAttributes = categoricalAttributes;
     this.currentNumericalAttribute = D3Service.getDefaultNumericalAttribute();
-
     this.currentCategoricalAttribute = D3Service.getDefaultCategoricalAttribute();
-
-    this.createCharacteristics(this.selectedHospital);
-
     this.initMapData(this.allHospitals, this.selectedHospitalTypes);
 
-    // add SVG element to leaflet's overlay pane (group layers)
+    /* ------------------------ Initialize characteristics ------------------------------ */
+    this.createCharacteristics(this.selectedHospital);
+
+    /* ------------------------ Initialize svg element, tooltip, circles and zoom ------- */
     this.addSVGelement();
-
     this.calculateSVGBounds(this.allHospitals);
-
     this.initTooltip();
-
     this.initCircles(this.modifiedHospitals);
-
-    // makes points invisible when user starts zooming
-    this.map.on('zoomstart', () => {
-      d3.select('#circleSVG').style('visibility', 'hidden');
-    });
-
-    // makes points visible again after user has finished zooming
-    this.map.on('zoomend', () => {
-      const maxValue = this.getMaxValue(this.modifiedHospitals);
-      this.circles
-        .attr('cx', (d) => { return this.projectPoint(d.longitude, d.latitude).x; })
-        .attr('cy', (d) => { return this.projectPoint(d.longitude, d.latitude).y; })
-        .attr('r', (d) => { return this.getCircleRadius(d, maxValue); });
-
-      this.calculateSVGBounds(this.allHospitals);
-      d3.select('#circleSVG').style('visibility', 'visible');
-    });
+    this.initZoomableBehaviour();
   }
 
+  /**
+   * Initialize the map using OpenStreetMap tiles with custom design using mapbox.
+   */
+  private initializeMap () {
+    this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
+
+    L.tileLayer(
+      `https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=
+pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow`, {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      id: 'mapbox.streets'
+    }).addTo(this.map);
+  }
+
+  /**
+   * Add SVG element to leaflet's overlay pane (group layers)
+   */
   private addSVGelement() {
-    console.log('add SVG element, showMap', this.showMap())
-    if (this.showMap()) {
+    console.log('add SVG element, showMap', D3Service.showMap());
+    if (D3Service.showMap()) {
       this.svg = d3.select(this.map.getPanes().overlayPane).append('svg').attr('id', 'circleSVG');
     } else {
 
     }
+  }
+
+  /**
+   * Calculate the width and the height of the svg element.
+   * calculate the y max and x max value for all datapoints and add a padding.
+   * xmax is width and ymax is height of svg-layer
+   *
+   * @param {Hospital[]} allHospitals
+   */
+  private calculateSVGBounds(allHospitals: Hospital[]) {
+    let xMax = 0;
+    let yMax = 0;
+    const heightPadding = 100;
+    const widthPadding = 300;
+
+    allHospitals.forEach((d) => {
+      xMax = Math.max(this.projectPoint(d.longitude, d.latitude).x, xMax);
+      yMax = Math.max(this.projectPoint(d.longitude, d.latitude).y, yMax);
+    });
+
+    this.svg
+      .style('left', 0)
+      .style('width', xMax + widthPadding)
+      .style('top', 0)
+      .style('height', yMax + heightPadding);
+  }
+
+  /**
+   * Initializes zoom behaviour. Makes points invisible when user starts zooming
+   * and show them again when he has finished zooming.
+   *
+   */
+  private initZoomableBehaviour() {
+    this.map.on('zoomstart', () => {
+      d3.select('#circleSVG').style('visibility', 'hidden');
+    });
+
+    this.map.on('zoomend', () => {
+      const maxValue = this.getMaxRadius(this.modifiedHospitals);
+      this.circles
+        .attr('cx', (d) => { return this.projectPoint(d.longitude, d.latitude).x; })
+        .attr('cy', (d) => { return this.projectPoint(d.longitude, d.latitude).y; })
+        .attr('r', (d) => { return this.calculateCircleRadius(d, maxValue); });
+
+      this.calculateSVGBounds(this.allHospitals);
+      d3.select('#circleSVG').style('visibility', 'visible');
+    });
   }
 
 
@@ -222,6 +273,9 @@ export class D3Service {
     return this.map.latLngToLayerPoint(new L.LatLng(y, x));
   }
 
+  /**
+   * Initialize the tooltip.
+   */
   private initTooltip() {
     this.tooltip = d3.select('body').append('div')
       .attr('class', 'tooltip')
@@ -257,7 +311,8 @@ export class D3Service {
       // displays the values of the current numerical and categorical attribute of clicked hospital
       if (sizeResult !== null) {
         document.getElementById('numericalAttributeName').innerHTML = this.currentCategoricalAttribute.nameDE;
-        document.getElementById('numericalAttributeValue').innerHTML = this.formatValues(this.currentCategoricalAttribute, sizeResult.value);
+        document.getElementById('numericalAttributeValue').innerHTML = this.formatValues(
+          this.currentCategoricalAttribute, sizeResult.value);
       } else {
         document.getElementById('numericalAttributeName').innerHTML = this.currentNumericalAttribute.nameDE;
         document.getElementById('numericalAttributeValue').innerHTML = 'Keine Daten';
@@ -271,34 +326,31 @@ export class D3Service {
         document.getElementById('categoricalAttributeValue').innerHTML = 'Keine Daten';
       }
     }
-
-
   }
 
 
   /**
-   * Initialize circles on map for the given hospitals
+   * Initialize circles on the map for the given hospitals. Use the maximal radius
+   * of all hospitals to calculate the circle radius for every hospital.
    *
    * @param {Array} currentHospitals data that is visualized as circles (with x- and y-coordinates and radius r)
    */
   private initCircles (currentHospitals: Hospital[]) {
-    // get maximal value of radius to calculate radius of circles
-    const maxValue = this.getMaxValue(currentHospitals);
+    const maxRadius = this.getMaxRadius(currentHospitals);
 
-    // define circles
     this.circles = this.svg.selectAll('circle')
       .data(currentHospitals)
       .enter()
       .append('circle')
       .style('fill-opacity', 0.7)
       .attr('r', (d) => {
-        return this.getCircleRadius(d, maxValue);
+        return this.calculateCircleRadius(d, maxRadius);
       })
       .attr('fill', (d) => {
-        return this.getColourBasedOnType(d);
+        return D3Service.getColourBasedOnHospitalType(d);
       })
       .attr('stroke', (d) => {
-        return this.getColourBasedOnType(d);
+        return D3Service.getColourBasedOnHospitalType(d);
       })
       .attr('cx', (d) => {
         return this.projectPoint(d.longitude, d.latitude).x;
@@ -327,74 +379,21 @@ export class D3Service {
     }
   }
 
-  /**
-   * Calculate the width and the height of the svg element.
-   * calculate the y max and x max value for all datapoints and add a padding.
-   * xmax is width and ymax is height of svg-layer
-   *
-   * @param {Hospital[]} allHospitals
-   */
-  private calculateSVGBounds(allHospitals: Hospital[]) {
-    let xMax = 0;
-    let yMax = 0;
-    const heightPadding = 100;
-    const widthPadding = 300;
-
-    allHospitals.forEach((d) => {
-      xMax = Math.max(this.projectPoint(d.longitude, d.latitude).x, xMax);
-      yMax = Math.max(this.projectPoint(d.longitude, d.latitude).y, yMax);
-    });
-
-    this.svg
-      .style('left', 0)
-      .style('width', xMax + widthPadding)
-      .style('top', 0)
-      .style('height', yMax + heightPadding);
-  }
-
-  private defineMap () {
-    this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
-
-    // basic map using OpenStreetMap tiles with custom design using mapbox
-    L.tileLayer('https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow', {
-      maxZoom: 18,
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      id: 'mapbox.streets'
-    }).addTo(this.map);
-  }
 
   /**
-   * Updates map with new data
+   * Updates the selected hospital types based on how many times the checkbox has been clicked.
+   * An odd number means that the checkbox is checked and therefore hospitals of that type should be shown.
    *
-   * For the next parameters: number of times checkbox was pressed
-   * --> since default is checked, even numbers (0,2,4,6, ...) mean that this type should be displayed
-   * @param numUniSp
-   * @param numZentSp
-   * @param numGrundVers
-   * @param numPsychKl
-   * @param numRehaKl
-   * @param numSpezKl
+   * @param numUniSp  number of times 'Universitätsspitäler' checkbox was pressed
+   * @param numZentSp  number of times 'Zentrumsspitäler' checkbox was pressed
+   * @param numGrundVers number of times 'Grundversorgung' checkbox was pressed
+   * @param numPsychKl number of times 'Psychiatrische Kliniken' checkbox was pressed
+   * @param numRehaKl number of times 'Rehabilitationskliniken' checkbox was pressed
+   * @param numSpezKl number of times 'Spezialkliniken' checkbox was pressed
    */
   updateSelectedHospitalTypes(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
-    let data;
-
-    // use only filtered hospitals (categorical attributes) but only if a filter is active
-    if (this.filteredHospitals.length !== 0) {
-      data = this.filteredHospitals;
-    } else {
-      data = this.allHospitals;
-    }
-
-    // remove circles that are already defined so we can initialize them again with other data
-    this.removeCircles();
-
-    // first empty type
     this.selectedHospitalTypes = [];
 
-    // build up data array
-    // odd numbers of clicks mean that the checkbox is checked and hospitals with that type should be drawn
     if ((numUniSp % 2) === 1) {
       this.selectedHospitalTypes.push('K111');
     }
@@ -420,9 +419,9 @@ export class D3Service {
         .push('K111', 'K112', 'K121', 'K122', 'K123', 'K211', 'K212', 'K221', 'K231', 'K232', 'K233', 'K234', 'K235');
     }
 
-    this.initMapData(data, this.selectedHospitalTypes);
-
-    this.initCircles(this.modifiedHospitals);
+    if (D3Service.showMap()) {
+      this.updateMap('hospitalTypes');
+    }
   }
 
   /**
@@ -434,7 +433,9 @@ export class D3Service {
   updateSelectedNumericalAttribute(numericalAttribute) {
     this.currentNumericalAttribute = numericalAttribute;
 
-    this.updateMap('numericalAttribute');
+    if (D3Service.showMap()) {
+      this.updateMap('numericalAttribute');
+    }
   }
 
   updateSelectedCategoricalAttribute(categoricalAttribute: any) {
@@ -456,7 +457,7 @@ export class D3Service {
       this.filteredHospitals = [];
       this.resetCheckBoxes();
 
-    } else if (changedAttribute === 'numericalAttribute') {
+    } else if (changedAttribute === 'numericalAttribute' || changedAttribute === 'hospitalTypes') {
       if (this.filteredHospitals.length !== 0) {
         data = this.filteredHospitals;
       } else {
@@ -476,7 +477,7 @@ export class D3Service {
    * @param maxValue
    * @returns {number} radius of the marker (according numerical attribute)
    */
-  private getCircleRadius (d: any, maxValue: any) {
+  private calculateCircleRadius (d: any, maxValue: any) {
     const zoomLevel = this.map.getZoom();
     if (d.radius === 0) {
       return 3 * zoomLevel * zoomLevel / 100; // circles with value 0 have radius 3
@@ -490,40 +491,17 @@ export class D3Service {
    * @param currentHospitals data which is displayed as a circle
    * @returns {number} maximal radius of the chosen attribute
    */
-  private getMaxValue (currentHospitals: any) {
-    let maxValue = 0;
-    // get max value of radius attribute (to calculate radius of circles)
+  private getMaxRadius (currentHospitals: any) {
+    let maxRadius = 0;
+
     for (let i = 0; i < currentHospitals.length; i++) {
       if (currentHospitals[i] !== null && currentHospitals[i].radius !== null) {
-        if (currentHospitals[i].radius > maxValue) {
-          maxValue = currentHospitals[i].radius;
+        if (currentHospitals[i].radius > maxRadius) {
+          maxRadius = currentHospitals[i].radius;
         }
       }
     }
-    return maxValue;
-  }
-
-  /**
-   * Gives markers different color according to its type attribute
-   * @param d data which is displayed as a circle
-   * @returns {string} color of the marker (according to type)
-   */
-  private getColourBasedOnType(d)  {
-    if (d.Typ === 'K111') {
-      return ('#a82a2a');
-    } else if (d.Typ === 'K112') {
-      return ('#a89f2a');
-    } else if (d.Typ === 'K121' || d.Typ === 'K122' || d.Typ === 'K123') {
-      return ('#2ca82a');
-    } else if (d.Typ === 'K211' || d.Typ === 'K212') {
-      return ('#2a8ea8');
-    } else if (d.Typ === 'K221') {
-      return ('#2c2aa8');
-    } else if (d.Typ === 'K231' || d.Typ === 'K232' || d.Typ === 'K233' || d.Typ === 'K234' || d.Typ === 'K235') {
-      return ('#772aa8');
-    } else {
-      return ('#d633ff');
-    }
+    return maxRadius;
   }
 
 
