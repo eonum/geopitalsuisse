@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { D3Service } from '../../services/d3.service';
 
 @Component({
@@ -7,45 +8,59 @@ import { D3Service } from '../../services/d3.service';
   styleUrls: ['./categorial-attributes.component.css']
 })
 export class CategorialAttributesComponent implements OnInit {
-  // all categorical codes
-  private CatCodeList = ['RForm', 'Akt', 'SL', 'WB', 'SA', 'LA'];
-  // default category to show on loaded site
-  private DefaultCategory = {code: 'RForm', nameDE: 'Rechtsform', nameFR: 'Forme juridique', nameIT: 'Forma giuridica'};
 
-  // dictionaries with all options of the categorical codes,
-  // when an option is true it's selected, when false it's deselected
-  RformDict = {'R1': false, 'R2': false, 'R3': false, 'R4': false};
-  AktDict   = {'A': false, 'B': false, 'P': false, 'R': false};
-  SLDict    = {'IPS': false, 'NF': false};
-  WBDict    = {'Arzt': false, 'BGs': false, 'MSt': false};
-  SADict    = {'Angio': false, 'CC': false, 'CT': false, 'Dia': false, 'LB': false, 'Lito': false, 'MRI': false, 'PET': false};
-  LADict    = {'Stat': false, 'Amb': false};
+  private defaultCategory = {code: 'RForm', nameDE: 'Rechtsform', nameFR: 'Forme juridique', nameIT: 'Forma giuridica'};
 
-  allDict   = {'RForm': this.RformDict,
-              'Akt': this.AktDict,
-              'SL': this.SLDict,
-              'WB': this.WBDict,
-              'SA': this.SADict,
-              'LA': this.LADict};
+  dict = {
+    'RForm': [
+      ['R1', 'AG / GmbH'],
+      ['R2', 'Verein / Stiftung'],
+      ['R3', 'Einzelfirma / Gesellschaft'],
+      ['R4', 'Öffentliches Unternehmen']],
+    'Akt': [
+      ['A', 'Akutbehandlung'],
+      ['B', 'Geburtshaus'],
+      ['P', 'Psychiatrie'],
+      ['R', 'Rehabilitation / Geriatrie']
+    ],
+    'SL': [
+      ['IPS', 'Intensivpflegestation'],
+      ['NF', 'Notfallaufnahme']
+    ],
+    'WB': [
+      ['Arzt', 'Ärzte'],
+      ['BGs', 'Gesundheitssektor'],
+      ['MSt', 'Medizinstudenten']
+    ],
+    'SA': [
+      ['Angio', 'Angiographie'],
+      ['CC', 'Gamma Camera inkl. Szintigraphie und SPECT-Scanner'],
+      ['CT', 'Computertomograph'],
+      ['Dia', 'Dialyse'],
+      ['LB', 'Linearbeschleuniger'],
+      ['Lito', 'Lithotriptor'],
+      ['MRI', 'Magnetresonanztomograph'],
+      ['PET', 'Positronen-Emissions-Tomograph'],
+    ],
+    'LA': [
+      ['Stat', 'Stationär'],
+      ['Amb', 'Ambulant']
+    ]
+  };
+
+  currentAttribute;
 
   constructor(
     private d3: D3Service
   ) { }
 
   ngOnInit() {
-    // option panel must be wiped first
-    for (let i = 0 ; i < this.CatCodeList.length; i++) {
-      this.d3.hideAllOptions(this.CatCodeList[i]);
-    }
-
-    // displays default category (RForm)
-    this.d3.showOptionsForSelectedCategoricalAttribute(this.DefaultCategory);
-    // sets all selections initially 'true'
-    // setDefaultOptionSelection(this.allDict);
-    this.d3.initializeCheckBoxDictionary(this.allDict);
+    this.currentAttribute = this.defaultCategory;
+    this.d3.currentCategoricalAttribute$.subscribe(attribute => {
+      this.currentAttribute = attribute;
+    });
   }
 
-  // updates the selected/deselected options and give the information to mapInitializer
   selectedCatValue(category, code) {
     this.d3.updateSelectedCategoryOption(category, code);
   }
