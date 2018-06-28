@@ -30,10 +30,6 @@ export class MapsComponent implements OnInit {
     private d3: D3Service
   ) {}
 
-  /**
-   * Loads all hospital data from backend with the help of hospitalService
-   * and gives it to the mapDrawer() function in mapInitializer.js
-   */
   ngOnInit() {
     this.characteristicsService.getNumericalAttributes()
       .subscribe(x => {

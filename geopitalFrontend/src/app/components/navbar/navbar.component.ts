@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit {
    * Defines hospital type which the user has selected or deselected.
    * The number tells us whether the user has selected (even number) or deselected (uneven number) a type.
    * Hospitals of a certain type must only be displayed when the according checkbox is selected.
-   * Function then calls updateMap() from mapInitializer.js in which the remaining logic is implemented.
+   *
    * @param hospitalType hospitals from this type need to be displayed (if they are hidden) or hidden (if they are displayed)
    */
   selectHospitalType(hospitalType) {

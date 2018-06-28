@@ -4,7 +4,6 @@ import { D3Service } from '../../services/d3.service';
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.
- * When an attribute is selected, a function in mapInitializer.js is called for further logic.
  */
 @Component({
   selector: 'app-dropdown',
