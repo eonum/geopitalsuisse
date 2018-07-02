@@ -15,7 +15,6 @@ import { CategorialAttributesComponent } from './components/categorial-attribute
 import {CharacteristicsService} from './services/characteristics.service';
 import {HospitalService} from './services/hospital.service';
 import { D3Service } from './services/d3.service';
-import { D3MapsService } from './services/d3-maps.service';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';
 
@@ -43,7 +42,6 @@ import { ScatterplotComponent } from './components/scatterplot/scatterplot.compo
     CharacteristicsService,
     HospitalService,
     D3Service,
-    D3MapsService
   ],
   exports: [
     AppComponent,
