@@ -28,7 +28,6 @@ export class D3Service {
 
   private modifiedHospitals;
   private filteredHospitals = [];
-
   private selectedHospitalTypes = [];
 
   private circles;
@@ -38,9 +37,7 @@ export class D3Service {
 
   private xCoordinateNumAttribute;
   private yCoordinateNumAttribute;
-  private allXCoordValues = [];
-  private allYCoordValues = [];
-  private regressionData = [];
+
   private sumOfXValues = 0;
   private sumOfYValues = 0;
 
@@ -155,6 +152,11 @@ export class D3Service {
     }
   }
 
+  private resetVariables() {
+    this.filteredHospitals = [];
+    this.selectedHospitalTypes = [];
+  }
+
   setCurrentCategoricalAttribute(attribute: any) {
     this.currentCategoricalAttributeSource.next(attribute);
   }
@@ -168,6 +170,9 @@ export class D3Service {
   }
 
   drawMap(hospitals, numericalAttributes, categoricalAttributes) {
+    /* ------------------------ Reset variables ------------------------------------------ */
+    this.resetVariables();
+
     /* ------------------------ Initialize map ------------------------------------------ */
     this.initializeMap();
 
@@ -438,7 +443,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   }
 
   updateAttribute(attribute: any, axis: string) {
-    console.log('update attribute, axis', attribute, axis)
     if (D3Service.showMap()) {
 
       if (this.characteristicsService.isCategoricalAttribute(attribute)) {
@@ -660,6 +664,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    */
 
   drawGraph(hospitals, numAttributes) {
+    this.resetVariables();
     this.allHospitals = hospitals;
     this.allNumericalAttributes = numAttributes;
     this.xCoordinateNumAttribute = numAttributes.find(obj =>  obj.code === 'AnzStand');
