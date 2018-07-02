@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { D3Service } from '../../services/d3.service';
 import { HospitalService } from '../../services/hospital.service';
 

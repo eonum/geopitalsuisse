@@ -2,16 +2,14 @@
   <h6>{{name}}</h6>
 
   <div id="attributeDropdown" class="dropdown">
-    <button type="button" id="attributeDropdownButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-      {{selectedAttribute.nameDE}}
-    </button>
+    <button type="button" id="attributeDropdownButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{{selectedAttribute.nameDE}}</button>
 
     <div class="dropdown-menu">
       <input *ngIf="input" class="form-control" type="text" placeholder="Suchen..." id="searchField" (keyup)="filterDropdownOptions()">
       <a *ngFor="let attribute of attributes"
          [class.active]="attribute.nameDE === selectedAttribute.nameDE"
          class="dropdown-item"
-         id="{{attribute.nameDE}}"
+         id="{{attribute.code}}"
          (click)="selectAttribute(attribute)">{{attribute.nameDE}}</a>
     </div>
   </div>
