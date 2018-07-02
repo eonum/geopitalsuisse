@@ -32,6 +32,7 @@ export class D3Service {
 
   private circles;
 
+  // Todo: remove this as soon as backend can deliver the data
   private singleClassCategories = ['RForm'];
   private multiClassCategories = ['Akt', 'SL', 'WB', 'SA', 'LA'];
 
@@ -81,6 +82,7 @@ export class D3Service {
   ) {}
 
 
+  // Todo: remove this as soon as backend can deliver the data
   static getDefaultNumericalAttribute(): any {
     return {
       category: 'number',
@@ -90,6 +92,7 @@ export class D3Service {
       nameIT: 'Ricavi per degenze e cure'};
   }
 
+  // Todo: remove this as soon as backend can deliver the data
   static getDefaultCategoricalAttribute(): any {
     return {
       category: 'string',
@@ -100,6 +103,7 @@ export class D3Service {
     };
   }
 
+  // Todo: remove this as soon as backend can deliver the data
   static getDefaultXAxisAttribute(): any {
     return {
       category: 'number',
@@ -110,6 +114,7 @@ export class D3Service {
     };
   }
 
+  // Todo: remove this as soon as backend can deliver the data
   static getDefaultYAxisAttribute(): any {
     return {
       category: 'number',
@@ -136,20 +141,37 @@ export class D3Service {
    */
   private static getColourBasedOnHospitalType(d)  {
     if (d.Typ === 'K111') {
-      return ('#a82a2a');
+      return '#a82a2a';
     } else if (d.Typ === 'K112') {
-      return ('#a89f2a');
+      return '#a89f2a';
     } else if (d.Typ === 'K121' || d.Typ === 'K122' || d.Typ === 'K123') {
-      return ('#2ca82a');
+      return '#2ca82a';
     } else if (d.Typ === 'K211' || d.Typ === 'K212') {
-      return ('#2a8ea8');
+      return '#2a8ea8';
     } else if (d.Typ === 'K221') {
-      return ('#2c2aa8');
+      return '#2c2aa8';
     } else if (d.Typ === 'K231' || d.Typ === 'K232' || d.Typ === 'K233' || d.Typ === 'K234' || d.Typ === 'K235') {
-      return ('#772aa8');
+      return '#772aa8';
     } else {
-      return ('#d633ff');
+      return '#d633ff';
     }
+  }
+
+  /**
+   * Returns the maximal value of the chosen numerical attribute
+   * @param currentHospitals data which is displayed as a circle
+   * @returns {number} maximal radius of the chosen attribute
+   */
+  private static getMaxRadius (currentHospitals: any) {
+    return currentHospitals.reduce((max, p) => p.radius > max ? p.radius : max, currentHospitals[0].radius);
+  }
+
+  private static xValue(d) {
+    return d.x;
+  }
+
+  private static yValue(d) {
+    return d.y;
   }
 
   private resetVariables() {
@@ -182,7 +204,7 @@ export class D3Service {
     this.allCategoricalAttributes = categoricalAttributes;
     this.currentNumericalAttribute = D3Service.getDefaultNumericalAttribute();
     this.currentCategoricalAttribute = D3Service.getDefaultCategoricalAttribute();
-    this.initMapData(this.allHospitals, this.selectedHospitalTypes);
+    this.initMapData(this.allHospitals);
 
     /* ------------------------ Initialize svg element, tooltip, circles and zoom ------- */
     this.addSVGelement();
@@ -199,8 +221,7 @@ export class D3Service {
     this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
 
     L.tileLayer(
-      `https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=
-pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow`, {
+      `https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow`, {
       maxZoom: 18,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -213,12 +234,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    * Add SVG element to leaflet's overlay pane (group layers)
    */
   private addSVGelement() {
-    console.log('add SVG element, showMap', D3Service.showMap());
-    if (D3Service.showMap()) {
-      this.svg = d3.select(this.map.getPanes().overlayPane).append('svg').attr('id', 'circleSVG');
-    } else {
-
-    }
+    this.svg = d3.select(this.map.getPanes().overlayPane).append('svg').attr('id', 'circleSVG');
   }
 
   /**
@@ -257,7 +273,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     });
 
     this.map.on('zoomend', () => {
-      const maxValue = this.getMaxRadius(this.modifiedHospitals);
+      const maxValue = D3Service.getMaxRadius(this.modifiedHospitals);
       this.circles
         .attr('cx', (d) => { return this.projectPoint(d.longitude, d.latitude).x; })
         .attr('cy', (d) => { return this.projectPoint(d.longitude, d.latitude).y; })
@@ -273,52 +289,41 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    * Stores data in array for displaying it. Builds up array with the important information.
    *
    * @param {Hospital[]} allHospitals
-   * @param selectedHospitalTypes
    */
-  private initMapData (allHospitals: any, selectedHospitalTypes: any) {
+  private initMapData (allHospitals: any) {
     this.modifiedHospitals = [];
 
     for (let i = 0; i < allHospitals.length; i++) {
 
       const currentHospital = allHospitals[i];
+      const name = currentHospital.name;
+      const latitude = currentHospital.latitude;
+      const longitude = currentHospital.longitude;
+      const attributes = currentHospital.hospital_attributes;
 
-      if (currentHospital.name !== null && currentHospital.latitude !== null && currentHospital.longitude !== null) {
-        const hospitalName = currentHospital.name;
-        const latitude = currentHospital.latitude;
-        const longitude = currentHospital.longitude;
-        const attributes = currentHospital.hospital_attributes;
-
+      if (name !== null && latitude !== null && longitude !== null) {
         let sizeAttribute;
         let typeAttribute ;
 
-        // filters code attribute and saves it in variable
-        const sizeResult = attributes.filter(obj => obj.code === this.currentNumericalAttribute.code );
+        const sizeResult = attributes.find(obj => obj.code === this.currentNumericalAttribute.code );
+        const typeResult = attributes.find(obj => obj.code === 'Typ' );
 
-        if (sizeResult == null || sizeResult[0] == null || sizeResult[0].value == null) {
+        if (sizeResult == null || sizeResult.value == null) {
           continue;
         } else {
-          sizeAttribute = Number(sizeResult[0].value);
+          sizeAttribute = Number(sizeResult.value);
         }
 
-        // filters type attribute and saves it in variable
-        const typeResult = attributes.filter(obj => obj.code === 'Typ' );
-
-        if (typeResult == null || typeResult[0] == null || typeResult[0].value == null) {
+        if (typeResult == null || typeResult.value == null) {
           typeAttribute = null;
         } else {
-          typeAttribute = String(typeResult[0].value);
+          typeAttribute = String(typeResult.value);
         }
 
-        const basicInformation = {longitude: longitude, latitude: latitude, name: hospitalName, radius: sizeAttribute, Typ: typeAttribute};
+        const basicInformation = {longitude: longitude, latitude: latitude, name: name, radius: sizeAttribute, Typ: typeAttribute};
 
-        if (selectedHospitalTypes.length === 0) {
+        if (this.selectedHospitalTypes.length === 0 || this.selectedHospitalTypes.indexOf(typeAttribute) > -1) {
           this.modifiedHospitals.push(basicInformation);
-        } else {
-          for (let j = 0; j < selectedHospitalTypes.length; j++) {
-            if (typeAttribute === selectedHospitalTypes[j]) {
-              this.modifiedHospitals.push(basicInformation);
-            }
-          }
         }
       }
     }
@@ -352,7 +357,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    * @param {Array} currentHospitals data that is visualized as circles (with x- and y-coordinates and radius r)
    */
   private initCircles (currentHospitals: Hospital[]) {
-    const maxRadius = this.getMaxRadius(currentHospitals);
+    const maxRadius = D3Service.getMaxRadius(currentHospitals);
 
     this.circles = this.svg.selectAll('circle')
       .data(currentHospitals)
@@ -479,15 +484,11 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
       this.resetCheckBoxes();
 
     } else if (changedAttribute === 'numericalAttribute' || changedAttribute === 'hospitalTypes') {
-      if (this.filteredHospitals.length !== 0) {
-        data = this.filteredHospitals;
-      } else {
-        data = this.allHospitals;
-      }
+      data = (this.filteredHospitals.length !== 0) ? this.filteredHospitals : this.allHospitals;
     }
 
     this.removeCircles();
-    this.initMapData(data, this.selectedHospitalTypes);
+    this.initMapData(data);
     this.initCircles(this.modifiedHospitals);
   }
 
@@ -506,24 +507,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     }
   }
 
-  /**
-   * Returns the maximal value of the chosen numerical attribute
-   * @param currentHospitals data which is displayed as a circle
-   * @returns {number} maximal radius of the chosen attribute
-   */
-  private getMaxRadius (currentHospitals: any) {
-    let maxRadius = 0;
-
-    for (let i = 0; i < currentHospitals.length; i++) {
-      if (currentHospitals[i] !== null && currentHospitals[i].radius !== null) {
-        if (currentHospitals[i].radius > maxRadius) {
-          maxRadius = currentHospitals[i].radius;
-        }
-      }
-    }
-    return maxRadius;
-  }
-
 
   /**
    * Displays tooltip when hovering over a marker
@@ -531,11 +514,16 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    */
   private showTooltip(d) {
     this.tooltip.transition()
-      .duration(1)
-      .style('opacity', .98);
-    this.tooltip.html(d.name)
+      .duration(100)
+      .style('opacity', .98)
       .style('left', d3.event.pageX + 'px')
       .style('top', d3.event.pageY + 'px');
+
+    if (!D3Service.showMap()) {
+      this.tooltip.html(d.name + '<br/> (' + D3Service.xValue(d) + ', ' + D3Service.yValue(d) + ')');
+    } else {
+      this.tooltip.html(d.name);
+    }
   }
 
 
@@ -582,7 +570,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
    */
   private updateCircles() {
     this.filteredHospitals = this.filter(this.allHospitals, this.checkBoxDictionary);
-    this.initMapData(this.filteredHospitals, this.selectedHospitalTypes);
+    this.initMapData(this.filteredHospitals);
     this.removeCircles();
     this.initCircles(this.modifiedHospitals);
   }
@@ -659,10 +647,6 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     return filteredHospitalData;
   }
 
-  /*
-   * Methods for scatterplot
-   */
-
   drawGraph(hospitals, numAttributes) {
     this.resetVariables();
     this.allHospitals = hospitals;
@@ -705,8 +689,8 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   }
 
   private scale(data) {
-    this.xScale.domain([d3.min(data, (d) => this.xValue(d)), d3.max(data, (d) => this.xValue(d))]);
-    this.yScale.domain([d3.min(data, (d) => this.yValue(d)), d3.max(data, (d) => this.yValue(d))]);
+    this.xScale.domain([d3.min(data, (d) => D3Service.xValue(d)), d3.max(data, (d) => D3Service.xValue(d))]);
+    this.yScale.domain([d3.min(data, (d) => D3Service.yValue(d)), d3.max(data, (d) => D3Service.yValue(d))]);
   }
 
   private drawAxes() {
@@ -755,35 +739,15 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
       .enter().append('circle')
       .attr('class', 'dot')
       .attr('r', 3.5)
-      .attr('cx', (d) => { return this.xScale(this.xValue(d)); })
-      .attr('cy', (d) => { return this.yScale(this.yValue(d)); })
-      .style('fill', (d) => { return this.cValue(d); })
+      .attr('cx', (d) => { return this.xScale(D3Service.xValue(d)); })
+      .attr('cy', (d) => { return this.yScale(D3Service.yValue(d)); })
+      .style('fill', (d) => { return D3Service.getColourBasedOnHospitalType(d); })
       .on('mouseover', (d) =>  {
-        this.tooltip.transition()
-          .duration(200)
-          .style('opacity', .9);
-        this.tooltip.html(d.name + '<br/> (' + this.xValue(d)
-          + ', ' + this.yValue(d) + ')')
-          .style('left', (d3.event.pageX + 5) + 'px')
-          .style('top', (d3.event.pageY - 28) + 'px');
+        this.showTooltip(d);
       })
-      .on('mouseout', (d) => {
-        this.tooltip.transition()
-          .duration(500)
-          .style('opacity', 0);
+      .on('mouseout', () => {
+        this.removeTooltip();
       });
-  }
-
-  private cValue(d) {
-    return D3Service.getColourBasedOnHospitalType(d);
-  }
-
-  private xValue(d) {
-    return d.x;
-  }
-
-  private yValue(d) {
-    return d.y;
   }
 
   private initScatterPlotData() {
@@ -801,29 +765,22 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
 
       if (hospitalName === 'Ganze Schweiz') { continue; }
 
-      // get value for x coord
       const xCoordinate = attributes.find(obj =>  obj.code === this.xCoordinateNumAttribute.code);
-
-      if (xCoordinate == null || xCoordinate == null || xCoordinate.value == null) {
-        continue;
-      } else {
-        xCoordinateValue = Number(xCoordinate.value);
-        this.sumOfXValues += xCoordinateValue;
-      }
-
-      // get value for y coord
       const yCoordinate = attributes.find(obj => obj.code === this.yCoordinateNumAttribute.code);
 
-      if (yCoordinate == null || yCoordinate == null || yCoordinate.value == null) {
+      if (xCoordinate == null || xCoordinate.value == null || yCoordinate == null || yCoordinate.value == null) {
         continue;
-      } else {
-        yCoordinateValue = Number(yCoordinate.value);
-        this.sumOfYValues += yCoordinateValue;
       }
+
+      xCoordinateValue = Number(xCoordinate.value);
+      yCoordinateValue = Number(yCoordinate.value);
+      this.sumOfXValues += xCoordinateValue;
+      this.sumOfYValues += yCoordinateValue;
+
 
       let typeResult = attributes.find(obj => obj.code === 'Typ');
 
-      if (typeResult == null || typeResult == null || typeResult.value == null) {
+      if (typeResult == null || typeResult.value == null) {
         typeResult = null;
       } else {
         type = String(typeResult.value);
