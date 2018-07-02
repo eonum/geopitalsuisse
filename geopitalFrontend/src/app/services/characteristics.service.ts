@@ -18,7 +18,7 @@ export class CharacteristicsService {
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getCategoricalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>('http://geopitalsuisse-backend.eonum.ch/api/attributeTypes')
+    return this.http.get<Attribute[]>('http://localhost:3000/api/attributeTypes')
       .map(res => {
         this.categoricalAttributes = res['attribute_types_string'] as Attribute[];
         return res['attribute_types_string'] as Attribute[];
@@ -30,7 +30,7 @@ export class CharacteristicsService {
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getNumericalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>('http://geopitalsuisse-backend.eonum.ch/api/attributeTypes')
+    return this.http.get<Attribute[]>('http://localhost:3000/api/attributeTypes')
       .map(res => {
         this.numericalAttributes = res['attribute_types_number'] as Attribute[];
         return res['attribute_types_number'] as Attribute[];
