@@ -60,7 +60,7 @@ export class DropdownComponent implements OnInit {
         this.d3.setCurrentNumericalAttribute(attribute);
       }
 
-      this.d3.updateAttribute(attribute,null);
+      this.d3.updateAttribute(attribute, null);
 
     } else {
       this.d3.updateAttribute(attribute, this.axis);
