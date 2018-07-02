@@ -49,7 +49,6 @@ export class DropdownComponent implements OnInit {
 
   selectAttribute(attribute) {
     this.selectedAttribute = attribute;
-    console.log('is numerical attribute', )
 
     if (D3Service.showMap()) {
       if (this.characteristicsService.isCategoricalAttribute(attribute)) {
