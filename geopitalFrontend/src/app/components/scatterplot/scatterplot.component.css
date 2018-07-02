@@ -1,21 +1,7 @@
-.line {
-  fill: none;
-  stroke: #ffab00;
-  stroke-width: 3%;
-}
-
-.axis text {
-  font-size: 10px;
-  font-family: sans-serif;
-}
-.text-label {
-  font-size: 10px;
-  font-family: sans-serif;
-}
-
 #container {
   overflow: auto;
 }
+
 #graph {
   float:left;
   overflow: auto;
@@ -25,32 +11,6 @@
   overflow: auto;
   margin: 0;
   padding: 0 .5rem .5rem .5rem;
-}
-
-.dropdown {
-  margin-bottom: .5rem;
-  white-space: normal;
-}
-
-#xCoordinateNumAttribute, #yCoordinateNumAttribute {
-  white-space: normal;
-}
-
-.dropdown-menu {
-  left: auto;
-  right: auto;
-  max-height: 10rem;
-  max-width: 75vw;
-  overflow-y: scroll;
-}
-
-.dropdown-item {
-  white-space: normal;
-}
-
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {
-  display:block;
 }
 
 .btn {
