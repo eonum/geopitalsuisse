@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
+import { Hospital } from '../models/hospital.model';
+import { Subject } from 'rxjs/Subject';
+import { CharacteristicsService } from './characteristics.service';
 
 import * as d3 from 'd3';
 import { scaleLinear } from 'd3-scale';
 import { axisBottom, axisLeft} from 'd3-axis';
-
-
-import { Hospital } from '../models/hospital.model';
-import { Observable } from 'rxjs/Observable';
-import { Attribute } from '../models/attribute.model';
-import { Subject } from 'rxjs/Subject';
-import { CharacteristicsService } from './characteristics.service';
-
-
 
 declare const L;
 
@@ -32,7 +28,6 @@ export class D3Service {
 
   private modifiedHospitals;
   private filteredHospitals = [];
-  private selectedHospital: Hospital;
 
   private selectedHospitalTypes = [];
 
@@ -45,6 +40,7 @@ export class D3Service {
   private yCoordinateNumAttribute;
   private allXCoordValues = [];
   private allYCoordValues = [];
+  private regressionData = [];
   private sumOfXValues = 0;
   private sumOfYValues = 0;
 
@@ -77,15 +73,11 @@ export class D3Service {
   private currentNumericalAttributeSource = new Subject<any>();
   private currentCategoricalAttributeSource = new Subject<any>();
   private selectedHospitalSource = new Subject<any>();
-  private xAxisAttributeSource = new Subject<any>();
-  private yAxisAttributeSource = new Subject<any>();
 
   // Observable string streams
   currentNumericalAttribute$ = this.currentNumericalAttributeSource.asObservable();
   currentCategoricalAttribute$ = this.currentCategoricalAttributeSource.asObservable();
   selectedHospital$ = this.selectedHospitalSource.asObservable();
-  xAxisAttribute$ = this.xAxisAttributeSource.asObservable();
-  yAxisAttribute$ = this.yAxisAttributeSource.asObservable();
 
   constructor(
     private characteristicsService: CharacteristicsService,
@@ -114,20 +106,20 @@ export class D3Service {
   static getDefaultXAxisAttribute(): any {
     return {
       category: 'number',
-      code: 'EtMedL',
-      nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
-      nameFR: 'Produits des hospitalisations et soins',
-      nameIT: 'Ricavi per degenze e cure'
+      code: 'AnzStand',
+      nameDE: 'Anzahl Standorte',
+      nameFR: 'Nombre de sites',
+      nameIT: 'Numero di sedi'
     };
   }
 
   static getDefaultYAxisAttribute(): any {
     return {
       category: 'number',
-      code: 'AnzStand',
-      nameDE: 'Anzahl Standorte',
-      nameFR: 'Nombre de sites',
-      nameIT: 'Numero di sedi'
+      code: 'EtMedL',
+      nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
+      nameFR: 'Produits des hospitalisations et soins',
+      nameIT: 'Ricavi per degenze e cure'
     };
   }
 
@@ -174,15 +166,6 @@ export class D3Service {
   setSelectedHospital(attribute: any) {
     this.selectedHospitalSource.next(attribute);
   }
-
-  setXAxisAttribute(attribute: any) {
-    this.xAxisAttributeSource.next(attribute);
-  }
-
-  setYAxisAttribute(attribute: any) {
-    this.yAxisAttributeSource.next(attribute);
-  }
-
 
   drawMap(hospitals, numericalAttributes, categoricalAttributes) {
     /* ------------------------ Initialize map ------------------------------------------ */
@@ -455,6 +438,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   }
 
   updateAttribute(attribute: any, axis: string) {
+    console.log('update attribute, axis', attribute, axis)
     if (D3Service.showMap()) {
 
       if (this.characteristicsService.isCategoricalAttribute(attribute)) {
@@ -699,11 +683,11 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     // draw x and y axis
     this.drawAxes();
 
-    // draw a dot for every hospital
-    this.drawDots(this.modifiedHospitals);
-
     // draw regression line
     this.drawRegressionLine(this.modifiedHospitals);
+
+    // draw a dot for every hospital
+    this.drawDots(this.modifiedHospitals);
   }
 
   private initializeGraph() {
@@ -716,46 +700,48 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   }
 
   private scale(data) {
-    this.xScale.domain([d3.min(data, this.xValue) - 1, d3.max(data, this.xValue) + 1]);
-    this.yScale.domain([d3.min(data, this.yValue) - 1, d3.max(data, this.yValue) + 1]);
+    this.xScale.domain([d3.min(data, (d) => this.xValue(d)), d3.max(data, (d) => this.xValue(d))]);
+    this.yScale.domain([d3.min(data, (d) => this.yValue(d)), d3.max(data, (d) => this.yValue(d))]);
   }
 
   private drawAxes() {
-    const xAxisGroup = this.svg.append('g')
+    this.svg.append('g')
       .classed('x', true)
       .classed('axis', true)
       .attr('transform', 'translate(0,' + this.height + ')')
       .call(this.xAxis)
       .append('text')
-      .attr('class', 'label')
       .attr('x', this.width)
       .attr('y', -6)
+      .attr('fill', '#000')
       .style('text-anchor', 'end')
       .text(this.xCoordinateNumAttribute.nameDE);
 
-    const yAxisGroup = this.svg.append('g')
+    this.svg.append('g')
       .classed('y', true)
       .classed('axis', true)
       .call(this.yAxis)
       .append('text')
-      .attr('class', 'label')
       .attr('transform', 'rotate(-90)')
       .attr('y', 6)
       .attr('dy', '.71em')
+      .attr('fill', '#000')
       .style('text-anchor', 'end')
       .text(this.yCoordinateNumAttribute.nameDE);
-
   }
 
   drawRegressionLine(data) {
+    data = data.sort((a, b) => { return (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0); } );
+
     const line = d3.line()
-      .x((d) => { return this.xScale(d.x); })
-      .y((d) => { return this.yScale(d.yhat); });
+      .x((d) => this.xScale(d.x))
+      .y((d) => this.yScale(d.yhat));
 
     this.svg.append('path')
-      .datum(data)
-      .attr('class', 'line')
-      .attr('d', line);
+      .attr('d', line(data))
+      .attr('stroke', 'darkgrey')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
   }
 
   drawDots(data) {
@@ -797,6 +783,8 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
 
   private initScatterPlotData() {
     this.modifiedHospitals = [];
+    this.sumOfXValues = 0;
+    this.sumOfYValues = 0;
 
     for (let i = 0; i < this.allHospitals.length; i++) {
 
@@ -809,37 +797,38 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
       if (hospitalName === 'Ganze Schweiz') { continue; }
 
       // get value for x coord
-      const xCoordinate = attributes.filter(obj =>  obj.code === this.xCoordinateNumAttribute.code);
+      const xCoordinate = attributes.find(obj =>  obj.code === this.xCoordinateNumAttribute.code);
 
-      if (xCoordinate == null || xCoordinate[0] == null || xCoordinate[0].value == null) {
+      if (xCoordinate == null || xCoordinate == null || xCoordinate.value == null) {
         continue;
       } else {
-        xCoordinateValue = Number(xCoordinate[0].value);
+        xCoordinateValue = Number(xCoordinate.value);
         this.sumOfXValues += xCoordinateValue;
-        this.allXCoordValues.push(xCoordinateValue);
       }
 
       // get value for y coord
-      const yCoordinate = attributes.filter(obj => obj.code === this.yCoordinateNumAttribute.code);
+      const yCoordinate = attributes.find(obj => obj.code === this.yCoordinateNumAttribute.code);
 
-      if (yCoordinate == null || yCoordinate[0] == null || yCoordinate[0].value == null) {
+      if (yCoordinate == null || yCoordinate == null || yCoordinate.value == null) {
         continue;
       } else {
-        yCoordinateValue = Number(yCoordinate[0].value);
+        yCoordinateValue = Number(yCoordinate.value);
         this.sumOfYValues += yCoordinateValue;
-        this.allYCoordValues.push(yCoordinateValue);
       }
 
-      let typResult = attributes.filter(obj => obj.code === 'Typ');
+      let typeResult = attributes.find(obj => obj.code === 'Typ');
 
-      if (typResult == null || typResult[0] == null || typResult[0].value == null) {
-        typResult = null;
+      if (typeResult == null || typeResult == null || typeResult.value == null) {
+        typeResult = null;
       } else {
-        type = String(typResult[0].value);
+        type = String(typeResult.value);
+      }
+
+      if (this.selectedHospitalTypes.length > 0 && this.selectedHospitalTypes.indexOf(typeResult.value) === -1) {
+        continue;
       }
 
       this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
-
     }
   }
 
@@ -849,14 +838,13 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
 
     let term1 = 0;
     let term2 = 0;
-    const yhat = [];
 
     // calculate coefficients
     let xr = 0;
     let yr = 0;
     for (let i = 0; i < this.modifiedHospitals.length; i++) {
-      xr = (this.allXCoordValues[i] - xMean);
-      yr = (this.allYCoordValues[i] - yMean);
+      xr = (this.modifiedHospitals[i].x - xMean);
+      yr = (this.modifiedHospitals[i].y - yMean);
       term1 += (xr * yr);
       term2 += (xr * xr);
     }
@@ -865,8 +853,11 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     const y_intercept = (yMean - (m * xMean));
 
     // perform regression
-    for (let i = 0; i < this.modifiedHospitals.length; i++) {
-      this.modifiedHospitals[i].yhat = Math.floor((y_intercept + (this.allXCoordValues[i] * m)));
+    for (let i = 0; i < this.allHospitals.length; i++) {
+      const hospital = this.modifiedHospitals.find(obj => obj.name === this.allHospitals[i].name);
+      if (hospital) {
+        hospital.yhat = (y_intercept + (hospital.x * m));
+      }
     }
   }
 
@@ -881,6 +872,7 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
   private updateGraph() {
     // delete everything
     this.removeExistingGraph();
+
     // add the tooltip area to the webpage
     this.initTooltip();
 
@@ -896,11 +888,11 @@ pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6
     // draw x and y axis
     this.drawAxes();
 
-    // draw a dot for every hospital
-    this.drawDots(this.modifiedHospitals);
-
     // draw regression line
     this.drawRegressionLine(this.modifiedHospitals);
+
+    // draw a dot for every hospital
+    this.drawDots(this.modifiedHospitals);
   }
 }
 
