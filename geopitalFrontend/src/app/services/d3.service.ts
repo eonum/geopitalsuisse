@@ -46,13 +46,6 @@ export class D3Service {
   private yScale;
   private xAxis;
   private yAxis;
-  /*
-  private xScale = d3.scaleLinear().range([0, this.width]);
-  private yScale = d3.scaleLinear().range([this.height, 0]);
-
-  private xAxis = d3.axisBottom(this.xScale);
-  private yAxis = d3.axisLeft(this.yScale);
-  */
 
   private RformDict = {'R1': false, 'R2': false, 'R3': false, 'R4': false};
   private AktDict   = {'A': false, 'B': false, 'P': false, 'R': false};
@@ -230,7 +223,6 @@ export class D3Service {
     const linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/' +
       'kennzahlen-der-schweizer-spitaeler.html';
 
-    // this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
     this.map = L.map('mapid', {
       center: [46.818188, 8.97512],
       zoom: 8,
