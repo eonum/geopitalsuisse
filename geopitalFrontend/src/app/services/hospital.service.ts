@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
+
 import { Hospital} from '../models/hospital.model';
 
 /**
@@ -20,10 +21,10 @@ export class HospitalService {
    */
   getAll(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>('http://geopitalsuisse-backend.eonum.ch/api/hospitals')
-    .map(res => {
+    .pipe(
+      map(res => {
       return res as Hospital[];
-    })
-
+    }));
   }
 
 
@@ -33,8 +34,9 @@ export class HospitalService {
    */
   getDummyData(): Observable<Hospital[]> {
     return this.http.get<Hospital[]>('http://localhost:3000/api/hospital/public/dummy')
-      .map(res => {
+      .pipe(
+        map(res => {
         return res['data'] as Hospital[];
-      })
+      }));
   }
 }

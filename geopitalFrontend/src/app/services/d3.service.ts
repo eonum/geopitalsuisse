@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 import { Hospital } from '../models/hospital.model';
-import { Subject } from 'rxjs/Subject';
 import { CharacteristicsService } from './characteristics.service';
 
 import * as d3 from 'd3';
