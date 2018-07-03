@@ -230,11 +230,15 @@ export class D3Service {
     const linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/' +
       'kennzahlen-der-schweizer-spitaeler.html';
 
-    this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
+    // this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
+    this.map = L.map('mapid', {
+      center: [46.818188, 8.97512],
+      zoom: 8,
+      maxZoom: 16,
+    });
 
     L.tileLayer(
       linkToMap, {
-      maxZoom: 18,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
       'Imagery © <a href="http://mapbox.com">Mapbox</a>' + '<br>' +
@@ -282,6 +286,10 @@ export class D3Service {
    *
    */
   private initZoomableBehaviour() {
+    this.map.addEventListener('touchstart', this.handleTouch);
+    this.map.addEventListener('touchend', this.handleTouch);
+    this.map.addEventListener('click', this.handleTouch);
+
     this.map.on('zoomstart', () => {
       d3.select('#circleSVG').style('visibility', 'hidden');
     });
@@ -296,6 +304,20 @@ export class D3Service {
       this.calculateSVGBounds(this.allHospitals);
       d3.select('#circleSVG').style('visibility', 'visible');
     });
+  }
+
+  private handleTouch (e) {
+    if ( (e.type === 'touchmove' || e.type === 'touchstart' ) && e.touches.length === 1) {
+      this.disableInteractions();
+    }
+  }
+
+  private disableInteractions () {
+    this.map.dragging.disable();
+    this.map.scrollWheelZoom.disable();
+    if (this.map.tap) {
+      this.map.tap.disable();
+    }
   }
 
 
