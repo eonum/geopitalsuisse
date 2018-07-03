@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-// The declare function call is to get the D3 logic from the mapinizializer.js file
-declare function updateMap(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl): any;
+import { D3Service } from '../../services/d3.service';
+
 
 /**
  * Handles checkbox-events implemented in the html-file of this component.
@@ -23,55 +23,58 @@ export class NavbarComponent implements OnInit {
   private numRehaKl = 0;
   private numSpezKl = 0;
 
+  hospitalTypes = [
+    'Universitätsspitäler',
+    'Zentrumsspitäler',
+    'Grundversorgung',
+    'Psychiatrische Kliniken',
+    'Rehabilitationskliniken',
+    'Spezialkliniken'
+  ];
 
-  constructor() {
-
-  }
+  constructor(
+    private d3: D3Service
+  ) {}
 
   ngOnInit() {
 
   }
-
 
   /**
    * Is called when a click-event occurs in checkbox (html of component).
    * Defines hospital type which the user has selected or deselected.
    * The number tells us whether the user has selected (even number) or deselected (uneven number) a type.
    * Hospitals of a certain type must only be displayed when the according checkbox is selected.
-   * Function then calls updateMap() from mapInitializer.js in which the remaining logic is implemented.
+   *
    * @param hospitalType hospitals from this type need to be displayed (if they are hidden) or hidden (if they are displayed)
    */
   selectHospitalType(hospitalType) {
 
-    if (hospitalType === 'uniSp') {
+    if (hospitalType === 'Universitätsspitäler') {
       this.numUniSp = this.numUniSp + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
-      }
+    }
 
-    if (hospitalType === 'zentSp') {
+    if (hospitalType === 'Zentrumsspitäler') {
       this.numZentSp = this.numZentSp + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'grundVers') {
+    if (hospitalType === 'Grundversorgung') {
       this.numGrundVers = this.numGrundVers + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'psychKl') {
+    if (hospitalType === 'Psychiatrische Kliniken') {
       this.numPsychKl = this.numPsychKl + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'rehaKl') {
+    if (hospitalType === 'Rehabilitationskliniken') {
       this.numRehaKl = this.numRehaKl + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
 
-    if (hospitalType === 'spezKl') {
+    if (hospitalType === 'Spezialkliniken') {
       this.numSpezKl = this.numSpezKl + 1;
-      updateMap(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
     }
+
+    this.d3.updateSelectedHospitalTypes(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
   }
 
 }

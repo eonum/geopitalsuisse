@@ -1,0 +1,30 @@
+<button class="btn btn-outline-primary" routerLink="" type="button">{{changeToView}}</button>
+
+<div class="container">
+  <div id="graph"></div>
+
+  <div id="sidebar">
+
+    <app-navbar></app-navbar>
+
+    <app-dropdown
+      [input]="true"
+      [name]="name1"
+      [attributes]="numericalAttributes"
+      [selectedAttribute]="xCoordinateNumAttribute"
+      [axis]="axis1">
+
+    </app-dropdown>
+
+    <app-dropdown
+      [input]="true"
+      [name]="name2"
+      [attributes]="numericalAttributes"
+      [selectedAttribute]="yCoordinateNumAttribute"
+      [axis]="axis2">
+
+    </app-dropdown>
+
+
+  </div>
+</div>

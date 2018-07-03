@@ -1,13 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CharacteristicsService } from "../../services/characteristics.service";
-
-// The declare function call is to get the D3 logic from the mapinizializer.js file
-declare function updateCircleRadius(attribute): any;
-declare function showCatOptions(attribute): any;
+import { Component, Input, OnInit } from '@angular/core';
+import { CharacteristicsService } from '../../services/characteristics.service';
+import { D3Service } from '../../services/d3.service';
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.
- * When an attribute is selected, a function in mapInitializer.js is called for further logic.
  */
 @Component({
   selector: 'app-dropdown',
@@ -16,13 +12,17 @@ declare function showCatOptions(attribute): any;
 })
 export class DropdownComponent implements OnInit {
 
-  public categoricalAttributes: any[] = [];
-  public numericalAttributes: any[] = [];
+  @Input() input;
+  @Input() selectedAttribute;
+  @Input() attributes;
+  @Input() name;
+  @Input() axis?;
 
-  selectedCatAttribute: string;
-  selectedNumAttribute: string;
 
-  constructor(private characteristicsService: CharacteristicsService) {  }
+  constructor(
+    private characteristicsService: CharacteristicsService,
+    private d3: D3Service
+  ) {  }
 
   /**
    * Is called on init and loads the attribute-array from the backend.
@@ -30,69 +30,40 @@ export class DropdownComponent implements OnInit {
    * numerical and the other that contains all categorical attributes
    * The attributes are then displayed in the html.
    */
-  ngOnInit() {
-    this.characteristicsService.getCategoricalAttributes()
-      .subscribe(attributes => {
-        this.categoricalAttributes = attributes;
+  ngOnInit() {}
 
-        // extract the categorical attribute "Typ" since its not used in this selection
-        this.categoricalAttributes = this.categoricalAttributes.filter(attribute => {
-          return attribute.code !== "Typ";
-        });
-        this.selectedCatAttribute = this.categoricalAttributes[0].nameDE;
-      });
-
-    this.characteristicsService.getNumericalAttributes()
-      .subscribe(attributes => {
-        this.numericalAttributes = attributes;
-        this.selectedNumAttribute = this.numericalAttributes[0].nameDE;
-      });
-  }
-
-  /**
-   * Function is called when user selects an attribute in the dropdown1 from the html.
-   * @param categorcialAttribute selected categorical attribute from dropdown1
-   */
-  selectCatAttribute(categorcialAttribute) {
-    showCatOptions(categorcialAttribute);
-    this.handleDropdownHighlight(categorcialAttribute.nameDE, "catAttr");
-    this.selectedCatAttribute = categorcialAttribute.nameDE;
-  }
-
-  /**
-   * Function is called when user selects an attribute in the dropdown2 from the html.
-   * @param numericalAttribute selected numerical attribute from dropdown2
-   */
-  selectNumAttribute(numericalAttribute){
-    updateCircleRadius(numericalAttribute);
-    this.handleDropdownHighlight(numericalAttribute.nameDE, "numAttr");
-    this.selectedNumAttribute = numericalAttribute.nameDE;
-  }
-
-  filterNumAttr() {
-    const input = (<HTMLInputElement>document.getElementById("searchNumAttr"));
+  filterDropdownOptions() {
+    const input = (<HTMLInputElement>document.getElementById('searchField'));
     const filter = input.value.toUpperCase();
-    const div = document.getElementById("numAttr");
-    const a = div.getElementsByTagName("a");
+    const div = document.getElementById('attributeDropdown');
+    const a = div.getElementsByTagName('a');
 
     for (let i = 0; i < a.length; i++) {
-      if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1){
-        a[i].style.display = "";
+      if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = '';
       } else {
-        a[i].style.display = "none";
+        a[i].style.display = 'none';
       }
     }
   }
 
-  handleDropdownHighlight(attribute: any, id: string): void {
-    const div = document.getElementById(id);
-    const a = div.getElementsByTagName("a");
+  selectAttribute(attribute) {
+    this.selectedAttribute = attribute;
 
-    for (let  i = 0; i < a.length; i++) {
-      if (a[i].classList.contains("active")) {
-        a[i].classList.remove("active");
+    if (D3Service.showMap()) {
+      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
+        this.d3.setCurrentCategoricalAttribute(attribute);
       }
+
+      if (this.characteristicsService.isNumericalAttribute(attribute)) {
+        this.d3.setCurrentNumericalAttribute(attribute);
+      }
+
+      this.d3.updateAttribute(attribute, null);
+
+    } else {
+      this.d3.updateAttribute(attribute, this.axis);
+
     }
-    document.getElementById(attribute).classList.add("active");
   }
 }

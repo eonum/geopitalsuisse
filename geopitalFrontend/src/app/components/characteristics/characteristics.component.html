@@ -1,23 +1,20 @@
-<div id="char-container">
+<div id="char-container" *ngIf="selectedHospital">
 
-  <h5 id="hospitalName"></h5>
+  <h5 id="hospitalName">{{selectedHospital.name}}</h5>
 
   <table class="table table-responsive-md">
     <tbody>
     <tr>
       <td>Adresse:</td>
-      <!-- hospitalAddress of clicked hospital from mapInitializer -->
-      <td id="hospitalAddress"></td>
+      <td id="hospitalAddress">{{address}}</td>
     </tr>
     <tr>
-      <!-- name and value of current numerical attribute from  mapInitializer -->
-      <td id="numericalAttributeName"></td>
-      <td id="numericalAttributeValue"></td>
+      <td id="numericalAttributeName">{{currentNumericalAttribute.nameDE}}</td>
+      <td id="numericalAttributeValue">{{currentNumericalAttributeValue}}</td>
     </tr>
     <tr>
-      <!-- name and value of current categorical attribute from  mapInitializer -->
-      <td id="categoricalAttributeName"></td>
-      <td id="categoricalAttributeValue"></td>
+      <td id="categoricalAttributeName">{{currentCategoricalAttribute.nameDE}}</td>
+      <td id="categoricalAttributeValue">{{currentCategoricalAttributeValue}}</td>
     </tr>
     </tbody>
   </table>

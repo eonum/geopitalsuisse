@@ -1,0 +1,21 @@
+#container {
+  overflow: auto;
+}
+
+#graph {
+  float:left;
+  overflow: auto;
+}
+#sidebar {
+  height: 50vh;
+  overflow: auto;
+  margin: 0;
+  padding: 0 .5rem .5rem .5rem;
+}
+
+.btn {
+  top: 0;
+  left: 0;
+  height: 5%;
+}
+

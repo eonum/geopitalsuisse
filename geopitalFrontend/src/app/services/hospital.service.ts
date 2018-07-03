@@ -32,7 +32,7 @@ export class HospitalService {
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://geopitalsuisse-backend.eonum.ch/api/hospital/public/dummy')
+    return this.http.get<Hospital[]>('http://localhost:3000/api/hospital/public/dummy')
       .map(res => {
         return res['data'] as Hospital[];
       })

@@ -1,16 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { NavbarComponent } from './navbar.component';
-import { HospitalService } from "../../services/hospital.service";
+import { D3Service } from '../../services/d3.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
 
+  let d3ServiceSpy;
+
   beforeEach(async(() => {
+    const d3Spy = jasmine.createSpyObj('D3Servce', ['updateSelectedHospitalTypes']);
+
     TestBed.configureTestingModule({
       declarations: [ NavbarComponent ],
-      providers: [{ provide: HospitalService}]
-
+      providers: [
+        { provide: D3Service, useValue: d3Spy }
+      ]
     })
     .compileComponents();
   }));
@@ -18,7 +24,7 @@ describe('NavbarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    d3ServiceSpy = TestBed.get(D3Service);
   });
 
   it('should create', () => {
@@ -26,12 +32,16 @@ describe('NavbarComponent', () => {
   });
 
   it('should call selectHospitalType function if checkbox is selected', async(() => {
+    fixture.detectChanges();
+
     spyOn(component, 'selectHospitalType');
+
     let link = fixture.debugElement.nativeElement.querySelector('input');
     link.click();
 
     fixture.whenStable().then(() => {
       expect(component.selectHospitalType).toHaveBeenCalled();
-    })
+    });
+
   }));
 });

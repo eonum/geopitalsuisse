@@ -1,23 +1,54 @@
-import { Component } from "@angular/core";
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
 import { MapsComponent } from './maps.component';
-import { HospitalService } from "../../services/hospital.service";
-import { CharacteristicsService } from "../../services/characteristics.service";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HospitalService } from '../../services/hospital.service';
+import { CharacteristicsService } from '../../services/characteristics.service';
+import { D3Service } from '../../services/d3.service';
 
 @Component({selector: 'app-sidebar', template: ''})
 class SidebarComponentStubComponent {}
 
+const mockNumAttribute = {
+  category: 'number',
+  code: 'EtMedL',
+  nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
+  nameFR: 'Produits des hospitalisations et soins',
+  nameIT: 'Ricavi per degenze e cure'
+};
+
+const mockCatAttribute = {
+  category: 'string',
+  code: 'RForm',
+  nameDE: 'Rechtsform',
+  nameFR: 'Forme juridique',
+  nameIT: 'Forma giuridica'
+};
+
+const mockHospital = {
+  name: 'Test',
+  streetAndNumber: '',
+  zipCodeAndCity: '',
+  latitude: '',
+  longitude: '',
+  hospital_attributes: null
+};
+
+
 describe('MapsComponent', () => {
   let component: MapsComponent;
-  let client: HttpClient;
-  let charService: CharacteristicsService;
-  let hosService: HospitalService;
-
-
   let fixture: ComponentFixture<MapsComponent>;
 
+  let d3Service;
+  let hospitalService;
+  let characteristicsService;
+
   beforeEach(async(() => {
+    const d3Spy = jasmine.createSpyObj('D3Service', ['drawMap']);
+
     TestBed.configureTestingModule({
       declarations: [
         MapsComponent,
@@ -28,6 +59,7 @@ describe('MapsComponent', () => {
       ],
       providers: [
         HospitalService,
+        { provide: D3Service, useValue: d3Spy},
         CharacteristicsService,
         HttpClient
       ]
@@ -38,27 +70,26 @@ describe('MapsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MapsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    d3Service = TestBed.get(D3Service);
+    hospitalService = fixture.debugElement.injector.get(HospitalService);
+    characteristicsService = fixture.debugElement.injector.get(CharacteristicsService);
 
-  beforeEach(() => {
-    hosService = new HospitalService(client);
-    charService = new CharacteristicsService(client);
+    spyOn(characteristicsService, 'getNumericalAttributes').and.returnValue(Observable.of(mockNumAttribute));
+    spyOn(characteristicsService, 'getCategoricalAttributes').and.returnValue(Observable.of(mockCatAttribute));
+    spyOn(hospitalService, 'getAll').and.returnValue(Observable.of(mockHospital));
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('hospital service have been called', () => {
-      component.ngOnInit();
-      expect(hosService.getAll).toBeDefined();
-  });
-
-  it('characteristics service has been called', () => {
+  it('should call services', () => {
     component.ngOnInit();
-    expect(charService.getCategoricalAttributes).toBeDefined();
-    expect(charService.getNumericalAttributes).toBeDefined();
+    expect(characteristicsService.getNumericalAttributes).toHaveBeenCalled();
+    expect(characteristicsService.getCategoricalAttributes).toHaveBeenCalled();
+    expect(hospitalService.getAll).toHaveBeenCalled();
   });
 
 });
