@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Attribute } from '../models/attribute.model';
 
@@ -19,10 +19,11 @@ export class CharacteristicsService {
    */
   getCategoricalAttributes(): Observable<Attribute[]> {
     return this.http.get<Attribute[]>('http://localhost:3000/api/attributeTypes')
-      .map(res => {
+      .pipe(
+        map(res => {
         this.categoricalAttributes = res['attribute_types_string'] as Attribute[];
         return res['attribute_types_string'] as Attribute[];
-      });
+      }));
   }
 
   /**
@@ -31,10 +32,11 @@ export class CharacteristicsService {
    */
   getNumericalAttributes(): Observable<Attribute[]> {
     return this.http.get<Attribute[]>('http://localhost:3000/api/attributeTypes')
-      .map(res => {
+      .pipe(
+        map(res => {
         this.numericalAttributes = res['attribute_types_number'] as Attribute[];
         return res['attribute_types_number'] as Attribute[];
-      });
+      }));
   }
 
   isCategoricalAttribute(attribute): boolean {

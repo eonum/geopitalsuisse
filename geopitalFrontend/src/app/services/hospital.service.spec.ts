@@ -1,22 +1,22 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HospitalService } from './hospital.service';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
-import {Hospital} from "../models/hospital.model";
-import {async} from "rxjs/scheduler/async";
+import { HttpClient, HttpClientModule} from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Hospital } from '../models/hospital.model';
 
 
 
 describe('HospitalService', () => {
 
-  let service: HospitalService;
+  let hospitalService: HospitalService;
   let client: HttpClient;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         HospitalService,
-        HttpClient],
+        HttpClient
+      ],
       imports: [
         HttpClientModule,
       ]
@@ -24,7 +24,7 @@ describe('HospitalService', () => {
   });
 
   beforeEach(() => {
-    service = new HospitalService(client);
+    hospitalService = new HospitalService(client);
 
   });
 

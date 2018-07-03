@@ -1,8 +1,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs';
 
 import { MapsComponent } from './maps.component';
 import { HospitalService } from '../../services/hospital.service';
@@ -74,9 +73,9 @@ describe('MapsComponent', () => {
     hospitalService = fixture.debugElement.injector.get(HospitalService);
     characteristicsService = fixture.debugElement.injector.get(CharacteristicsService);
 
-    spyOn(characteristicsService, 'getNumericalAttributes').and.returnValue(Observable.of(mockNumAttribute));
-    spyOn(characteristicsService, 'getCategoricalAttributes').and.returnValue(Observable.of(mockCatAttribute));
-    spyOn(hospitalService, 'getAll').and.returnValue(Observable.of(mockHospital));
+    spyOn(characteristicsService, 'getNumericalAttributes').and.returnValue(of(mockNumAttribute));
+    spyOn(characteristicsService, 'getCategoricalAttributes').and.returnValue(of(mockCatAttribute));
+    spyOn(hospitalService, 'getAll').and.returnValue(of(mockHospital));
 
     fixture.detectChanges();
   });
