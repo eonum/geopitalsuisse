@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { Hospital } from '../models/hospital.model';
 import { Subject } from 'rxjs/Subject';
 import { CharacteristicsService } from './characteristics.service';
 
 import * as d3 from 'd3';
-import { scaleLinear } from 'd3-scale';
-import { axisBottom, axisLeft} from 'd3-axis';
 
 declare const L;
 
@@ -16,7 +13,6 @@ export class D3Service {
 
   private svg;
   private map;
-  private div;
   private tooltip;
 
   private allHospitals = [];
@@ -46,11 +42,17 @@ export class D3Service {
   private height = this.width / 1.5;
   private margin = { top: 20, right: 100, bottom: 20, left: 100 };
 
+  private xScale;
+  private yScale;
+  private xAxis;
+  private yAxis;
+  /*
   private xScale = d3.scaleLinear().range([0, this.width]);
   private yScale = d3.scaleLinear().range([this.height, 0]);
 
   private xAxis = d3.axisBottom(this.xScale);
   private yAxis = d3.axisLeft(this.yScale);
+  */
 
   private RformDict = {'R1': false, 'R2': false, 'R3': false, 'R4': false};
   private AktDict   = {'A': false, 'B': false, 'P': false, 'R': false};
@@ -172,6 +174,10 @@ export class D3Service {
 
   private static yValue(d) {
     return d.y;
+  }
+
+  private static yHatValue(d) {
+    return d.yhat;
   }
 
   private resetVariables() {
@@ -652,7 +658,7 @@ export class D3Service {
     this.allHospitals = hospitals;
     this.allNumericalAttributes = numAttributes;
     this.xCoordinateNumAttribute = numAttributes.find(obj =>  obj.code === 'AnzStand');
-    this.yCoordinateNumAttribute = numAttributes.find(obj => obj.code === 'PtageStatMST');
+    this.yCoordinateNumAttribute = numAttributes.find(obj => obj.code === 'EtMedL');
 
     // add the graph canvas to the body of the webpage
     this.initializeGraph();
@@ -663,11 +669,11 @@ export class D3Service {
     // modify data
     this.initScatterPlotData();
 
-    // calculate Line of Best Fit (Least Square Method)
-    this.calculateRegression();
-
     // scale axes so they do not overlap
     this.scale(this.modifiedHospitals);
+
+    // calculate Line of Best Fit (Least Square Method)
+    this.calculateRegression();
 
     // draw x and y axis
     this.drawAxes();
@@ -689,8 +695,16 @@ export class D3Service {
   }
 
   private scale(data) {
-    this.xScale.domain([d3.min(data, (d) => D3Service.xValue(d)), d3.max(data, (d) => D3Service.xValue(d))]);
-    this.yScale.domain([d3.min(data, (d) => D3Service.yValue(d)), d3.max(data, (d) => D3Service.yValue(d))]);
+    this.xScale = d3.scaleLinear()
+      .domain([Number(d3.min(data, d => D3Service.xValue(d))), Number(d3.max(data, d => D3Service.xValue(d)))])
+      .range([0, this.width]);
+
+    this.yScale = d3.scaleLinear()
+      .domain([Number(d3.min(data, d => D3Service.yValue(d))), Number(d3.max(data, d => D3Service.yValue(d)))])
+      .range([this.height, 0]);
+
+    this.xAxis = d3.axisBottom(this.xScale);
+    this.yAxis = d3.axisLeft(this.yScale);
   }
 
   private drawAxes() {
@@ -723,8 +737,8 @@ export class D3Service {
     data = data.sort((a, b) => { return (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0); } );
 
     const line = d3.line()
-      .x((d) => this.xScale(d.x))
-      .y((d) => this.yScale(d.yhat));
+      .x(d => this.xScale(D3Service.xValue(d)))
+      .y(d => this.yScale(D3Service.yHatValue(d)));
 
     this.svg.append('path')
       .attr('d', line(data))
@@ -739,9 +753,9 @@ export class D3Service {
       .enter().append('circle')
       .attr('class', 'dot')
       .attr('r', 3.5)
-      .attr('cx', (d) => { return this.xScale(D3Service.xValue(d)); })
-      .attr('cy', (d) => { return this.yScale(D3Service.yValue(d)); })
-      .style('fill', (d) => { return D3Service.getColourBasedOnHospitalType(d); })
+      .attr('cx', (d) => this.xScale(D3Service.xValue(d)))
+      .attr('cy', (d) => this.yScale(D3Service.yValue(d)))
+      .style('fill', (d) => D3Service.getColourBasedOnHospitalType(d))
       .on('mouseover', (d) =>  {
         this.showTooltip(d);
       })
