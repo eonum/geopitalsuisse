@@ -13,24 +13,14 @@
 }
 
 #sidebar {
-  min-width: 300px;
-  max-width: 300px;
-  min-height: 100vh;
-  max-height: 100vh;
+  min-width: 20rem;
+  max-width: 20rem;
+  height: auto;
   overflow-y: scroll;
   position: absolute;
   right: 0;
   top: 0;
   z-index: 9999;
-}
-
-#disclaimer {
-  font-size: 11px;
-  background-color: rgba(255, 255, 255, 0.7);
-  color: #333333;
-  padding: 0 .5rem;
-  position: fixed;
-  bottom: 0;
 }
 
 .btn {

@@ -224,14 +224,22 @@ export class D3Service {
    * Initialize the map using OpenStreetMap tiles with custom design using mapbox.
    */
   private initializeMap () {
+    const linkToMap = 'https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_' +
+      'token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow';
+    const linkToBlog = 'http://eonum.ch/de/allgemein/geopitalsuisse/';
+    const linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/' +
+      'kennzahlen-der-schweizer-spitaeler.html';
+
     this.map = L.map('mapid').setView([46.818188, 8.97512], 8);
 
     L.tileLayer(
-      `https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow`, {
+      linkToMap, {
       maxZoom: 18,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      'Imagery © <a href="http://mapbox.com">Mapbox</a>' + '<br>' +
+      '<a href=' + linkToBlog + ' target="_blank" style="color: #DF691A;">created by eonum & University of Berne</a> | ' +
+      '<a href=' + linkToData + ' target="_blank" style="color: #DF691A;">data by BFS / FSO</a>',
       id: 'mapbox.streets'
     }).addTo(this.map);
   }
