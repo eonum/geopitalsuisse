@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Attribute } from '../models/attribute.model';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class CharacteristicsService {
@@ -13,12 +14,13 @@ export class CharacteristicsService {
 
   private categoricalAttributes;
   private numericalAttributes;
+  private url;
   /**
    * Gets all categorical attributes of all hospitals
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getCategoricalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>('http://localhost:3000/api/attributeTypes')
+    return this.http.get<Attribute[]>(this.getUrl() + '/api/attributeTypes')
       .pipe(
         map(res => {
         this.categoricalAttributes = res['attribute_types_string'] as Attribute[];
@@ -31,7 +33,7 @@ export class CharacteristicsService {
    * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
    */
   getNumericalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>('http://localhost:3000/api/attributeTypes')
+    return this.http.get<Attribute[]>(this.getUrl() + '/api/attributeTypes')
       .pipe(
         map(res => {
         this.numericalAttributes = res['attribute_types_number'] as Attribute[];
@@ -58,6 +60,14 @@ export class CharacteristicsService {
     });
 
     return position > -1;
+  }
+
+  private getUrl(): string {
+    if (environment.production) {
+      return 'http://geopitalsuisse-backend.eonum.ch';
+    } else {
+      return 'http://localhost:3000';
+    }
   }
 
 }
