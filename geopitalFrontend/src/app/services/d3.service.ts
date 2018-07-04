@@ -38,9 +38,9 @@ export class D3Service {
   private sumOfXValues = 0;
   private sumOfYValues = 0;
 
-  private width = window.innerWidth / 3;
-  private height = this.width / 1.5;
-  private margin = { top: 20, right: 100, bottom: 20, left: 100 };
+  private width;
+  private height;
+  private margin = { top: 20, right: 15, bottom: 20, left: 50 };
 
   private xScale;
   private yScale;
@@ -708,6 +708,9 @@ export class D3Service {
   }
 
   private initializeGraph() {
+    this.width = document.getElementById('graph').clientWidth - this.margin.left - this.margin.right;
+    this.height = this.width / 1.5 - this.margin.bottom - this.margin.top;
+
     this.svg = d3.select('#graph').append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom)
@@ -718,11 +721,11 @@ export class D3Service {
 
   private scale(data) {
     this.xScale = d3.scaleLinear()
-      .domain([Number(d3.min(data, d => D3Service.xValue(d))), Number(d3.max(data, d => D3Service.xValue(d)))])
+      .domain([Math.min(Number(d3.min(data, d => D3Service.xValue(d))), 0), Number(d3.max(data, d => D3Service.xValue(d)))])
       .range([0, this.width]);
 
     this.yScale = d3.scaleLinear()
-      .domain([Number(d3.min(data, d => D3Service.yValue(d))), Number(d3.max(data, d => D3Service.yValue(d)))])
+      .domain([Math.min(Number(d3.min(data, d => D3Service.yValue(d))), 0), Number(d3.max(data, d => D3Service.yValue(d)))])
       .range([this.height, 0]);
 
     this.xAxis = d3.axisBottom(this.xScale);
@@ -734,7 +737,14 @@ export class D3Service {
       .classed('x', true)
       .classed('axis', true)
       .attr('transform', 'translate(0,' + this.height + ')')
-      .call(this.xAxis)
+      .call((this.xAxis)
+        .tickFormat((d) => {
+          if (d < 1) {
+           return d3.format(',.1f')(d);
+          } else {
+            return d3.format(',.5~s')(d);
+          }
+        }))
       .append('text')
       .attr('x', this.width)
       .attr('y', -6)
@@ -745,7 +755,14 @@ export class D3Service {
     this.svg.append('g')
       .classed('y', true)
       .classed('axis', true)
-      .call(this.yAxis)
+      .call((this.yAxis)
+        .tickFormat((d) => {
+          if (d < 1) {
+            return d3.format(',.1f')(d);
+          } else {
+            return d3.format(',.5~s')(d);
+          }
+        }))
       .append('text')
       .attr('transform', 'rotate(-90)')
       .attr('y', 6)
