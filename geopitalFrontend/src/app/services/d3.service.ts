@@ -839,7 +839,7 @@ export class D3Service {
         type = String(typeResult.value);
       }
 
-      if (this.selectedHospitalTypes.length > 0 && this.selectedHospitalTypes.indexOf(typeResult.value) === -1) {
+      if (this.selectedHospitalTypes.length > 0 && typeResult !== null && this.selectedHospitalTypes.indexOf(typeResult.value) === -1) {
         continue;
       }
 
