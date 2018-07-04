@@ -9,12 +9,25 @@ ul {
 #sidebarCollapse {
   width: 100%;
   overflow: auto;
-  margin-top: 2rem;
   padding: 0;
 }
 
-.navbar-toggler {
-  position: fixed;
-  right: 0;
-  top: 0;
+.transparent {
+  background: transparent !important;
+}
+
+
+.language-select {
+  float: right;
+  padding: 0;
+  list-style: none;
+  margin: 9px 6px 0 0;
+}
+
+.language-select li {
+  display: inline;
+}
+
+.language-select a {
+  padding-left: 16px;
 }

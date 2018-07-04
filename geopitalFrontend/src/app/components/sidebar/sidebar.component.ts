@@ -1,14 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
+import { TranslateService } from '@ngx-translate/core';
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
+import { Settings } from '../../settings';
+
+declare const $: any;
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SidebarComponent implements OnInit {
+
+  languages = Settings.LANGUAGES;
 
   name1 = 'Filter';
   selectedCatAttribute;
@@ -20,6 +27,7 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private characteristicsService: CharacteristicsService,
+    public translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -37,4 +45,19 @@ export class SidebarComponent implements OnInit {
     this.selectedCatAttribute = D3Service.getDefaultCategoricalAttribute();
     this.selectedNumAttribute = D3Service.getDefaultNumericalAttribute();
   }
+
+  setLanguage(language: string) {
+    console.log('set language: ' + language);
+  }
+
+  toggleCollapse() {
+    $('#sidebarCollapse').on('hide.bs.collapse', function () {
+      document.getElementById('navSidebar').classList.add('transparent');
+    });
+
+    $('#sidebarCollapse').on('show.bs.collapse', function () {
+      document.getElementById('navSidebar').classList.remove('transparent');
+    });
+  }
+
 }
