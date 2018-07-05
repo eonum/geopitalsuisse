@@ -47,6 +47,8 @@ export class D3Service {
   private xAxis;
   private yAxis;
 
+  private correlationCoefficient;
+
   private RformDict = {'R1': false, 'R2': false, 'R3': false, 'R4': false};
   private AktDict   = {'A': false, 'B': false, 'P': false, 'R': false};
   private SLDict    = {'IPS': false, 'NF': false};
@@ -681,7 +683,7 @@ export class D3Service {
     this.allNumericalAttributes = numAttributes;
     this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
     this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
-    
+
     // add the graph canvas to the body of the webpage
     this.initializeGraph();
 
@@ -699,6 +701,11 @@ export class D3Service {
 
     // draw x and y axis
     this.drawAxes();
+
+    if (this.correlationCoefficient != null && !isNaN(this.correlationCoefficient)) {
+      // draw legend
+      this.drawLegend();
+    }
 
     // draw regression line
     this.drawRegressionLine(this.modifiedHospitals);
@@ -781,9 +788,40 @@ export class D3Service {
 
     this.svg.append('path')
       .attr('d', line(data))
-      .attr('stroke', 'darkgrey')
+      .attr('stroke', '#DF691A')
       .attr('stroke-width', 2)
       .attr('fill', 'none');
+  }
+
+  drawLegend() {
+    const label = [{text: 'Regressionslinie (Korrelation: ' + this.correlationCoefficient + ')'}];
+    const legend = this.svg.append('g')
+      .attr('class', 'legend');
+
+    label.forEach(d => {
+      const x = this.width - 200;
+      const y = 30;
+
+      const symbol = d3.symbol()
+        .type(d3.symbolSquare)
+        .size(12 * 12);
+
+      legend.append('path')
+        .attr('d', symbol)
+        .attr('fill', '#DF691A')
+        .attr('stroke', 'black')
+        .attr('stroke-width', .5)
+        .attr('transform', 'translate(' + x + ',' + y + ')');
+
+
+      legend.append('text')
+        .attr('class', 'legend')
+        .attr('x', x + 12)
+        .attr('y', y)
+        .attr('dominant-baseline', 'central')
+        .style('font-size', '.8rem')
+        .text(d.text);
+    });
   }
 
   drawDots(data) {
@@ -853,6 +891,7 @@ export class D3Service {
 
     let term1 = 0;
     let term2 = 0;
+    let term3 = 0;
 
     // calculate coefficients
     let xr = 0;
@@ -862,10 +901,12 @@ export class D3Service {
       yr = (this.modifiedHospitals[i].y - yMean);
       term1 += (xr * yr);
       term2 += (xr * xr);
+      term3 += (yr * yr);
     }
 
     const m = (term1 / term2);
     const y_intercept = (yMean - (m * xMean));
+    this.correlationCoefficient = Math.round(term1 / (Math.sqrt(term2 * term3)) * 100 + Number.EPSILON) / 100;
 
     // perform regression
     for (let i = 0; i < this.allHospitals.length; i++) {
@@ -894,14 +935,19 @@ export class D3Service {
     // modify data
     this.initScatterPlotData();
 
-    // calculate Line of Best Fit (Least Square Method)
-    this.calculateRegression();
-
     // scale axes so they do not overlap
     this.scale(this.modifiedHospitals);
 
+    // calculate Line of Best Fit (Least Square Method)
+    this.calculateRegression();
+
     // draw x and y axis
     this.drawAxes();
+    
+    if (this.correlationCoefficient != null && !isNaN(this.correlationCoefficient)) {
+      // draw legend
+      this.drawLegend();
+    }
 
     // draw regression line
     this.drawRegressionLine(this.modifiedHospitals);
