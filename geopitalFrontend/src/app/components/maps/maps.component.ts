@@ -19,7 +19,6 @@ import { Hospital } from '../../models/hospital.model';
 
 export class MapsComponent implements OnInit {
 
-  changeToView = 'Scatterplot';
   private numericalAttributes: Attribute[];
   private categoricalAttributes: Attribute[];
   private hospitalsList: Hospital[];
