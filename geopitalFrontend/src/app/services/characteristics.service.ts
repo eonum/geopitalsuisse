@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Attribute } from '../models/attribute.model';
-import { environment } from '../environments/environment';
 
 @Injectable()
 export class CharacteristicsService {
@@ -63,10 +62,10 @@ export class CharacteristicsService {
   }
 
   private getUrl(): string {
-    if (environment.production) {
-      return 'http://geopitalsuisse-backend.eonum.ch';
-    } else {
+    if (isDevMode()) {
       return 'http://localhost:3000';
+    } else {
+      return 'http://geopitalsuisse-backend.eonum.ch';
     }
   }
 

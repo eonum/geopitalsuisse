@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, isDevMode } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Hospital} from '../models/hospital.model';
-import { environment } from '../environments/environment';
 
 /**
  * Loads data from backend with the corresponding route defined in backend
@@ -13,8 +12,7 @@ import { environment } from '../environments/environment';
 @Injectable()
 export class HospitalService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Gets all hospitals with all corresponding data (address, coordinates, attributes)
@@ -42,10 +40,10 @@ export class HospitalService {
   }
 
   private getUrl(): string {
-    if (environment.production) {
-      return 'http://geopitalsuisse-backend.eonum.ch';
-    } else {
+    if (isDevMode()) {
       return 'http://localhost:3000';
+    } else {
+      return 'http://geopitalsuisse-backend.eonum.ch';
     }
   }
 }
