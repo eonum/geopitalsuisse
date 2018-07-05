@@ -18,6 +18,7 @@ import { D3Service } from './services/d3.service';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { ScatterplotComponent } from './components/scatterplot/scatterplot.compo
     CommonModule,
     FormsModule,
     AppRoutingModule,
-
+    FontAwesomeModule
   ],
   providers: [
     CharacteristicsService,
