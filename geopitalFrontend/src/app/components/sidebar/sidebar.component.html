@@ -1,37 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="sidebar">
+<ul class="nav nav-tabs">
+  <li>
+    <app-navbar></app-navbar>
+  </li>
 
-  <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="true" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <li>
+    <app-dropdown
+      [input]="true"
+      [name]="name2"
+      [attributes]="numericalAttributes"
+      [selectedAttribute]="selectedNumAttribute">
 
-  <div class="collapse navbar-collapse" id="sidebarCollapse">
-    <ul>
-      <li>
-        <app-navbar></app-navbar>
-      </li>
+    </app-dropdown>
 
-      <li>
-        <app-dropdown
-          [input]="true"
-          [name]="name2"
-          [attributes]="numericalAttributes"
-          [selectedAttribute]="selectedNumAttribute">
+    <app-dropdown
+      [input]="false"
+      [name]="name1"
+      [attributes]="categoricalAttributes"
+      [selectedAttribute]="selectedCatAttribute">
 
-        </app-dropdown>
+    </app-dropdown>
+    <app-categorial-attributes></app-categorial-attributes>
+  </li>
 
-        <app-dropdown
-          [input]="false"
-          [name]="name1"
-          [attributes]="categoricalAttributes"
-          [selectedAttribute]="selectedCatAttribute">
-
-        </app-dropdown>
-        <app-categorial-attributes></app-categorial-attributes>
-      </li>
-
-      <li>
-        <app-characteristics></app-characteristics>
-      </li>
-    </ul>
-  </div>
-</nav>
+  <li>
+    <app-characteristics></app-characteristics>
+  </li>
+</ul>
