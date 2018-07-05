@@ -102,10 +102,10 @@ export class D3Service {
   static getDefaultXAxisAttribute(): any {
     return {
       category: 'number',
-      code: 'AnzStand',
-      nameDE: 'Anzahl Standorte',
-      nameFR: 'Nombre de sites',
-      nameIT: 'Numero di sedi'
+      code: 'CMIb',
+      nameDE: 'Casemix Index (CMI) brutto',
+      nameFR: 'Indice de casemix (CMI) brut',
+      nameIT: 'Casemix Index lordo (CMI)',
     };
   }
 
@@ -679,9 +679,9 @@ export class D3Service {
     this.resetVariables();
     this.allHospitals = hospitals;
     this.allNumericalAttributes = numAttributes;
-    this.xCoordinateNumAttribute = numAttributes.find(obj =>  obj.code === 'AnzStand');
-    this.yCoordinateNumAttribute = numAttributes.find(obj => obj.code === 'EtMedL');
-
+    this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
+    this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
+    
     // add the graph canvas to the body of the webpage
     this.initializeGraph();
 
