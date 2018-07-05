@@ -7,10 +7,20 @@
   <ul class="navbar-nav">
     <li class="nav-item">
       <div *ngIf="showMap()">
-        <button class="btn btn-primary routingButton" routerLink="statistics" type="button" (click)="closeSidebar()">{{changeToView}}</button>
+        <span class="icon" data-toggle="tooltip" data-placement="top" title="Statistik">
+          <fa-icon
+            routerLink="statistics"
+            (click)="closeSidebar()"
+            [icon]="faChartLine"></fa-icon>
+        </span>
       </div>
       <div *ngIf="!showMap()">
-        <button class="btn btn-primary routingButton" routerLink="" type="button" (click)="openSidebar()">{{changeToView}}</button>
+        <span class="icon" data-toggle="tooltip" data-placement="top" title="Map">
+          <fa-icon
+            routerLink=""
+            (click)="openSidebar()"
+            [icon]="faGlobe"></fa-icon>
+        </span>
       </div>
     </li>
   </ul>

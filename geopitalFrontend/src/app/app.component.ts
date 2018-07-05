@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { D3Service } from './services/d3.service';
 
+import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe';
+import { faChartLine } from '@fortawesome/free-solid-svg-icons/faChartLine';
+
 declare const $: any;
 
 
@@ -11,7 +14,9 @@ declare const $: any;
 })
 export class AppComponent implements OnInit {
 
-  changeToView = 'Scatterplot';
+  faGlobe = faGlobe;
+  faChartLine = faChartLine;
+  private userAgent;
 
   constructor(
     private d3: D3Service
@@ -20,10 +25,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     $(document).ready(() => {
-      if (this.isMobile(navigator.userAgent) || !D3Service.showMap()) {
-        document.getElementById('externalContent').classList.remove('show');
+      this.userAgent = navigator.userAgent;
+      if (AppComponent.isMobile(this.userAgent) || !D3Service.showMap()) {
+        this.closeSidebar();
       } else {
-        document.getElementById('externalContent').classList.add('show');
+        this.openSidebar();
       }
     });
   }
@@ -33,7 +39,7 @@ export class AppComponent implements OnInit {
   }
 
   openSidebar() {
-    if (!this.isMobile()) {
+    if (!AppComponent.isMobile(this.userAgent)) {
       document.getElementById('externalContent').classList.add('show');
     }
   }
@@ -42,7 +48,7 @@ export class AppComponent implements OnInit {
     document.getElementById('externalContent').classList.remove('show');
   }
 
-  private isMobile(userAgent): boolean {
+  private static isMobile(userAgent): boolean {
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
   }
 }
