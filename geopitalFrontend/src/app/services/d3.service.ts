@@ -79,6 +79,8 @@ export class D3Service {
   ) {}
 
 
+  /* Public static methods */
+
   // Todo: remove this as soon as backend can deliver the data
   static getDefaultNumericalAttribute(): any {
     return {
@@ -131,6 +133,7 @@ export class D3Service {
     return document.getElementById('mapid') !== null;
   }
 
+  /* Private static methods */
   /**
    * Gives markers different color according to its type attribute
    * @param d data which is displayed as a circle
@@ -175,10 +178,7 @@ export class D3Service {
     return d.yhat;
   }
 
-  private resetVariables() {
-    this.filteredHospitals = [];
-    this.selectedHospitalTypes = [];
-  }
+  /* Public methods */
 
   setCurrentCategoricalAttribute(attribute: any) {
     this.currentCategoricalAttributeSource.next(attribute);
@@ -194,7 +194,8 @@ export class D3Service {
 
   drawMap(hospitals, numericalAttributes, categoricalAttributes) {
     /* ------------------------ Reset variables ------------------------------------------ */
-    this.resetVariables();
+    this.filteredHospitals = [];
+    this.selectedHospitalTypes = [];
 
     /* ------------------------ Initialize map ------------------------------------------ */
     this.initializeMap();
@@ -213,6 +214,138 @@ export class D3Service {
     this.initTooltip();
     this.initCircles(this.modifiedHospitals);
     this.initZoomableBehaviour();
+  }
+
+  drawGraph(hospitals, numAttributes) {
+    this.filteredHospitals = [];
+    this.selectedHospitalTypes = [];
+    this.allHospitals = hospitals;
+    this.allNumericalAttributes = numAttributes;
+    this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
+    this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
+
+    // add the graph canvas to the body of the webpage
+    this.initializeGraph();
+
+    // add the tooltip area to the webpage
+    this.initTooltip();
+
+    // modify data
+    this.initScatterPlotData();
+
+    // scale axes so they do not overlap
+    this.scale(this.modifiedHospitals);
+
+    // calculate Line of Best Fit (Least Square Method)
+    this.calculateRegression();
+
+    // draw x and y axis
+    this.drawAxes();
+
+    if (this.correlationCoefficient != null && !isNaN(this.correlationCoefficient)) {
+      // draw legend
+      this.drawLegend();
+    }
+
+    // draw regression line
+    this.drawRegressionLine(this.modifiedHospitals);
+
+    // draw a dot for every hospital
+    this.drawDots(this.modifiedHospitals);
+  }
+
+  /**
+   * Updates the selected hospital types based on how many times the checkbox has been clicked.
+   * An odd number means that the checkbox is checked and therefore hospitals of that type should be shown.
+   *
+   * @param numUniSp  number of times 'Universitätsspitäler' checkbox was pressed
+   * @param numZentSp  number of times 'Zentrumsspitäler' checkbox was pressed
+   * @param numGrundVers number of times 'Grundversorgung' checkbox was pressed
+   * @param numPsychKl number of times 'Psychiatrische Kliniken' checkbox was pressed
+   * @param numRehaKl number of times 'Rehabilitationskliniken' checkbox was pressed
+   * @param numSpezKl number of times 'Spezialkliniken' checkbox was pressed
+   */
+  updateSelectedHospitalTypes(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+    this.selectedHospitalTypes = [];
+
+    if ((numUniSp % 2) === 1) {
+      this.selectedHospitalTypes.push('K111');
+    }
+    if ((numZentSp % 2) === 1) {
+      this.selectedHospitalTypes.push('K112');
+    }
+    if ((numGrundVers % 2) === 1) {
+      this.selectedHospitalTypes.push('K121', 'K122', 'K123');
+    }
+    if ((numPsychKl % 2) === 1) {
+      this.selectedHospitalTypes.push('K211', 'K212');
+    }
+    if ((numRehaKl % 2) === 1) {
+      this.selectedHospitalTypes.push('K221');
+    }
+    if ((numSpezKl % 2) === 1) {
+      this.selectedHospitalTypes.push('K231', 'K232', 'K233', 'K234', 'K235');
+    }
+
+    if (((numUniSp % 2) === 0) && ((numZentSp % 2) === 0) && ((numGrundVers % 2) === 0) && ((numPsychKl % 2) === 0) &&
+      ((numRehaKl % 2) === 0) && ((numSpezKl % 2) === 0)) {
+      this.selectedHospitalTypes
+        .push('K111', 'K112', 'K121', 'K122', 'K123', 'K211', 'K212', 'K221', 'K231', 'K232', 'K233', 'K234', 'K235');
+    }
+
+    if (D3Service.showMap()) {
+      this.updateMap('hospitalTypes');
+    } else {
+      this.updateGraph();
+    }
+  }
+
+  updateAttribute(attribute: any, axis: string) {
+    if (D3Service.showMap()) {
+
+      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
+        this.currentCategoricalAttribute = attribute;
+        this.updateMap('categoricalAttribute');
+
+      } else if (this.characteristicsService.isNumericalAttribute(attribute)) {
+        this.currentNumericalAttribute = attribute;
+        this.updateMap('numericalAttribute');
+
+      } else {
+        console.error(`Attribute ${attribute} neither categorical nor numerical attribute!`);
+      }
+    } else {
+      if (axis === 'x') {
+        this.xCoordinateNumAttribute = attribute;
+      } else {
+        this.yCoordinateNumAttribute = attribute;
+      }
+      this.updateGraph();
+    }
+  }
+
+  /**
+   * Updates the selected/deselected option for the given category and code.
+   *
+   * @param {string} category the categorical attribute
+   * @param {string} code the code of the selected/deselected option
+   */
+  updateSelectedCategoryOption(category: string, code: string) {
+    this.checkBoxDictionary[category][code] = !this.checkBoxDictionary[category][code];
+    this.updateCircles();
+  }
+
+  /* Private methods */
+  private initializeGraph() {
+    this.width = document.getElementById('graph').clientWidth - this.margin.left - this.margin.right;
+    this.height = this.width / 1.5 - this.margin.bottom - this.margin.top;
+
+    this.svg = d3.select('#graph').append('svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .style('background-color', 'white')
+      .append('g')
+      .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
   }
 
   /**
@@ -314,7 +447,6 @@ export class D3Service {
     }
   }
 
-
   /**
    * Stores data in array for displaying it. Builds up array with the important information.
    *
@@ -358,6 +490,7 @@ export class D3Service {
       }
     }
   }
+
 
   /**
    * Adapt Leaflet’s API to fit D3 with custom geometric transformation.
@@ -430,82 +563,11 @@ export class D3Service {
     }
   }
 
-
-  /**
-   * Updates the selected hospital types based on how many times the checkbox has been clicked.
-   * An odd number means that the checkbox is checked and therefore hospitals of that type should be shown.
-   *
-   * @param numUniSp  number of times 'Universitätsspitäler' checkbox was pressed
-   * @param numZentSp  number of times 'Zentrumsspitäler' checkbox was pressed
-   * @param numGrundVers number of times 'Grundversorgung' checkbox was pressed
-   * @param numPsychKl number of times 'Psychiatrische Kliniken' checkbox was pressed
-   * @param numRehaKl number of times 'Rehabilitationskliniken' checkbox was pressed
-   * @param numSpezKl number of times 'Spezialkliniken' checkbox was pressed
-   */
-  updateSelectedHospitalTypes(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
-    this.selectedHospitalTypes = [];
-
-    if ((numUniSp % 2) === 1) {
-      this.selectedHospitalTypes.push('K111');
-    }
-    if ((numZentSp % 2) === 1) {
-      this.selectedHospitalTypes.push('K112');
-    }
-    if ((numGrundVers % 2) === 1) {
-      this.selectedHospitalTypes.push('K121', 'K122', 'K123');
-    }
-    if ((numPsychKl % 2) === 1) {
-      this.selectedHospitalTypes.push('K211', 'K212');
-    }
-    if ((numRehaKl % 2) === 1) {
-      this.selectedHospitalTypes.push('K221');
-    }
-    if ((numSpezKl % 2) === 1) {
-      this.selectedHospitalTypes.push('K231', 'K232', 'K233', 'K234', 'K235');
-    }
-
-    if (((numUniSp % 2) === 0) && ((numZentSp % 2) === 0) && ((numGrundVers % 2) === 0) && ((numPsychKl % 2) === 0) &&
-      ((numRehaKl % 2) === 0) && ((numSpezKl % 2) === 0)) {
-      this.selectedHospitalTypes
-        .push('K111', 'K112', 'K121', 'K122', 'K123', 'K211', 'K212', 'K221', 'K231', 'K232', 'K233', 'K234', 'K235');
-    }
-
-    if (D3Service.showMap()) {
-      this.updateMap('hospitalTypes');
-    } else {
-      this.updateGraph();
-    }
-  }
-
-  updateAttribute(attribute: any, axis: string) {
-    if (D3Service.showMap()) {
-
-      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
-        this.currentCategoricalAttribute = attribute;
-        this.updateMap('categoricalAttribute');
-
-      } else if (this.characteristicsService.isNumericalAttribute(attribute)) {
-        this.currentNumericalAttribute = attribute;
-        this.updateMap('numericalAttribute');
-
-      } else {
-        console.error(`Attribute ${attribute} neither categorical nor numerical attribute!`);
-      }
-    } else {
-      if (axis === 'x') {
-        this.xCoordinateNumAttribute = attribute;
-      } else {
-        this.yCoordinateNumAttribute = attribute;
-      }
-      this.updateGraph();
-    }
-  }
-
   /**
    *
    * @param {string} changedAttribute
    */
-  updateMap(changedAttribute: string) {
+  private updateMap(changedAttribute: string) {
     let data;
 
     if (changedAttribute === 'categoricalAttribute') {
@@ -581,17 +643,6 @@ export class D3Service {
         }
       }
     }
-  }
-
-  /**
-   * Updates the selected/deselected option for the given category and code.
-   *
-   * @param {string} category the categorical attribute
-   * @param {string} code the code of the selected/deselected option
-   */
-  updateSelectedCategoryOption(category: string, code: string) {
-    this.checkBoxDictionary[category][code] = !this.checkBoxDictionary[category][code];
-    this.updateCircles();
   }
 
   /**
@@ -677,55 +728,6 @@ export class D3Service {
     return filteredHospitalData;
   }
 
-  drawGraph(hospitals, numAttributes) {
-    this.resetVariables();
-    this.allHospitals = hospitals;
-    this.allNumericalAttributes = numAttributes;
-    this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
-    this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
-
-    // add the graph canvas to the body of the webpage
-    this.initializeGraph();
-
-    // add the tooltip area to the webpage
-    this.initTooltip();
-
-    // modify data
-    this.initScatterPlotData();
-
-    // scale axes so they do not overlap
-    this.scale(this.modifiedHospitals);
-
-    // calculate Line of Best Fit (Least Square Method)
-    this.calculateRegression();
-
-    // draw x and y axis
-    this.drawAxes();
-
-    if (this.correlationCoefficient != null && !isNaN(this.correlationCoefficient)) {
-      // draw legend
-      this.drawLegend();
-    }
-
-    // draw regression line
-    this.drawRegressionLine(this.modifiedHospitals);
-
-    // draw a dot for every hospital
-    this.drawDots(this.modifiedHospitals);
-  }
-
-  private initializeGraph() {
-    this.width = document.getElementById('graph').clientWidth - this.margin.left - this.margin.right;
-    this.height = this.width / 1.5 - this.margin.bottom - this.margin.top;
-
-    this.svg = d3.select('#graph').append('svg')
-      .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', this.height + this.margin.top + this.margin.bottom)
-      .style('background-color', 'white')
-      .append('g')
-      .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
-  }
-
   private scale(data) {
     this.xScale = d3.scaleLinear()
       .domain([Math.min(Number(d3.min(data, d => D3Service.xValue(d))), 0), Number(d3.max(data, d => D3Service.xValue(d)))])
@@ -779,7 +781,7 @@ export class D3Service {
       .text(this.yCoordinateNumAttribute.nameDE);
   }
 
-  drawRegressionLine(data) {
+  private drawRegressionLine(data) {
     data = data.sort((a, b) => { return (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0); } );
 
     const line = d3.line()
@@ -793,7 +795,7 @@ export class D3Service {
       .attr('fill', 'none');
   }
 
-  drawLegend() {
+  private drawLegend() {
     const label = [{text: 'Regressionslinie (Korrelation: ' + this.correlationCoefficient + ')'}];
     const legend = this.svg.append('g')
       .attr('class', 'legend');
@@ -824,7 +826,7 @@ export class D3Service {
     });
   }
 
-  drawDots(data) {
+  private drawDots(data) {
     this.svg.selectAll('.dot')
       .data(data)
       .enter().append('circle')
@@ -943,7 +945,7 @@ export class D3Service {
 
     // draw x and y axis
     this.drawAxes();
-    
+
     if (this.correlationCoefficient != null && !isNaN(this.correlationCoefficient)) {
       // draw legend
       this.drawLegend();

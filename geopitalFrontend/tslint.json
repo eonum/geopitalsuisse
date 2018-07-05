@@ -38,10 +38,8 @@
         "order": [
           "static-field",
           "instance-field",
-          "public-static-method",
-          "public-instance-method",
-          "private-static-method",
-          "private-instance-method"
+          "static-method",
+          "instance-method"
         ]
       }
     ],
