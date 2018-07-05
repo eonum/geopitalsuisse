@@ -7,20 +7,20 @@
   <ul class="navbar-nav">
     <li class="nav-item">
       <div *ngIf="showMap()">
-        <div class="icon">
+        <span class="icon" data-toggle="tooltip" data-placement="top" title="Statistik">
           <fa-icon
             routerLink="statistics"
             (click)="closeSidebar()"
             [icon]="faChartLine"></fa-icon>
-        </div>
+        </span>
       </div>
       <div *ngIf="!showMap()">
-        <div class="icon">
+        <span class="icon" data-toggle="tooltip" data-placement="top" title="Map">
           <fa-icon
             routerLink=""
             (click)="openSidebar()"
             [icon]="faGlobe"></fa-icon>
-        </div>
+        </span>
       </div>
     </li>
   </ul>
