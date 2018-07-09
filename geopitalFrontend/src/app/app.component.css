@@ -47,6 +47,11 @@ ul, li {
   padding-left: 1rem;
 }
 
+.active {
+  font-size: large;
+  color: #9a4912;
+}
+
 footer {
   position: fixed;
   bottom: 0;

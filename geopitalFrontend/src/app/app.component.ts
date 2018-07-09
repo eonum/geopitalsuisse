@@ -30,6 +30,10 @@ export class AppComponent implements OnInit {
     public translate: TranslateService
   ) {
     translate.addLangs(this.languages);
+    translate.setDefaultLang('de');
+
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/de|it|fr/) ? browserLang : 'de');
   }
 
   ngOnInit() {
@@ -55,9 +59,6 @@ export class AppComponent implements OnInit {
 
   closeSidebar() {
     document.getElementById('externalContent').classList.remove('show');
-  }
-
-  setLanguage(language: string) {
   }
 
   private static isMobile(userAgent): boolean {
