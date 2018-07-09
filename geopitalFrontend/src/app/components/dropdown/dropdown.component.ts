@@ -33,9 +33,9 @@ export class DropdownComponent implements OnInit {
   ngOnInit() {}
 
   filterDropdownOptions() {
-    const input = (<HTMLInputElement>document.getElementById('searchField'));
+    const input = (<HTMLInputElement>document.getElementById('searchField-' + this.name));
     const filter = input.value.toUpperCase();
-    const div = document.getElementById('attributeDropdown');
+    const div = document.getElementById('attributeDropdown-' + this.name);
     const a = div.getElementsByTagName('a');
 
     for (let i = 0; i < a.length; i++) {

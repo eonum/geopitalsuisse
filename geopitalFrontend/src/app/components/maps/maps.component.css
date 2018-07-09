@@ -11,21 +11,3 @@
   position: absolute;
   z-index: -1;
 }
-
-#sidebar {
-  min-width: 20rem;
-  max-width: 25vw;
-  height: auto;
-  max-height: 100vh;
-  overflow-y: scroll;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 9999;
-}
-
-.btn {
-  top: 0;
-  left: 0;
-  height: 5%;
-}

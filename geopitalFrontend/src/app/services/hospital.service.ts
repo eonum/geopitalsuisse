@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, isDevMode } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -12,15 +12,14 @@ import { Hospital} from '../models/hospital.model';
 @Injectable()
 export class HospitalService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Gets all hospitals with all corresponding data (address, coordinates, attributes)
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://geopitalsuisse-backend.eonum.ch/api/hospitals')
+    return this.http.get<Hospital[]>(this.getUrl() + '/api/hospitals')
     .pipe(
       map(res => {
       return res as Hospital[];
@@ -33,10 +32,18 @@ export class HospitalService {
    * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
    */
   getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>('http://localhost:3000/api/hospital/public/dummy')
+    return this.http.get<Hospital[]>(this.getUrl() + '/api/hospital/public/dummy')
       .pipe(
         map(res => {
         return res['data'] as Hospital[];
       }));
+  }
+
+  private getUrl(): string {
+    if (isDevMode()) {
+      return 'http://localhost:3000';
+    } else {
+      return 'http://geopitalsuisse-backend.eonum.ch';
+    }
   }
 }

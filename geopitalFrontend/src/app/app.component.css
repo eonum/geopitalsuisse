@@ -1,0 +1,43 @@
+#externalContent {
+  min-width: 20rem;
+  max-width: 20rem;
+  height: auto;
+  max-height: 100%;
+  overflow-y: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index:0;
+}
+
+.navbar-toggler {
+  z-index:9999;
+  top: 0;
+  right: 0;
+  position: fixed;
+}
+
+.routingButton {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.icon {
+  cursor: pointer;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  color: #DF691A;
+  font-size: 2.5rem;
+  text-align: center;
+  z-index: 9999;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 0.75rem;
+  padding: .25rem;
+}

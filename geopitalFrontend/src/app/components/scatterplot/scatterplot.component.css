@@ -1,21 +1,31 @@
-#container {
-  overflow: auto;
-}
-
-#graph {
-  float:left;
-  overflow: auto;
-}
-#sidebar {
-  height: 50vh;
-  overflow: auto;
-  margin: 0;
-  padding: 0 .5rem .5rem .5rem;
-}
-
 .btn {
   top: 0;
   left: 0;
   height: 5%;
 }
 
+#graph {
+  flex: 100%;
+  width: 100%;
+  max-width: 100%;
+  float: none;
+}
+
+#filterConatiner {
+  flex: 100%;
+  width: 100%;
+  max-width: 100%;
+  float: none;
+}
+
+.filter {
+  flex: 50%;
+  max-width: 50%;
+  padding: 0 4px;
+}
+
+.nestedFilter {
+  flex: 100%;
+  max-width: 100%;
+  padding: 0 4px;
+}

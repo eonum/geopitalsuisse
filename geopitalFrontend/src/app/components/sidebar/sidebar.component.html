@@ -1,54 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navSidebar">
+<ul class="nav nav-tabs">
+  <li>
+    <app-navbar></app-navbar>
+  </li>
 
-  <button class="navbar-toggler navbar-toggler-right ml-auto"
-          id="sidebarCollapseButton"
-          type="button"
-          data-toggle="collapse"
-          data-target="#sidebarCollapse"
-          aria-controls="sidebarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          (click)="toggleCollapse()">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <li>
+    <app-dropdown
+      [input]="true"
+      [name]="name2"
+      [attributes]="numericalAttributes"
+      [selectedAttribute]="selectedNumAttribute">
 
-  <div class="collapse navbar-collapse" id="sidebarCollapse">
-    <ul>
+    </app-dropdown>
 
-      <ul href="#" class="language-select">
-        <li *ngFor="let language of languages">
-          <a href="javascript:void(0)"
-             [class.active]="translate.currentLang===language"
-             (click)="setLanguage(language)">{{language}}</a>
-        </li>
-      </ul>
+    <app-dropdown
+      [input]="false"
+      [name]="name1"
+      [attributes]="categoricalAttributes"
+      [selectedAttribute]="selectedCatAttribute">
 
-      <li>
-        <app-navbar></app-navbar>
-      </li>
+    </app-dropdown>
+    <app-categorial-attributes></app-categorial-attributes>
+  </li>
 
-      <li>
-        <app-dropdown
-          [input]="true"
-          [name]="name2"
-          [attributes]="numericalAttributes"
-          [selectedAttribute]="selectedNumAttribute">
-
-        </app-dropdown>
-
-        <app-dropdown
-          [input]="false"
-          [name]="name1"
-          [attributes]="categoricalAttributes"
-          [selectedAttribute]="selectedCatAttribute">
-
-        </app-dropdown>
-        <app-categorial-attributes></app-categorial-attributes>
-      </li>
-
-      <li>
-        <app-characteristics></app-characteristics>
-      </li>
-    </ul>
-  </div>
-</nav>
+  <li>
+    <app-characteristics></app-characteristics>
+  </li>
+</ul>
