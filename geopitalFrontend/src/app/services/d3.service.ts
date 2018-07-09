@@ -40,7 +40,7 @@ export class D3Service {
 
   private width;
   private height;
-  private margin = { top: 20, right: 15, bottom: 20, left: 50 };
+  private margin = { top: 20, right: 20, bottom: 60, left: 100 };
 
   private xScale;
   private yScale;
@@ -755,10 +755,11 @@ export class D3Service {
           }
         }))
       .append('text')
-      .attr('x', this.width)
-      .attr('y', -6)
+      .attr('x', this.width / 2)
+      .attr('y', this.margin.bottom / 2)
       .attr('fill', '#000')
-      .style('text-anchor', 'end')
+      .style('text-anchor', 'middle')
+      .style('font-size', '.8rem')
       .text(this.xCoordinateNumAttribute.nameDE);
 
     this.svg.append('g')
@@ -774,10 +775,11 @@ export class D3Service {
         }))
       .append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 6)
-      .attr('dy', '.71em')
+      .attr('y', - this.margin.left / 2)
+      .attr('x', - this.height / 2)
       .attr('fill', '#000')
-      .style('text-anchor', 'end')
+      .style('text-anchor', 'middle')
+      .style('font-size', '.8rem')
       .text(this.yCoordinateNumAttribute.nameDE);
   }
 
@@ -867,8 +869,7 @@ export class D3Service {
 
       xCoordinateValue = Number(xCoordinate.value);
       yCoordinateValue = Number(yCoordinate.value);
-      this.sumOfXValues += xCoordinateValue;
-      this.sumOfYValues += yCoordinateValue;
+
 
 
       let typeResult = attributes.find(obj => obj.code === 'Typ');
@@ -881,9 +882,12 @@ export class D3Service {
 
       if (this.selectedHospitalTypes.length > 0 && typeResult !== null && this.selectedHospitalTypes.indexOf(typeResult.value) === -1) {
         continue;
+      } else {
+        this.sumOfXValues += xCoordinateValue;
+        this.sumOfYValues += yCoordinateValue;
+        this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
       }
 
-      this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
     }
   }
 
