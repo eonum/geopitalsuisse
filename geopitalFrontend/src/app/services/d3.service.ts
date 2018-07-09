@@ -869,8 +869,7 @@ export class D3Service {
 
       xCoordinateValue = Number(xCoordinate.value);
       yCoordinateValue = Number(yCoordinate.value);
-      this.sumOfXValues += xCoordinateValue;
-      this.sumOfYValues += yCoordinateValue;
+
 
 
       let typeResult = attributes.find(obj => obj.code === 'Typ');
@@ -883,9 +882,12 @@ export class D3Service {
 
       if (this.selectedHospitalTypes.length > 0 && typeResult !== null && this.selectedHospitalTypes.indexOf(typeResult.value) === -1) {
         continue;
+      } else {
+        this.sumOfXValues += xCoordinateValue;
+        this.sumOfYValues += yCoordinateValue;
+        this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
       }
 
-      this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
     }
   }
 
