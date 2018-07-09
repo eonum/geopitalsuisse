@@ -37,9 +37,9 @@ export class LanguageGuardService implements CanActivate {
    * */
   public canActivate(route: ActivatedRouteSnapshot): boolean {
 
-    let language = route.params['language'];
-
+    let language = route.params['locale'];
     // set language and return if it exists
+
     if (language && this.languages.indexOf(language) > -1) {
       this.setLanguage(language);
       return true;
@@ -49,7 +49,7 @@ export class LanguageGuardService implements CanActivate {
     language = this.matchingLanguage(navigator.language) || Settings.DEFAULT_LANGUAGE;
 
     // redirect
-    this.router.navigate([language]).catch(error => console.error('Error ', error));
+    this.router.navigate(['map'], {queryParams: {locale: language} }).catch(error => console.error('Error ', error));
     return false;
   }
 

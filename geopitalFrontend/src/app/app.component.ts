@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { TranslateService } from '@ngx-translate/core';
 import { D3Service } from './services/d3.service';
 
@@ -25,9 +27,13 @@ export class AppComponent implements OnInit {
   public languages = Settings.LANGUAGES;
   private userAgent;
 
+  private locale;
+
   constructor(
     private d3: D3Service,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
     translate.addLangs(this.languages);
     translate.setDefaultLang('de');
@@ -37,6 +43,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.activatedRoute.queryParams
+      .subscribe(params => {
+        if (params.locale != undefined) {
+          this.locale = params.locale;
+          this.translate.use(this.locale.match(/de|it|fr/) ? this.locale : 'de');
+        }
+
+      });
+
     $(document).ready(() => {
       this.userAgent = navigator.userAgent;
       if (AppComponent.isMobile(this.userAgent) || !D3Service.showMap()) {
@@ -45,6 +60,11 @@ export class AppComponent implements OnInit {
         this.openSidebar();
       }
     });
+  }
+
+  selectLanguage(language: string) {
+    this.translate.use(language);
+    this.router.navigate([], {relativeTo: this.activatedRoute, queryParams: {locale: language} });
   }
 
   showMap() {

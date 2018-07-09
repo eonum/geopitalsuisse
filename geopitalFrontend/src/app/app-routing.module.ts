@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MapsComponent } from "./components/maps/maps.component";
-import { ScatterplotComponent } from "./components/scatterplot/scatterplot.component";
+import { MapsComponent } from './components/maps/maps.component';
+import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';
+import { LanguageGuardService } from './services/language-guard.service';
 
 const routes: Routes = [
-  { path: '', component: MapsComponent},
-  { path: 'maps', component: MapsComponent},
+  { path: '', canActivate: [LanguageGuardService], component: MapsComponent},
+  { path: 'map', component: MapsComponent },
   { path: 'statistics', component: ScatterplotComponent}
 
 
