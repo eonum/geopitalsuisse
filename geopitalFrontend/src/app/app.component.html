@@ -23,7 +23,19 @@
         </span>
       </div>
     </li>
+
+    <li class="nav-item">
+      <ul href="#" class="language-select ml-auto">
+        <li *ngFor="let language of languages">
+          <a href="javascript:void(0)"
+             [class.active]="translate.currentLang===language"
+             (click)="setLanguage(language)">{{language}}</a>
+        </li>
+      </ul>
+    </li>
   </ul>
+
+
 </nav>
 
 <div class="collapse bg-light" id="externalContent">

@@ -22,12 +22,12 @@ export class AppComponent implements OnInit {
   linkToBlog = 'http://eonum.ch/de/allgemein/geopitalsuisse/';
   linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
-  private languages = Settings.LANGUAGES;
+  public languages = Settings.LANGUAGES;
   private userAgent;
 
   constructor(
     private d3: D3Service,
-    translate: TranslateService
+    public translate: TranslateService
   ) {
     translate.addLangs(this.languages);
   }
@@ -55,6 +55,9 @@ export class AppComponent implements OnInit {
 
   closeSidebar() {
     document.getElementById('externalContent').classList.remove('show');
+  }
+
+  setLanguage(language: string) {
   }
 
   private static isMobile(userAgent): boolean {
