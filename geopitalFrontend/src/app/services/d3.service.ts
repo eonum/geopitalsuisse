@@ -370,7 +370,7 @@ export class D3Service {
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
       'Imagery © <a href="http://mapbox.com">Mapbox</a>' + '<br>' +
       '<a href=' + linkToBlog + ' target="_blank" style="color: #DF691A;">created by eonum & University of Berne</a> | ' +
-      '<a href=' + linkToData + ' target="_blank" style="color: #DF691A;">data by BFS / FSO</a>',
+      '<a href=' + linkToData + ' target="_blank" style="color: #DF691A;">data by BAG / FOPH</a>',
       id: 'mapbox.streets'
     }).addTo(this.map);
   }
