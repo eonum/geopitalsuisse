@@ -2,3 +2,4 @@
 .DS_Store
 geopitalBackend/node_modules/
 *.secret
+*.iml
