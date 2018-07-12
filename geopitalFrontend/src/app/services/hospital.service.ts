@@ -6,8 +6,7 @@ import { map } from 'rxjs/operators';
 import { Hospital} from '../models/hospital.model';
 
 /**
- * Loads data from backend with the corresponding route defined in backend
- * and puts them in a data array with the help of the defined models so we can access the data.
+ * Loads data from qualimed-hospital.
  */
 @Injectable()
 export class HospitalService {
@@ -15,35 +14,23 @@ export class HospitalService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Gets all hospitals with all corresponding data (address, coordinates, attributes)
-   * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
+   * Gets all hospitals from qualimed-hospital.
+   * @returns {Observable<Array<Hospital>>}
    */
-  getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>(this.getUrl() + '/api/hospitals')
+  getHospitals(): Observable<Array<Hospital>> {
+    return this.http.get<Array<Hospital>>(this.getUrl() + '/api/geopital/hospitals')
     .pipe(
-      map(res => {
-      return res as Hospital[];
-    }));
-  }
+      map( res => res.map((hospital: Hospital) => new Hospital(hospital)))
+  )};
 
 
-  /**
-   * Gets all dummy hospitals
-   * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
-   */
-  getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>(this.getUrl() + '/api/hospital/public/dummy')
-      .pipe(
-        map(res => {
-        return res['data'] as Hospital[];
-      }));
-  }
 
+  // Todo: replace 'de' with current locale
   private getUrl(): string {
     if (isDevMode()) {
-      return 'http://localhost:3000';
+      return 'http://localhost:3000/de';
     } else {
-      return 'http://geopitalsuisse-backend.eonum.ch';
+      return 'http://qm1.ch/de';
     }
   }
 }
