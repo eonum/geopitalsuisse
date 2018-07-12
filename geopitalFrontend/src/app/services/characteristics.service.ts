@@ -21,13 +21,48 @@ export class CharacteristicsService {
       );
   }
 
-  static isCategoricalAttribute(attribute): boolean {
-    return attribute.variable_type === 'string'
+  /**
+   * Gets all string attributes
+   * @returns {Observable<Array<Attribute>>} array of Attributes
+   */
+  getStringAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/string_attributes')
+      .pipe(
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
   }
 
-  static isNumericalAttribute(attribute): boolean {
-    return attribute.variable_type === 'number'
+  /**
+   * Gets all string attributes
+   * @returns {Observable<Array<Attribute>>} array of Attributes
+   */
+  getNumberAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/number_attributes')
+      .pipe(
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
+  }
 
+  getDefaultStringAttribute(): Observable<Attribute> {
+    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/default_string_attribute')
+      .pipe(
+        map( res => new Attribute(res))
+      )
+  }
+
+  getDefaultNumberAttribute(): Observable<Attribute> {
+    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/default_number_attribute')
+      .pipe(
+        map( res => new Attribute(res))
+      )
+  }
+
+  static isCategoricalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'string';
+  }
+
+  static isNumericalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'number';
   }
 
   /* Todo: replace 'de' with current locale */

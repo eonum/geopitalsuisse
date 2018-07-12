@@ -19,10 +19,6 @@ import { Hospital } from '../../models/hospital.model';
 
 export class MapsComponent implements OnInit {
 
-  private numericalAttributes: Attribute[];
-  private categoricalAttributes: Attribute[];
-  private hospitalsList: Hospital[];
-
   constructor (
     private characteristicsService: CharacteristicsService,
     private hospitalService: HospitalService,
@@ -30,21 +26,14 @@ export class MapsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.characteristicsService.getNumericalAttributes()
-      .subscribe(x => {
-        this.numericalAttributes = x;
+    this.characteristicsService.getAttributes().subscribe((attributes: Array<Attribute>) => {
+      const numericalAttributes = attributes.filter(attribute => attribute.variable_type === 'number');
+      const categoricalAttributes = attributes.filter(attribute => attribute.variable_type === 'string' && attribute.variable_sets.indexOf('geopital_test') > -1);
 
-        this.characteristicsService.getCategoricalAttributes()
-          .subscribe(y => {
-            this.categoricalAttributes = y;
-
-            this.hospitalService.getAll()
-              .subscribe(hospitals => {
-                this.hospitalsList = hospitals;
-                this.d3.drawMap(this.hospitalsList, this.numericalAttributes, this.categoricalAttributes);
-              });
-
-          });
-      });
+      this.hospitalService.getHospitals()
+        .subscribe((hospitals: Array<Hospital>) => {
+          this.d3.drawMap(hospitals, numericalAttributes, categoricalAttributes);
+        });
+    })
   }
 }

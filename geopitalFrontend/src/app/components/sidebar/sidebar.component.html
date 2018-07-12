@@ -5,6 +5,7 @@
 
   <li>
     <app-dropdown
+      *ngIf="numericalAttributes && selectedNumAttribute"
       [input]="true"
       [name]="name2"
       [attributes]="numericalAttributes"
@@ -13,6 +14,7 @@
     </app-dropdown>
 
     <app-dropdown
+      *ngIf="categoricalAttributes && selectedCatAttribute"
       [input]="false"
       [name]="name1"
       [attributes]="categoricalAttributes"

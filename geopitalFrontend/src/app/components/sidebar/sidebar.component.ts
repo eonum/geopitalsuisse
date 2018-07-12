@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { CharacteristicsService } from '../../services/characteristics.service';
-import { D3Service } from '../../services/d3.service';
+import { Attribute } from "../../models/attribute.model";
 
 @Component({
   selector: 'app-sidebar',
@@ -10,31 +10,33 @@ import { D3Service } from '../../services/d3.service';
 })
 export class SidebarComponent implements OnInit {
 
-  name1 = 'Filter';
-  selectedCatAttribute;
-  categoricalAttributes;
+  name1: string = 'Filter';
+  selectedCatAttribute: Attribute = null;
+  categoricalAttributes: Array<Attribute> = null;
 
-  name2 = 'Kennzahlen';
-  selectedNumAttribute;
-  numericalAttributes;
+  name2: string = 'Kennzahlen';
+  selectedNumAttribute: Attribute = null;
+  numericalAttributes: Array<Attribute> = null;
 
   constructor(
     private characteristicsService: CharacteristicsService,
   ) { }
 
   ngOnInit() {
-    this.characteristicsService.getCategoricalAttributes().subscribe(attributes => {
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
       this.categoricalAttributes = attributes;
-
-      // extract the categorical attribute 'Typ' since its not used in this selection
-      this.categoricalAttributes = this.categoricalAttributes.filter(attribute => attribute.code !== 'Typ');
     });
 
-    this.characteristicsService.getNumericalAttributes().subscribe(attributes => {
+    this.characteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
       this.numericalAttributes = attributes;
     });
 
-    this.selectedCatAttribute = D3Service.getDefaultCategoricalAttribute();
-    this.selectedNumAttribute = D3Service.getDefaultNumericalAttribute();
+    this.characteristicsService.getDefaultStringAttribute().subscribe((attribute: Attribute) => {
+      this.selectedCatAttribute = attribute
+    });
+
+    this.characteristicsService.getDefaultNumberAttribute().subscribe((attribute: Attribute) => {
+      this.selectedNumAttribute = attribute
+    });
   }
 }

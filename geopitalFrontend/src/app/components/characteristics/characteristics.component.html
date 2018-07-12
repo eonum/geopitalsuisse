@@ -1,4 +1,4 @@
-<div id="char-container" *ngIf="selectedHospital">
+<div id="char-container" *ngIf="selectedHospital && currentNumericalAttribute && currentCategoricalAttribute">
 
   <h5 id="hospitalName">{{selectedHospital.name}}</h5>
 
@@ -6,14 +6,14 @@
     <tbody>
     <tr>
       <td>Adresse:</td>
-      <td id="hospitalAddress">{{address}}</td>
+      <td id="hospitalAddress">{{selectedHospital.address}}</td>
     </tr>
     <tr>
-      <td id="numericalAttributeName">{{currentNumericalAttribute.nameDE}}</td>
+      <td id="numericalAttributeName">{{currentNumericalAttribute.name_de}}</td>
       <td id="numericalAttributeValue">{{currentNumericalAttributeValue}}</td>
     </tr>
     <tr>
-      <td id="categoricalAttributeName">{{currentCategoricalAttribute.nameDE}}</td>
+      <td id="categoricalAttributeName">{{currentCategoricalAttribute.name_de}}</td>
       <td id="categoricalAttributeValue">{{currentCategoricalAttributeValue}}</td>
     </tr>
     </tbody>

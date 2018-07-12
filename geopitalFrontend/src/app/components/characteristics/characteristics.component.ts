@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { D3Service } from '../../services/d3.service';
 import { HospitalService } from '../../services/hospital.service';
+import { Hospital } from "../../models/hospital.model";
+import { CharacteristicsService } from "../../services/characteristics.service";
+import { Attribute } from "../../models/attribute.model";
 
 /**
  * Component for the short information (Steckbrief) of the selected hospital.
@@ -27,11 +30,13 @@ export class CharacteristicsComponent implements OnInit {
 
   constructor (
     private hospitalService: HospitalService,
+    private characteristicsService: CharacteristicsService,
     private d3: D3Service
   ) {}
 
-  private static formatValues(attribute: any, value: string) {
-    if (attribute.nameDE.includes('Anteil')) {
+  private static formatValues(attribute: Attribute, value: string) {
+    console.log('attribute', attribute)
+    if (attribute.name_de.includes('Anteil')) {
       if (parseFloat(value) > 1) {
         return (parseFloat(value) / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
       } else {
@@ -43,39 +48,37 @@ export class CharacteristicsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.hospitalService.getAll().subscribe(hospitals => {
+    this.hospitalService.getHospitals().subscribe((hospitals: Array<Hospital>) => {
       this.allHospitals = hospitals;
       this.selectedHospital = this.allHospitals[0];
       this.updateCharacteristicsData();
     });
 
     this.d3.selectedHospital$.subscribe(hospital => {
-      this.selectedHospital = this.allHospitals.find(obj => obj.name === hospital.name);
+      this.selectedHospital = this.allHospitals.filter(obj => obj.name === hospital.name)[0];
       this.updateCharacteristicsData();
     });
 
-    this.d3.currentCategoricalAttribute$.subscribe(catAttribute => {
-      this.currentCategoricalAttribute = catAttribute;
+    this.d3.currentCategoricalAttribute$.subscribe((attribute: Attribute) => {
+      this.currentCategoricalAttribute = attribute;
       this.updateCharacteristicsData();
     });
 
-    this.d3.currentNumericalAttribute$.subscribe(attribute => {
+    this.d3.currentNumericalAttribute$.subscribe((attribute: Attribute) => {
       this.currentNumericalAttribute = attribute;
       this.updateCharacteristicsData();
     });
 
-    this.currentCategoricalAttribute = D3Service.getDefaultCategoricalAttribute();
-    this.currentNumericalAttribute = D3Service.getDefaultNumericalAttribute();
   }
 
   private updateCharacteristicsData () {
-    const sizeResult = this.selectedHospital.hospital_attributes.find(obj => obj.code === this.currentNumericalAttribute.code);
-    const catResult = this.selectedHospital.hospital_attributes.find(obj => obj.code === this.currentCategoricalAttribute.code);
+    let sizeResult = null;
+    let catResult = null;
 
-    if (this.selectedHospital.streetAndNumber !== '') {
-      this.address = this.selectedHospital.streetAndNumber + ', ' + this.selectedHospital.zipCodeAndCity;
-    } else {
-      this.address = this.selectedHospital.zipCodeAndCity;
+    if (this.currentCategoricalAttribute != null && this.currentNumericalAttribute != null) {
+      sizeResult = this.selectedHospital.attributes.filter(obj => Object.keys(obj)[0] === this.currentNumericalAttribute.code)[0];
+      catResult = this.selectedHospital.attributes.filter(obj => Object.keys(obj)[0] === this.currentCategoricalAttribute.code)[0];
+
     }
 
     if (sizeResult != null) {
