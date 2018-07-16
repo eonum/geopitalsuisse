@@ -47,7 +47,7 @@ export class DropdownComponent implements OnInit {
     }
   }
 
-  selectAttribute(attribute) {
+  selectAttribute(attribute: Attribute) {
     this.selectedAttribute = attribute;
 
     if (D3Service.showMap()) {
@@ -62,6 +62,11 @@ export class DropdownComponent implements OnInit {
       this.d3.updateAttribute(attribute, null);
 
     } else {
+      if (this.axis === 'x') {
+        this.d3.setXCoordinateAttribute(attribute);
+      } else if (this.axis === 'y') {
+        this.d3.setYCoordinateAttribute(attribute);
+      }
       this.d3.updateAttribute(attribute, this.axis);
 
     }

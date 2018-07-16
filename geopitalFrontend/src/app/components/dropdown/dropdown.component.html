@@ -7,10 +7,10 @@
     <div class="dropdown-menu">
       <input *ngIf="input" class="form-control" type="text" placeholder="Suchen..." id="searchField-{{name}}" (keyup)="filterDropdownOptions()">
       <a *ngFor="let attribute of attributes"
-         [class.active]="attribute.nameDE === selectedAttribute.name_de"
+         [class.active]="attribute.name_de === selectedAttribute.name_de"
          class="dropdown-item"
          id="{{attribute.code}}-{{name}}"
-         (click)="selectAttribute(attribute)">{{attribute.nameDE}}</a>
+         (click)="selectAttribute(attribute)">{{attribute.name_de}}</a>
     </div>
   </div>
 </div>
