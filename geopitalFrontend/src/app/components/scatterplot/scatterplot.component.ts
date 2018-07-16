@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Hospital } from '../../models/hospital.model';
-import { CharacteristicsService } from '../../services/characteristics.service';
-import { HospitalService } from '../../services/hospital.service';
+import { Attribute } from "../../models/attribute.model";
 import { D3Service } from '../../services/d3.service';
+import { CharacteristicsService } from "../../services/characteristics.service";
 
 
 @Component({
@@ -13,39 +12,29 @@ import { D3Service } from '../../services/d3.service';
 })
 export class ScatterplotComponent implements OnInit {
 
-  private hospitalsList: Hospital[];
+  name_x_axis = 'Kennzahl x-Achse';
+  x_axis = 'x';
+  xCoordinateAttribute: Attribute = null;
 
-  changeToView = 'Map';
+  name_y_axis = 'Kennzahl y-Achse';
+  y_axis = 'y';
+  yCoordinateAttribute: Attribute = null;
 
-  name1 = 'Kennzahl x-Achse';
-  axis1 = 'x';
-  xCoordinateNumAttribute;
-
-  name2 = 'Kennzahl y-Achse';
-  axis2 = 'y';
-  yCoordinateNumAttribute;
-
-  numericalAttributes;
+  attributes: Array<Attribute> = null;
 
   constructor(
-    private characteristicsService: CharacteristicsService,
-    private hospitalService: HospitalService,
-    private d3: D3Service
+    private d3: D3Service,
+    private characteristicsService: CharacteristicsService
   ) { }
 
   ngOnInit() {
-    this.characteristicsService.getNumericalAttributes()
-      .subscribe(x => {
-        this.numericalAttributes = x;
+    this.d3.drawGraph();
 
-        this.hospitalService.getAll()
-          .subscribe(hospitals => {
-            this.hospitalsList = hospitals;
-            this.d3.drawGraph(this.hospitalsList, this.numericalAttributes);
-          });
-      });
+    this.characteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
+      this.attributes = attributes;
+    });
 
-    this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
-    this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
+    this.xCoordinateAttribute = this.d3.getXCoordinateAttribute();
+    this.yCoordinateAttribute = this.d3.getYCoordinateAttribute();
   }
 }
