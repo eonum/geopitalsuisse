@@ -43,18 +43,16 @@ export class CharacteristicsService {
       );
   }
 
-  getDefaultStringAttribute(): Observable<Attribute> {
-    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/default_string_attribute')
-      .pipe(
-        map( res => new Attribute(res))
-      )
+  getAttributeByName(name: string): Observable<Attribute> {
+    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/attribute?name=' + name)
+    .pipe(
+      map(res => new Attribute(res))
+    )
   }
 
-  getDefaultNumberAttribute(): Observable<Attribute> {
-    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/default_number_attribute')
-      .pipe(
-        map( res => new Attribute(res))
-      )
+  getStringAttribteCodes(): Observable<string> {
+    return this.http.get<string>(CharacteristicsService.getUrl() + '/api/geopital/string_attribute_codes')
+      .pipe()
   }
 
   static isCategoricalAttribute(attribute: Attribute): boolean {
