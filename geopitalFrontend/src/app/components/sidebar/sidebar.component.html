@@ -5,20 +5,20 @@
 
   <li>
     <app-dropdown
-      *ngIf="numericalAttributes && selectedNumAttribute"
+      *ngIf="numericalAttributes && selectedNumericalAttribute"
       [input]="true"
       [name]="name2"
       [attributes]="numericalAttributes"
-      [selectedAttribute]="selectedNumAttribute">
+      [selectedAttribute]="selectedNumericalAttribute">
 
     </app-dropdown>
 
     <app-dropdown
-      *ngIf="categoricalAttributes && selectedCatAttribute"
+      *ngIf="categoricalAttributes && selectedCategoricalAttribute"
       [input]="false"
       [name]="name1"
       [attributes]="categoricalAttributes"
-      [selectedAttribute]="selectedCatAttribute">
+      [selectedAttribute]="selectedCategoricalAttribute">
 
     </app-dropdown>
     <app-categorial-attributes></app-categorial-attributes>

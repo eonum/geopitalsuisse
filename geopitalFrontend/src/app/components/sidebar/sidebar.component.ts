@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { Attribute } from "../../models/attribute.model";
+import { D3Service } from "../../services/d3.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -11,32 +12,23 @@ import { Attribute } from "../../models/attribute.model";
 export class SidebarComponent implements OnInit {
 
   name1: string = 'Filter';
-  selectedCatAttribute: Attribute = null;
+  selectedCategoricalAttribute: Attribute = null;
   categoricalAttributes: Array<Attribute> = null;
 
   name2: string = 'Kennzahlen';
-  selectedNumAttribute: Attribute = null;
+  selectedNumericalAttribute: Attribute = null;
   numericalAttributes: Array<Attribute> = null;
 
   constructor(
     private characteristicsService: CharacteristicsService,
+    private d3: D3Service
   ) { }
 
-  ngOnInit() {
-    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
-      this.categoricalAttributes = attributes;
-    });
+  async ngOnInit () {
+    this.categoricalAttributes = await this.characteristicsService.getStringAttributes().toPromise();
+    this.numericalAttributes = await this.characteristicsService.getNumberAttributes().toPromise();
 
-    this.characteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
-      this.numericalAttributes = attributes;
-    });
-
-    this.characteristicsService.getDefaultStringAttribute().subscribe((attribute: Attribute) => {
-      this.selectedCatAttribute = attribute
-    });
-
-    this.characteristicsService.getDefaultNumberAttribute().subscribe((attribute: Attribute) => {
-      this.selectedNumAttribute = attribute
-    });
+    this.selectedCategoricalAttribute = this.d3.getSelectedCategoricalAttribute();
+    this.selectedNumericalAttribute = this.d3.getSelectedNumericalAttribute();
   }
 }
