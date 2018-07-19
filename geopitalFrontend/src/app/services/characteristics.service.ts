@@ -50,11 +50,6 @@ export class CharacteristicsService {
     )
   }
 
-  getStringAttribteCodes(): Observable<string> {
-    return this.http.get<string>(CharacteristicsService.getUrl() + '/api/geopital/string_attribute_codes')
-      .pipe()
-  }
-
   static isCategoricalAttribute(attribute: Attribute): boolean {
     return attribute.variable_type === 'string';
   }
