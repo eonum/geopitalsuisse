@@ -34,6 +34,13 @@ export class HospitalService {
     }
   };
 
+  getHospitalByName(name: string): Observable<Hospital> {
+    return this.http.get<Hospital>(HospitalService.getUrl() + '/api/geopital/hospital_by_name?name=' + name)
+      .pipe(
+        map(res => new Hospital(res))
+      )
+  }
+
   // Todo: replace 'de' with current locale
   private static getUrl(): string {
     if (isDevMode()) {
