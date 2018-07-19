@@ -13,7 +13,7 @@ describe('CharacteristicsComponent', () => {
   beforeEach(async(() => {
     const hospitalSpy = jasmine.createSpyObj('HospitalService', ['getAll']);
     const d3Spy = jasmine.createSpyObj('D3Service',
-      ['selectedHospital$', 'currentCategoricalAttribute$', 'currentNumericalAttribute$']);
+      ['selectedHospital$', 'categoricalAttribute$', 'numericalAttribute$']);
 
     TestBed.configureTestingModule({
       declarations: [ CharacteristicsComponent ],

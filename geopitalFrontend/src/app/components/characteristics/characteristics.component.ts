@@ -1,41 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 
-import { D3Service } from '../../services/d3.service';
-import { HospitalService } from '../../services/hospital.service';
-import { Hospital } from "../../models/hospital.model";
-import { CharacteristicsService } from "../../services/characteristics.service";
-import { Attribute } from "../../models/attribute.model";
+import { Attribute } from '../../models/attribute.model';
+import { Hospital } from '../../models/hospital.model';
+import { VariableService } from '../../services/variable.service';
 
 /**
  * Component for the short information (Steckbrief) of the selected hospital.
  */
-
 @Component({
   selector: 'app-characteristics',
   templateUrl: './characteristics.component.html',
   styleUrls: ['./characteristics.component.css']
 })
-export class CharacteristicsComponent implements OnInit {
+export class CharacteristicsComponent implements OnInit, OnChanges {
 
-  allHospitals;
-  selectedHospital;
+  @Input() hospital: Hospital;
+  @Input() categoricalAttribute: Attribute;
+  @Input() numericalAttribute: Attribute;
 
-  address;
-
-  currentCategoricalAttribute;
-  currentCategoricalAttributeValue;
-
-  currentNumericalAttribute;
-  currentNumericalAttributeValue;
+  categoricalAttributeValue: string;
+  numericalAttributeValue: string;
 
   constructor (
-    private hospitalService: HospitalService,
-    private characteristicsService: CharacteristicsService,
-    private d3: D3Service
+    private variableService: VariableService,
   ) {}
 
+
+  ngOnInit() {
+    this.updateCharacteristicsData(this.hospital, this.categoricalAttribute, this.numericalAttribute);
+  }
+
+  ngOnChanges() {
+    this.updateCharacteristicsData(this.hospital, this.categoricalAttribute, this.numericalAttribute);
+  }
+
+
+  private updateCharacteristicsData (hospital: Hospital, categoricalAttribute: Attribute, numericalAttribute: Attribute) {
+    const numericalVariable = this.variableService.getVariableOfHospitalByAttribute(hospital, numericalAttribute);
+    const categoricalVariable = this.variableService.getVariableOfHospitalByAttribute(hospital, categoricalAttribute);
+
+    if (numericalVariable != null) {
+      this.numericalAttributeValue = CharacteristicsComponent.formatValues(numericalAttribute, VariableService.getValueOfVariable(numericalVariable));
+    } else {
+      this.numericalAttributeValue = 'Keine Daten';
+    }
+
+    if (categoricalVariable != null) {
+      this.categoricalAttributeValue = VariableService.getValueOfVariable(categoricalVariable);
+    } else {
+      this.categoricalAttributeValue = 'Keine Daten';
+    }
+  }
+
   private static formatValues(attribute: Attribute, value: string) {
-    console.log('attribute', attribute)
     if (attribute.name_de.includes('Anteil')) {
       if (parseFloat(value) > 1) {
         return (parseFloat(value) / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
@@ -44,53 +61,6 @@ export class CharacteristicsComponent implements OnInit {
       }
     } else {
       return parseFloat(value).toLocaleString('de-CH', { maximumFractionDigits: 3});
-    }
-  }
-
-  ngOnInit() {
-    this.hospitalService.getHospitals().subscribe((hospitals: Array<Hospital>) => {
-      this.allHospitals = hospitals;
-      this.selectedHospital = this.allHospitals[0];
-      this.updateCharacteristicsData();
-    });
-
-    this.d3.selectedHospital$.subscribe(hospital => {
-      this.selectedHospital = this.allHospitals.filter(obj => obj.name === hospital.name)[0];
-      this.updateCharacteristicsData();
-    });
-
-    this.d3.currentCategoricalAttribute$.subscribe((attribute: Attribute) => {
-      this.currentCategoricalAttribute = attribute;
-      this.updateCharacteristicsData();
-    });
-
-    this.d3.currentNumericalAttribute$.subscribe((attribute: Attribute) => {
-      this.currentNumericalAttribute = attribute;
-      this.updateCharacteristicsData();
-    });
-
-  }
-
-  private updateCharacteristicsData () {
-    let sizeResult = null;
-    let catResult = null;
-
-    if (this.currentCategoricalAttribute != null && this.currentNumericalAttribute != null) {
-      sizeResult = this.selectedHospital.attributes.filter(obj => Object.keys(obj)[0] === this.currentNumericalAttribute.code)[0];
-      catResult = this.selectedHospital.attributes.filter(obj => Object.keys(obj)[0] === this.currentCategoricalAttribute.code)[0];
-
-    }
-
-    if (sizeResult != null) {
-      this.currentNumericalAttributeValue = CharacteristicsComponent.formatValues(this.currentCategoricalAttribute, sizeResult.value);
-    } else {
-      this.currentNumericalAttributeValue = 'Keine Daten';
-    }
-
-    if (catResult != null) {
-      this.currentCategoricalAttributeValue = catResult.value;
-    } else {
-      this.currentCategoricalAttributeValue = 'Keine Daten';
     }
   }
 }

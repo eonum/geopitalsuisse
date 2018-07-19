@@ -1,8 +1,8 @@
-<div id="checkboxes-container" *ngIf="currentAttribute">
-  <div id="{{currentAttribute.nameDE}}">
-    <div class="wrapper" *ngFor="let option of dict[currentAttribute.code]">
-      <label class="container">{{option[0]}}: {{option[1]}}
-        <input type="checkbox" name="checkbox" (click)="selectedCatValue(currentAttribute.code, option[0])">
+<div id="checkboxes-container" *ngIf="attribute">
+  <div id="{{attribute.name_de}}">
+    <div class="wrapper" *ngFor="let value of attribute.values, let i = index">
+      <label class="container">{{value}}: {{attribute.values_de[i]}}
+        <input type="checkbox" name="checkbox" (click)="select(attribute, value)">
         <span class="checkmark1"></span>
       </label>
     </div>

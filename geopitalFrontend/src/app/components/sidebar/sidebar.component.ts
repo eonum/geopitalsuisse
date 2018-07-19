@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { CharacteristicsService } from '../../services/characteristics.service';
-import { Attribute } from "../../models/attribute.model";
-import { D3Service } from "../../services/d3.service";
+import { D3Service } from '../../services/d3.service';
+import { Attribute } from '../../models/attribute.model';
+import { Hospital } from '../../models/hospital.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,24 +12,40 @@ import { D3Service } from "../../services/d3.service";
 })
 export class SidebarComponent implements OnInit {
 
-  name1: string = 'Filter';
-  selectedCategoricalAttribute: Attribute = null;
+  dropdownCategoricalAttributes: string = 'Filter';
   categoricalAttributes: Array<Attribute> = null;
 
-  name2: string = 'Kennzahlen';
-  selectedNumericalAttribute: Attribute = null;
+  dropdownNumericalAttributes: string = 'Kennzahlen';
   numericalAttributes: Array<Attribute> = null;
+
+  selectedHospital: Hospital = null;
+  categoricalAttribute: Attribute = null;
+  numericalAttribute: Attribute = null;
 
   constructor(
     private characteristicsService: CharacteristicsService,
     private d3: D3Service
   ) { }
 
-  async ngOnInit () {
-    this.categoricalAttributes = await this.characteristicsService.getStringAttributes().toPromise();
-    this.numericalAttributes = await this.characteristicsService.getNumberAttributes().toPromise();
+  ngOnInit () {
+    this.d3.selectedHospital$.subscribe(hospital => {
+      this.selectedHospital = hospital;
+    });
 
-    this.selectedCategoricalAttribute = this.d3.getSelectedCategoricalAttribute();
-    this.selectedNumericalAttribute = this.d3.getSelectedNumericalAttribute();
+    this.d3.categoricalAttribute$.subscribe((catAttribute: Attribute) => {
+      this.categoricalAttribute = catAttribute;
+    });
+
+    this.d3.numericalAttribute$.subscribe((numAttribute: Attribute) => {
+      this.numericalAttribute = numAttribute;
+    });
+
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      this.categoricalAttributes = attributes;
+    });
+
+    this.characteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
+      this.numericalAttributes = attributes;
+    });
   }
 }

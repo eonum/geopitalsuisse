@@ -52,11 +52,11 @@ export class DropdownComponent implements OnInit {
 
     if (D3Service.showMap()) {
       if (CharacteristicsService.isCategoricalAttribute(attribute)) {
-        this.d3.setCurrentCategoricalAttribute(attribute);
+        this.d3.setCategoricalAttribute(attribute);
       }
 
       if (CharacteristicsService.isNumericalAttribute(attribute)) {
-        this.d3.setCurrentNumericalAttribute(attribute);
+        this.d3.setNumericalAttribute(attribute);
       }
 
       this.d3.updateAttribute(attribute, null);

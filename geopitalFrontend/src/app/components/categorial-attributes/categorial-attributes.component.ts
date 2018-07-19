@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { D3Service } from '../../services/d3.service';
+import { Attribute } from "../../models/attribute.model";
 
 @Component({
   selector: 'app-categorial-attributes',
@@ -9,59 +10,19 @@ import { D3Service } from '../../services/d3.service';
 })
 export class CategorialAttributesComponent implements OnInit {
 
-  private defaultCategory = {code: 'RForm', nameDE: 'Rechtsform', nameFR: 'Forme juridique', nameIT: 'Forma giuridica'};
-
-  dict = {
-    'RForm': [
-      ['R1', 'AG / GmbH'],
-      ['R2', 'Verein / Stiftung'],
-      ['R3', 'Einzelfirma / Gesellschaft'],
-      ['R4', 'Öffentliches Unternehmen']],
-    'Akt': [
-      ['A', 'Akutbehandlung'],
-      ['B', 'Geburtshaus'],
-      ['P', 'Psychiatrie'],
-      ['R', 'Rehabilitation / Geriatrie']
-    ],
-    'SL': [
-      ['IPS', 'Intensivpflegestation'],
-      ['NF', 'Notfallaufnahme']
-    ],
-    'WB': [
-      ['Arzt', 'Ärzte'],
-      ['BGs', 'Gesundheitssektor'],
-      ['MSt', 'Medizinstudenten']
-    ],
-    'SA': [
-      ['Angio', 'Angiographie'],
-      ['CC', 'Gamma Camera inkl. Szintigraphie und SPECT-Scanner'],
-      ['CT', 'Computertomograph'],
-      ['Dia', 'Dialyse'],
-      ['LB', 'Linearbeschleuniger'],
-      ['Lito', 'Lithotriptor'],
-      ['MRI', 'Magnetresonanztomograph'],
-      ['PET', 'Positronen-Emissions-Tomograph'],
-    ],
-    'LA': [
-      ['Stat', 'Stationär'],
-      ['Amb', 'Ambulant']
-    ]
-  };
-
-  currentAttribute;
+  @Input() attribute: Attribute;
 
   constructor(
     private d3: D3Service
   ) { }
 
   ngOnInit() {
-    this.currentAttribute = this.defaultCategory;
-    this.d3.currentCategoricalAttribute$.subscribe(attribute => {
-      this.currentAttribute = attribute;
+    this.d3.categoricalAttribute$.subscribe((attribute: Attribute) => {
+      this.attribute = attribute;
     });
   }
 
-  selectedCatValue(category, code) {
-    this.d3.updateSelectedCategoryOption(category, code);
+  select(attribute: Attribute, value: string) {
+    this.d3.updateSelectedCategoryOption(attribute, value);
   }
 }

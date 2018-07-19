@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Attribute } from "../../models/attribute.model";
+import { Attribute } from '../../models/attribute.model';
 import { D3Service } from '../../services/d3.service';
-import { CharacteristicsService } from "../../services/characteristics.service";
+import { CharacteristicsService } from '../../services/characteristics.service';
 
 
 @Component({
@@ -27,14 +27,14 @@ export class ScatterplotComponent implements OnInit {
     private characteristicsService: CharacteristicsService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.d3.drawGraph();
 
     this.characteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
       this.attributes = attributes;
     });
 
-    this.xCoordinateAttribute = this.d3.getXCoordinateAttribute();
-    this.yCoordinateAttribute = this.d3.getYCoordinateAttribute();
+    this.yCoordinateAttribute = await this.characteristicsService.getAttributeByName('CMIb').toPromise();
+    this.xCoordinateAttribute = await this.characteristicsService.getAttributeByName('EtMedL').toPromise();
   }
 }

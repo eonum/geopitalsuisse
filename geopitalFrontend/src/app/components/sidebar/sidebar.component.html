@@ -5,26 +5,33 @@
 
   <li>
     <app-dropdown
-      *ngIf="numericalAttributes && selectedNumericalAttribute"
+      *ngIf="numericalAttributes && numericalAttribute"
       [input]="true"
-      [name]="name2"
+      [name]="dropdownNumericalAttributes"
       [attributes]="numericalAttributes"
-      [selectedAttribute]="selectedNumericalAttribute">
-
+      [selectedAttribute]="numericalAttribute">
     </app-dropdown>
 
     <app-dropdown
-      *ngIf="categoricalAttributes && selectedCategoricalAttribute"
+      *ngIf="categoricalAttributes && categoricalAttribute"
       [input]="false"
-      [name]="name1"
+      [name]="dropdownCategoricalAttributes"
       [attributes]="categoricalAttributes"
-      [selectedAttribute]="selectedCategoricalAttribute">
-
+      [selectedAttribute]="categoricalAttribute">
     </app-dropdown>
-    <app-categorial-attributes></app-categorial-attributes>
+    <app-categorial-attributes
+      *ngIf="categoricalAttribute"
+      [attribute]="categoricalAttribute">
+    </app-categorial-attributes>
+
   </li>
 
   <li>
-    <app-characteristics></app-characteristics>
+    <app-characteristics
+      *ngIf="categoricalAttribute && numericalAttribute && selectedHospital"
+      [categoricalAttribute]="categoricalAttribute"
+      [numericalAttribute]="numericalAttribute"
+      [hospital]="selectedHospital">
+    </app-characteristics>
   </li>
 </ul>
