@@ -11,7 +11,9 @@ import { VariableService } from './variable.service';
 
 declare const L;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class D3Service {
 
   private svg;
