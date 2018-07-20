@@ -6,22 +6,20 @@ import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
 import { Attribute } from '../../models/attribute.model';
 
-const ATTRIBUTE_STRING = [new Attribute('KT', 'string', 'Kanton', 'Cantone', 'Cantone')];
-const ATTRIBUTE_NUMERIC = [new Attribute('Gebs', 'number', 'Gebärsäle', 'Gebärsäle', 'sale parto'), new Attribute('Ops', 'number', 'Operationssäle', 'salles d’opération', 'Sale operatorie')];
-
 
 describe('DropdownComponent', () => {
   let component: DropdownComponent;
   let fixture: ComponentFixture<DropdownComponent>;
   let characteristicsServiceSpy;
   let d3ServiceSpy;
-  let attributes;
+  let attributes: Array<Attribute> = [];
+  let selectedAttribute: Attribute;
 
   beforeEach(async(() => {
     const d3Spy = jasmine.createSpyObj('D3Service',
-      ['showMap', 'setCurrentCategoricalAttribute', 'setCurrentNumericalAttribute', 'updateAttribute']);
+      ['showMap', 'setCategoricalAttribute', 'setNumericalAttribute', 'setXCoordinateAttribute', 'setYCoordinateAttribute', 'updateAttribute']);
     const characteristicsSpy = jasmine.createSpyObj('CharacteristicsService',
-      ['getNumericalAttributes', 'isCategoricalAttribute', 'isNumericalAttribute']);
+      ['isCategoricalAttribute', 'isNumericalAttribute']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -32,38 +30,39 @@ describe('DropdownComponent', () => {
         {provide: D3Service, useValue: d3Spy}
       ]
     })
-    .compileComponents();
+    .compileComponents().then(() => {
+      fixture = TestBed.createComponent(DropdownComponent);
+      component = fixture.componentInstance;
+      characteristicsServiceSpy = TestBed.get(CharacteristicsService);
+      d3ServiceSpy = TestBed.get(D3Service);
+    });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DropdownComponent);
-    component = fixture.componentInstance;
-    characteristicsServiceSpy = TestBed.get(CharacteristicsService);
-    d3ServiceSpy = TestBed.get(D3Service);
-  });
+    selectedAttribute = {
+      code: 'Akt',
+      variable_type: 'string',
+      values: ['A','P','R','B'],
+      values_de: ['Akutsomatik','Psychiatrie','Rehabilitation','Geburtshäuser'],
+      values_fr: ['soins aiguë','psychiatrie','Réhabilitation','maison de naissance'],
+      values_it: [],
+      variable_sets: ['kzp','geopital_test'],
+      name_de: 'Aktivitätstyp',
+      name_fr: 'Type d‘activité',
+      name_it: 'Tipo di attività'
+    };
 
-  beforeEach(() => {
-    attributes = [
-      {
-        category: 'number',
-        code: 'AnzStand',
-        nameDE: 'Anzahl Standorte',
-        nameFR: 'Nombre de sites',
-        nameIT: 'Numero di sedi'
-      },
-      {
-        category: 'number',
-        code: 'EtMedL',
-        nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
-        nameFR: 'Produits des hospitalisations et soins',
-        nameIT: 'Ricavi per degenze e cure'
-      }
-    ];
+    attributes.push(selectedAttribute);
 
     component.input = false;
-    component.selectedAttribute = attributes[0];
+    component.selectedAttribute = selectedAttribute;
     component.attributes = attributes;
     component.name = 'Test';
+    component.axis = null;
+  });
+
+  afterEach(() => {
+    attributes = [];
   });
 
   it('should create', () => {
@@ -74,10 +73,10 @@ describe('DropdownComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('h6').textContent).toEqual('Test');
-    expect(fixture.debugElement.query(By.css('#attributeDropdownButton')).nativeElement.textContent).toBe('Anzahl Standorte');
+    expect(fixture.debugElement.query(By.css('#attributeDropdownButton')).nativeElement.textContent).toBe('Aktivitätstyp');
     expect(component.attributes).toEqual(attributes);
-    expect(component.attributes.length).toBe(2);
-    expect(fixture.debugElement.queryAll(By.css('.dropdown-item')).length).toBe(2);
+    expect(component.attributes.length).toBe(1);
+    expect(fixture.debugElement.queryAll(By.css('.dropdown-item')).length).toBe(1);
   });
 
 });

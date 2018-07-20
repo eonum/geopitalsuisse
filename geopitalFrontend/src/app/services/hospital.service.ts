@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Hospital} from '../models/hospital.model';
+import { Hospital } from '../models/hospital.model';
 
 /**
  * Loads data from qualimed-hospital.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HospitalService {
 
   private hospitals: Array<Hospital> = null;
@@ -20,7 +22,6 @@ export class HospitalService {
    * @returns {Observable<Array<Hospital>>}
    */
   getHospitals(): Observable<Array<Hospital>> {
-
     if (this.hospitals) {
       return of(this.hospitals)
     } else {

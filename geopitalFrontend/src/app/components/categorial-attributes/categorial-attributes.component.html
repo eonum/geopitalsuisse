@@ -2,7 +2,7 @@
   <div id="{{attribute.name_de}}">
     <div class="wrapper" *ngFor="let value of attribute.values, let i = index">
       <label class="container">{{value}}: {{attribute.values_de[i]}}
-        <input type="checkbox" name="checkbox" (click)="select(attribute, value)">
+        <input type="checkbox" name="checkbox" id="{{value}}" (click)="select(attribute, value)">
         <span class="checkmark1"></span>
       </label>
     </div>

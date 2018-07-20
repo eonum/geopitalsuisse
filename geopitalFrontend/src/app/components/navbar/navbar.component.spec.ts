@@ -18,20 +18,18 @@ describe('NavbarComponent', () => {
         { provide: D3Service, useValue: d3Spy }
       ]
     })
-    .compileComponents();
+    .compileComponents().then(() => {
+      fixture = TestBed.createComponent(NavbarComponent);
+      component = fixture.componentInstance;
+      d3ServiceSpy = TestBed.get(D3Service);
+    });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NavbarComponent);
-    component = fixture.componentInstance;
-    d3ServiceSpy = TestBed.get(D3Service);
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call selectHospitalType function if checkbox is selected', async(() => {
+  it('should call \'selectHospitalType\' if checkbox is selected', async(() => {
     fixture.detectChanges();
 
     spyOn(component, 'selectHospitalType');

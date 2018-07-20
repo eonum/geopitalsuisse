@@ -5,7 +5,9 @@ import { map } from 'rxjs/operators';
 
 import { Attribute } from '../models/attribute.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CharacteristicsService {
 
   constructor(private http: HttpClient) {}
@@ -55,7 +57,7 @@ export class CharacteristicsService {
   }
 
   static isNumericalAttribute(attribute: Attribute): boolean {
-    return attribute.variable_type === 'number';
+    return attribute.variable_type === 'number' || attribute.variable_type === 'percentage';
   }
 
   /* Todo: replace 'de' with current locale */
