@@ -13,8 +13,7 @@ Please visit https://github.com/eonum/geopitalsuisse/wiki/StepByStepSetup(Dev) f
 The frontend is documented here: https://github.com/eonum/geopitalsuisse/wiki/Frontend-Angular-en
 
 ## Backend
-The backend is documented here: https://github.com/eonum/geopitalsuisse/wiki/Backend_Rails
-A how to for inserting data is here: https://github.com/eonum/geopitalsuisse/wiki/Manual:-Backend
+See: https://github.com/eonum/qualimed-hospitals
 
 ## General
 If you seek further information, feel free to visit our wiki. 
