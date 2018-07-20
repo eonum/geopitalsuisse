@@ -4,9 +4,10 @@ export class Hospital {
 
   name: string;
   address: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   typ: string;
+  typ_aggregated: string;
   attributes: Array<Variable>;
 
   constructor(data: any = {}) {
@@ -15,6 +16,7 @@ export class Hospital {
     this.latitude = data.latitude || null;
     this.longitude = data.longitude || null;
     this.typ = data.typ || null;
+    this.typ_aggregated = data.typ_aggregated || '';
     this.attributes = (data.variables || []).map((variable) =>
       new Variable(variable));
   }
