@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 
 import { HospitalService } from './hospital.service';
 import { Hospital } from '../models/hospital.model';
@@ -11,7 +11,7 @@ describe('HospitalService', () => {
   let hospitalService: HospitalService;
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
-  let testUrl = 'http://qm1.ch/de';
+  const testUrl = 'http://qm1.ch/de';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -39,7 +39,7 @@ describe('HospitalService', () => {
 
   it('should get hospitals', () => {
     httpClient.get<Array<Hospital>>(testUrl + '/api/geopital/hospitals').subscribe((hospitals: Array<Hospital>) => {
-      expect(hospitals).toEqual(Hospitals)
+      expect(hospitals).toEqual(Hospitals);
     });
 
     // The following `expectOne()` will match the request's URL.
@@ -57,7 +57,7 @@ describe('HospitalService', () => {
 
   it('should get hospital by name', () => {
     httpClient.get<Hospital>(testUrl + '/api/geopital/hospital_by_name?name=' + Hospitals[0].name).subscribe((hospital: Hospital) => {
-      expect(hospital).toEqual(Hospitals[0])
+      expect(hospital).toEqual(Hospitals[0]);
     });
 
     const req = httpTestingController.expectOne(testUrl + '/api/geopital/hospital_by_name?name=' + Hospitals[0].name);

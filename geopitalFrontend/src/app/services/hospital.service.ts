@@ -17,31 +17,6 @@ export class HospitalService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Gets all hospitals from qualimed-hospital.
-   * @returns {Observable<Array<Hospital>>}
-   */
-  getHospitals(): Observable<Array<Hospital>> {
-    if (this.hospitals) {
-      return of(this.hospitals)
-    } else {
-      return this.http.get<Array<Hospital>>(HospitalService.getUrl() + '/api/geopital/hospitals')
-        .pipe(
-          map( res => {
-            this.hospitals = res.map((hospital: Hospital) => new Hospital(hospital));
-            return this.hospitals;
-          })
-        )
-    }
-  };
-
-  getHospitalByName(name: string): Observable<Hospital> {
-    return this.http.get<Hospital>(HospitalService.getUrl() + '/api/geopital/hospital_by_name?name=' + name)
-      .pipe(
-        map(res => new Hospital(res))
-      )
-  }
-
   // Todo: replace 'de' with current locale
   private static getUrl(): string {
     if (isDevMode()) {
@@ -49,5 +24,30 @@ export class HospitalService {
     } else {
       return 'http://qm1.ch/de';
     }
+  }
+
+  /**
+   * Gets all hospitals from qualimed-hospital.
+   * @returns {Observable<Array<Hospital>>}
+   */
+  getHospitals(): Observable<Array<Hospital>> {
+    if (this.hospitals) {
+      return of(this.hospitals);
+    } else {
+      return this.http.get<Array<Hospital>>(HospitalService.getUrl() + '/api/geopital/hospitals')
+        .pipe(
+          map( res => {
+            this.hospitals = res.map((hospital: Hospital) => new Hospital(hospital));
+            return this.hospitals;
+          })
+        );
+    }
+  }
+
+  getHospitalByName(name: string): Observable<Hospital> {
+    return this.http.get<Hospital>(HospitalService.getUrl() + '/api/geopital/hospital_by_name?name=' + name)
+      .pipe(
+        map(res => new Hospital(res))
+      );
   }
 }

@@ -15,7 +15,8 @@ describe('DropdownComponent', () => {
 
   beforeEach(async(() => {
     const d3Spy = jasmine.createSpyObj('D3Service',
-      ['showMap', 'setCategoricalAttribute', 'setNumericalAttribute', 'setXCoordinateAttribute', 'setYCoordinateAttribute', 'updateAttribute']);
+      ['showMap', 'setCategoricalAttribute', 'setNumericalAttribute',
+        'setXCoordinateAttribute', 'setYCoordinateAttribute', 'updateAttribute']);
     const characteristicsSpy = jasmine.createSpyObj('CharacteristicsService',
       ['isCategoricalAttribute', 'isNumericalAttribute']);
 
@@ -52,7 +53,8 @@ describe('DropdownComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('h6').textContent).toEqual('Test');
-    expect(fixture.debugElement.query(By.css('#attributeDropdownButton')).nativeElement.textContent).toBe('Anzahl Standorte');
+    expect(fixture.debugElement.query(By.css('#attributeDropdownButton')).nativeElement.textContent)
+      .toBe('Anzahl Standorte');
     expect(component.attributes).toEqual(NumericalAttributes);
     expect(component.attributes.length).toBe(3);
     expect(fixture.debugElement.queryAll(By.css('.dropdown-item')).length).toBe(3);

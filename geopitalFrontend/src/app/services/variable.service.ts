@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Variable } from "../models/variable.model";
-import { Hospital } from "../models/hospital.model";
-import { Attribute } from "../models/attribute.model";
+import { Variable } from '../models/variable.model';
+import { Hospital } from '../models/hospital.model';
+import { Attribute } from '../models/attribute.model';
 
 @Injectable({
   providedIn: 'root'

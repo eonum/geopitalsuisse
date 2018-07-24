@@ -12,6 +12,23 @@ export class CharacteristicsService {
 
   constructor(private http: HttpClient) {}
 
+  /* Todo: replace 'de' with current locale */
+  private static getUrl(): string {
+    if (isDevMode()) {
+      return 'http://localhost:3000/de';
+    } else {
+      return 'qm1.ch/de';
+    }
+  }
+
+  static isCategoricalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'string';
+  }
+
+  static isNumericalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'number' || attribute.variable_type === 'percentage';
+  }
+
   /**
    * Gets all attributes
    * @returns {Observable<Array<Attribute>>} array of Attributes
@@ -49,24 +66,6 @@ export class CharacteristicsService {
     return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/attribute?name=' + name)
     .pipe(
       map(res => new Attribute(res))
-    )
+    );
   }
-
-  static isCategoricalAttribute(attribute: Attribute): boolean {
-    return attribute.variable_type === 'string';
-  }
-
-  static isNumericalAttribute(attribute: Attribute): boolean {
-    return attribute.variable_type === 'number' || attribute.variable_type === 'percentage';
-  }
-
-  /* Todo: replace 'de' with current locale */
-  private static getUrl(): string {
-    if (isDevMode()) {
-      return 'http://localhost:3000/de';
-    } else {
-      return 'qm1.ch/de';
-    }
-  }
-
 }

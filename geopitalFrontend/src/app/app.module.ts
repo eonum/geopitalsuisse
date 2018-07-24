@@ -12,8 +12,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { CategorialAttributesComponent } from './components/categorial-attributes/categorial-attributes.component';
 
-import {CharacteristicsService} from './services/characteristics.service';
-import {HospitalService} from './services/hospital.service';
+import { CharacteristicsService } from './services/characteristics.service';
+import { HospitalService } from './services/hospital.service';
 import { D3Service } from './services/d3.service';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';

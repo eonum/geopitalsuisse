@@ -32,11 +32,11 @@ describe('CategorialAttributesComponent', () => {
     attribute = {
       code: 'Akt',
       variable_type: 'string',
-      values: ['A','P','R','B'],
-      values_de: ['Akutsomatik','Psychiatrie','Rehabilitation','Geburtshäuser'],
-      values_fr: ['soins aiguë','psychiatrie','Réhabilitation','maison de naissance'],
+      values: ['A', 'P', 'R', 'B'],
+      values_de: ['Akutsomatik', 'Psychiatrie', 'Rehabilitation', 'Geburtshäuser'],
+      values_fr: ['soins aiguë', 'psychiatrie', 'Réhabilitation', 'maison de naissance'],
       values_it: [],
-      variable_sets: ['kzp','geopital_test'],
+      variable_sets: ['kzp', 'geopital_test'],
       name_de: 'Aktivitätstyp',
       name_fr: 'Type d‘activité',
       name_it: 'Tipo di attività'

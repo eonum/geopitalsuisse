@@ -12,10 +12,10 @@ import { Hospital } from '../../models/hospital.model';
 })
 export class SidebarComponent implements OnInit {
 
-  dropdownCategoricalAttributes: string = 'Filter';
+  dropdownCategoricalAttributes = 'Filter';
   categoricalAttributes: Array<Attribute> = null;
 
-  dropdownNumericalAttributes: string = 'Kennzahlen';
+  dropdownNumericalAttributes = 'Kennzahlen';
   numericalAttributes: Array<Attribute> = null;
 
   selectedHospital: Hospital = null;

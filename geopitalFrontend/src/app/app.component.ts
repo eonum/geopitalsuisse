@@ -14,6 +14,8 @@ declare const $: any;
 })
 export class AppComponent implements OnInit {
 
+  myComponent: AppComponent;
+
   faGlobe = faGlobe;
   faChartLine = faChartLine;
 
@@ -21,38 +23,33 @@ export class AppComponent implements OnInit {
   linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
   private userAgent;
+  private isMobile;
 
   constructor(
-    private d3: D3Service
+    private d3: D3Service,
   ) { }
 
+  static openSidebar() {
+    document.getElementById('externalContent').classList.add('show');
+  }
+
+  static closeSidebar() {
+    document.getElementById('externalContent').classList.remove('show');
+  }
+
+  static showMap() {
+    return D3Service.showMap();
+  }
 
   ngOnInit() {
     $(document).ready(() => {
       this.userAgent = navigator.userAgent;
-      if (AppComponent.isMobile(this.userAgent) || !D3Service.showMap()) {
+      this.isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
+      if (this.isMobile || !D3Service.showMap()) {
         this.closeSidebar();
-      } else {
+      } else if (!this.isMobile && !D3Service.showMap()) {
         this.openSidebar();
       }
     });
-  }
-
-  showMap() {
-    return D3Service.showMap();
-  }
-
-  openSidebar() {
-    if (!AppComponent.isMobile(this.userAgent)) {
-      document.getElementById('externalContent').classList.add('show');
-    }
-  }
-
-  closeSidebar() {
-    document.getElementById('externalContent').classList.remove('show');
-  }
-
-  private static isMobile(userAgent): boolean {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
   }
 }

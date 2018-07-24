@@ -70,7 +70,7 @@ export const Hospitals: Array<Hospital> = [
     name: 'Klinik Siloah',
     address: 'Worbstrasse 324, 3073 Gümligen',
     latitude: 46.93146489999999,
-    longitude:7.517250000000001,
+    longitude: 7.517250000000001,
     typ: 'K231',
     typ_aggregated: 'S',
     variables: [
@@ -80,8 +80,8 @@ export const Hospitals: Array<Hospital> = [
     ]
   }),
   new Hospital({
-    name:'Psychiatriezentrum Münsingen',
-    address:'Hunzigenallee 1, 3110 Münsingen',
+    name: 'Psychiatriezentrum Münsingen',
+    address: 'Hunzigenallee 1, 3110 Münsingen',
     latitude: 46.88050380000001,
     longitude: 7.5531352,
     typ: 'K211',

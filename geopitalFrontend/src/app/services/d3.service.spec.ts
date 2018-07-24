@@ -8,8 +8,8 @@ import { VariableService } from './variable.service';
 import { Hospitals } from '../../mocks/data/mock-hospitals';
 import { NumericalAttributes } from '../../mocks/data/mock-numerical-attributes';
 import { StringAttributes } from '../../mocks/data/mock-string-attributes';
-import { of } from "rxjs";
-import { Hospital } from "../models/hospital.model";
+import { of } from 'rxjs';
+import { Hospital } from '../models/hospital.model';
 
 describe('D3Service', () => {
   let characteristicsServiceSpy;
@@ -41,7 +41,7 @@ describe('D3Service', () => {
     characteristicsServiceSpy = TestBed.get(CharacteristicsService);
     hospitalServiceSpy = TestBed.get(HospitalService);
     variableServiceSpy = TestBed.get(VariableService);
-    d3Service = TestBed.get(D3Service)
+    d3Service = TestBed.get(D3Service);
   });
 
   it('should be created', () => {
@@ -49,7 +49,7 @@ describe('D3Service', () => {
   });
 
   it('should draw map', fakeAsync(() => {
-    const selectedHospitals = Hospitals.filter(hospital => hospital.typ_aggregated === 'U')
+    const selectedHospitals = Hospitals.filter(hospital => hospital.typ_aggregated === 'U');
     spyOn(d3Service, 'initializeMap');
     spyOn(d3Service, 'addSVGelement');
     spyOn(d3Service, 'initMapData').and.returnValue(selectedHospitals);

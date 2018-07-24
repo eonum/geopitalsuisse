@@ -32,13 +32,13 @@ export class D3Service {
   private selectedHospitalTypes: Array<string> = null;
 
   private singleClassCategories: Array<string> = [];
-  private multiClassCategories : Array<string> = [];
+  private multiClassCategories: Array<string> = [];
 
   private xCoordinateAttribute: Attribute = null;
   private yCoordinateAttribute: Attribute = null;
 
-  private sumOfXValues: number = 0;
-  private sumOfYValues: number = 0;
+  private sumOfXValues = 0;
+  private sumOfYValues = 0;
 
   private width;
   private height;
@@ -75,13 +75,13 @@ export class D3Service {
   private generateDict() {
     this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.forEach((attribute: Attribute) => {
-        let values = {};
+        const values = {};
         attribute.values.forEach((value) => {
           values[value] = false;
         });
         this.stringAttributeValuesDictionary[attribute.code] = values;
       });
-    })
+    });
   }
 
   private initDefaultValues() {
@@ -92,23 +92,23 @@ export class D3Service {
 
     this.characteristicsService.getAttributeByName('KT').subscribe((attribute: Attribute) => {
       this.categoricalAttribute = attribute;
-      this.setCategoricalAttribute(this.categoricalAttribute)
+      this.setCategoricalAttribute(this.categoricalAttribute);
     });
 
     this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.filter(attr => attr.multiclass === false).map((attr: Attribute) => {
-        this.singleClassCategories.push(attr.code)
+        this.singleClassCategories.push(attr.code);
       });
     });
 
     this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.filter(attr => attr.multiclass === true).map((attr: Attribute) => {
-        this.multiClassCategories.push(attr.code)
+        this.multiClassCategories.push(attr.code);
       });
     });
 
     this.hospitalService.getHospitalByName('Insel Gruppe AG (universitär)').subscribe((hospital: Hospital) => {
-      this.setSelectedHospital(hospital)
+      this.setSelectedHospital(hospital);
     });
   }
 
@@ -160,7 +160,8 @@ export class D3Service {
       return '#2a8ea8';
     } else if (hospital.typ === 'K221') {
       return '#2c2aa8';
-    } else if (hospital.typ === 'K231' || hospital.typ === 'K232' || hospital.typ === 'K233' || hospital.typ === 'K234' || hospital.typ === 'K235') {
+    } else if (hospital.typ === 'K231' || hospital.typ === 'K232' || hospital.typ === 'K233' || hospital.typ === 'K234'
+      || hospital.typ === 'K235') {
       return '#772aa8';
     } else {
       return '#d633ff';
@@ -177,8 +178,9 @@ export class D3Service {
 
     selectedHospitals.forEach( (hospital) => {
         radiuses.push(
-          {radius: Number(VariableService.getValueOfVariable(this.variableService.getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
-        )
+          {radius: Number(VariableService.getValueOfVariable(this.variableService
+            .getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
+        );
     });
     return radiuses.reduce((max, p) => p.radius > max ? p.radius : max, radiuses[0].radius);
   }
@@ -458,7 +460,8 @@ export class D3Service {
       const latitude = currentHospital.latitude;
       const longitude = currentHospital.longitude;
 
-      if (name !== null && latitude !== null && longitude !== null && this.variableService.getVariableOfHospitalByAttribute(currentHospital, this.numericalAttribute) !== null) {
+      if (name !== null && latitude !== null && longitude !== null && this.variableService
+          .getVariableOfHospitalByAttribute(currentHospital, this.numericalAttribute) !== null) {
 
         if (this.selectedHospitalTypes.length === 0 || this.selectedHospitalTypes.indexOf(currentHospital.typ) > -1) {
           selectedHospitals.push(currentHospital);
@@ -658,7 +661,7 @@ export class D3Service {
       return hospitals;
     } else {
       for (let i = 0; i < hospitals.length; i++) {
-        let currentHospital = hospitals[i];
+        const currentHospital = hospitals[i];
 
         const variable = this.variableService.getVariableOfHospitalByAttribute(currentHospital, this.categoricalAttribute);
         let values = [];
@@ -670,7 +673,7 @@ export class D3Service {
         if (this.singleClassCategories.indexOf(code) >= 0) {
           for (let key = 0; key < selectedAttributeOptions.length; key++) {
             if (values.indexOf(selectedAttributeOptions[key]) > -1) {
-              filteredHospitals.push(currentHospital)
+              filteredHospitals.push(currentHospital);
             }
           }
         } else if (this.multiClassCategories.indexOf(code) >= 0) {
@@ -824,11 +827,12 @@ export class D3Service {
       const xCoordinateValue = VariableService.getValueOfVariable(xCoordinateVariable);
       const yCoordinateValue = VariableService.getValueOfVariable(yCoordinateVariable);
 
-      if (xCoordinateVariable === null ||xCoordinateValue === null || yCoordinateVariable === null || yCoordinateValue === null) {
+      if (xCoordinateVariable === null || xCoordinateValue === null || yCoordinateVariable === null || yCoordinateValue === null) {
         continue;
       }
 
-      if (typ && (this.selectedHospitalTypes.length === 0 || (this.selectedHospitalTypes.length > 0 && this.selectedHospitalTypes.indexOf(typ) > -1))) {
+      if (typ && (this.selectedHospitalTypes.length === 0 ||
+          (this.selectedHospitalTypes.length > 0 && this.selectedHospitalTypes.indexOf(typ) > -1))) {
         this.sumOfXValues += Number(xCoordinateValue);
         this.sumOfYValues += Number(yCoordinateValue);
         this.modifiedHospitals.push({

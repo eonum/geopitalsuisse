@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
-import { Attribute } from "../../models/attribute.model";
+import { Attribute } from '../../models/attribute.model';
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.

@@ -34,7 +34,7 @@ describe('NavbarComponent', () => {
 
     spyOn(component, 'selectHospitalType');
 
-    let link = fixture.debugElement.nativeElement.querySelector('input');
+    const link = fixture.debugElement.nativeElement.querySelector('input');
     link.click();
 
     fixture.whenStable().then(() => {

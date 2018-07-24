@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 
 import { CharacteristicsService } from './characteristics.service';
 import { Attribute } from '../models/attribute.model';
@@ -14,7 +14,7 @@ describe('CharacteristicsService', () => {
   let service: CharacteristicsService;
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
-  let testUrl = 'http://qm1.ch/de';
+  const testUrl = 'http://qm1.ch/de';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -42,7 +42,7 @@ describe('CharacteristicsService', () => {
 
   it('should get string attributes', () => {
     httpClient.get<Array<Attribute>>(testUrl + '/api/geopital/string_attributes').subscribe((attributes: Array<Attribute>) => {
-      expect(attributes).toEqual(StringAttributes)
+      expect(attributes).toEqual(StringAttributes);
     });
 
     // The following `expectOne()` will match the request's URL.
@@ -64,7 +64,7 @@ describe('CharacteristicsService', () => {
 
   it('should get number attributes', () => {
     httpClient.get<Array<Attribute>>(testUrl + '/api/geopital/number_attributes').subscribe((attributes: Array<Attribute>) => {
-      expect(attributes).toEqual(NumericalAttributes)
+      expect(attributes).toEqual(NumericalAttributes);
     });
 
     const req = httpTestingController.expectOne(testUrl + '/api/geopital/number_attributes');
@@ -78,7 +78,7 @@ describe('CharacteristicsService', () => {
 
   it('should get attribute by code', () => {
     httpClient.get<Attribute>(testUrl +  '/api/geopital/attribute?name=' + StringAttributes[0].code).subscribe((attribute: Attribute) => {
-      expect(attribute).toEqual(StringAttributes[0])
+      expect(attribute).toEqual(StringAttributes[0]);
     });
 
     const req = httpTestingController.expectOne(testUrl + '/api/geopital/attribute?name=' + StringAttributes[0].code);

@@ -40,7 +40,8 @@ export class CharacteristicsComponent implements OnInit, OnChanges {
     const categoricalVariable = this.variableService.getVariableOfHospitalByAttribute(hospital, categoricalAttribute);
 
     if (numericalVariable != null) {
-      this.numericalAttributeValue = CharacteristicsComponent.formatValues(numericalAttribute, VariableService.getValueOfVariable(numericalVariable));
+      this.numericalAttributeValue = CharacteristicsComponent.formatValues(numericalAttribute,
+        VariableService.getValueOfVariable(numericalVariable));
     } else {
       this.numericalAttributeValue = 'Keine Daten';
     }

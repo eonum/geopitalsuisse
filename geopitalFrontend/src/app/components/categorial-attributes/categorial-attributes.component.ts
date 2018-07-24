@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { D3Service } from '../../services/d3.service';
-import { Attribute } from "../../models/attribute.model";
+import { Attribute } from '../../models/attribute.model';
 
 @Component({
   selector: 'app-categorial-attributes',
