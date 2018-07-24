@@ -9,9 +9,9 @@ export const Hospitals: Array<Hospital> = [
     typ: 'K111',
     typ_aggregated: 'U',
     variables: [
-      {KT: {value: 'BE', years: {2013: 'BE', 2012: 'BE', 2011: 'BE', 2014: 'BE', 2015: 'BE'}}},
-      {typ: {value: 'K111', years: {2013: 'K111', 2012: 'K111', 2011: 'K111', 2014: 'K111', 2015: 'K111'}}},
-      {Akt: {value: 'A,  R', years: {2013: 'A,  R', 2012: 'A,  R', 2011: 'A,  R', 2014: 'A,  R', 2015: 'A,  R'}}}
+      {KT: {value: 'BE' }},
+      {typ: {value: 'K111' }},
+      {Akt: {value: 'A,  R' }}
     ]
   }),
   new Hospital({
@@ -22,9 +22,9 @@ export const Hospitals: Array<Hospital> = [
     typ: 'K111',
     typ_aggregated: 'U',
     variables: [
-      {KT: {value: 'BS', years: {2013: 'BS', 2012: 'BS', 2011: 'BS', 2014: 'BS', 2015: 'BS'}}},
-      {typ: {value: 'K111', years: {2013: 'K111', 2012: 'K111', 2011: 'K111', 2014: 'K111', 2015: 'K111'}}},
-      {Akt: {value: 'A', years: {2013: 'A,  R', 2012: 'A,  R', 2011: 'A,  R', 2014: 'A', 2015: 'A'}}}
+      {KT: {value: 'BS' }},
+      {typ: {value: 'K111' }},
+      {Akt: {value: 'A' }}
     ]
   }),
   new Hospital({
@@ -32,11 +32,12 @@ export const Hospitals: Array<Hospital> = [
     address: 'Rämistrasse 100, 8091 Zürich',
     latitude: 47.3766158,
     longitude: 8.549177499999999,
-    typ: 'K111', typ_aggregated: 'U',
+    typ: 'K111',
+    typ_aggregated: 'U',
     variables: [
-      {KT: {value: 'ZH', years: {2013: 'ZH', 2012: 'ZH', 2011: 'ZH', 2014: 'ZH', 2015: 'ZH'}}},
-      {typ: {value: 'K111', years: {2013: 'K111', 2012: 'K111', 2011: 'K111', 2014: 'K111', 2015: 'K111'}}},
-      {Akt: {value: 'A,  P', years: {2013: 'A,  P', 2012: 'A', 2011: 'A', 2014: 'A,  P', 2015: 'A,  P'}}}
+      {KT: {value: 'ZH' }},
+      {typ: {value: 'K111' }},
+      {Akt: {value: 'A,  P' }}
     ]
   }),
   new Hospital({
@@ -47,9 +48,9 @@ export const Hospitals: Array<Hospital> = [
     typ: 'K112',
     typ_aggregated: 'Z',
     variables: [
-      {KT: {value: 'LU', years: {2013: 'LU', 2012: 'LU', 2011: 'LU', 2014: 'LU', 2015: 'LU'}}},
-      {typ: {value: 'K112', years: {2013: 'K112', 2012: 'K112', 2011: 'K112', 2014: 'K112', 2015: 'K112'}}},
-      {Akt: {value: 'A,  R', years: {2013: 'A,  R', 2012: 'A,  R', 2011: 'A,  R', 2014: 'A,  R', 2015: 'A,  R'}}}
+      {KT: {value: 'LU' }},
+      {typ: {value: 'K112' }},
+      {Akt: {value: 'A,  R' }}
     ]
   }),
   new Hospital({
@@ -60,9 +61,9 @@ export const Hospitals: Array<Hospital> = [
     typ: 'K221',
     typ_aggregated: 'R',
     variables: [
-      {KT: {value: 'AG', years: {2013: 'AG', 2012: 'AG', 2011: 'AG', 2014: 'AG', 2015: 'AG'}}},
-      {typ: {value: 'K221', years: {2013: 'K221', 2012: 'K221', 2011: 'K221', 2014: 'K221', 2015: 'K221'}}},
-      {Akt: {value: 'R', years: {2013: 'R', 2012: 'R', 2011: 'R', 2014: 'R', 2015: 'R'}}}
+      {KT: {value: 'AG' }},
+      {typ: {value: 'K221' }},
+      {Akt: {value: 'R' }}
     ]
   }),
   new Hospital({
@@ -73,9 +74,9 @@ export const Hospitals: Array<Hospital> = [
     typ: 'K231',
     typ_aggregated: 'S',
     variables: [
-      {KT: {value: 'BE',  years: {2013: 'BE',  2012: 'BE',  2011: 'BE',  2014: 'BE'}}},
-      {typ: {value: 'K231',  years: {2013: 'K231',  2012: 'K231',  2011: 'K231',  2014: 'K231'}}},
-      {Akt: {value: 'A,  R',  years: {2013: 'A,  R',  2012: 'A',  2011: 'A',  2014: 'A,  R'}}}
+      {KT: {value: 'BE' }},
+      {typ: {value: 'K231' }},
+      {Akt: {value: 'A,  R' }}
     ]
   }),
   new Hospital({
@@ -86,8 +87,8 @@ export const Hospitals: Array<Hospital> = [
     typ: 'K211',
     typ_aggregated: 'P',
     variables: [
-      {KT: {value: 'BE', years: {2013: 'BE', 2012: 'BE', 2011: 'BE', 2014: 'BE', 2015: 'BE'}}},
-      {typ: {value: 'K211', years: {2013: 'K211', 2012: 'K211', 2011: 'K211', 2014: 'K211', 2015: 'K211'}}},
-      {Akt: {value: 'P', years: {2013: 'P', 2012: 'P', 2011: 'P', 2014: 'P', 2015: 'P'}}}
+      {KT: {value: 'BE' }},
+      {typ: {value: 'K211' }},
+      {Akt: {value: 'P' }}
     ]
 })];
