@@ -57,13 +57,11 @@ export class D3Service {
   private numericalAttributeSource = new Subject<any>();
   private categoricalAttributeSource = new Subject<any>();
   private selectedHospitalSource = new Subject<any>();
-  private xCoordinateAttributeSource = new Subject<any>();
 
   // Observable string streams
   numericalAttribute$ = this.numericalAttributeSource.asObservable();
   categoricalAttribute$ = this.categoricalAttributeSource.asObservable();
   selectedHospital$ = this.selectedHospitalSource.asObservable();
-  xCoordinateAttribute$ = this.xCoordinateAttributeSource.asObservable();
 
   constructor(
     private characteristicsService: CharacteristicsService,
@@ -646,14 +644,12 @@ export class D3Service {
 
 
   private filter (hospitals: Array<Hospital>): Array<Hospital> {
-    console.log('singleclassattributes', this.singleClassCategories)
-    console.log('multiclassattributes', this.multiClassCategories)
     const filteredHospitals: Array<Hospital> = [];
     const code = this.categoricalAttribute.code;
     const selectedAttributeOptions = [];
 
     for (const key in this.stringAttributeValuesDictionary[code]) {
-      if (this.stringAttributeValuesDictionary[code][key]) {
+      if (this.stringAttributeValuesDictionary[code].hasOwnProperty(key) && this.stringAttributeValuesDictionary[code][key]) {
         selectedAttributeOptions.push(key.trim());
       }
     }
