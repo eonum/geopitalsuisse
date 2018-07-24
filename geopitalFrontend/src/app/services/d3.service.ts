@@ -109,7 +109,7 @@ export class D3Service {
       });
     });
 
-    this.hospitalService.getHospitalByName('Inselspital Bern').subscribe((hospital: Hospital) => {
+    this.hospitalService.getHospitalByName('Insel Gruppe AG (universitär)').subscribe((hospital: Hospital) => {
       this.setSelectedHospital(hospital)
     });
   }
