@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http'
 import { HospitalService } from './hospital.service';
 import { Hospital } from '../models/hospital.model';
 import { Hospitals } from '../../mocks/data/mock-hospitals';
-import { Observable, of } from "rxjs/index";
 
 describe('HospitalService', () => {
 
@@ -27,7 +26,6 @@ describe('HospitalService', () => {
     hospitalService = TestBed.get(HospitalService);
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
-
   });
 
   afterEach(() => {
@@ -40,7 +38,7 @@ describe('HospitalService', () => {
   });
 
   it('should get hospitals', () => {
-    httpClient.get<Array<Hospitals>>(testUrl + '/api/geopital/hospitals').subscribe((hospitals: Array<Hospital>) => {
+    httpClient.get<Array<Hospital>>(testUrl + '/api/geopital/hospitals').subscribe((hospitals: Array<Hospital>) => {
       expect(hospitals).toEqual(Hospitals)
     });
 
@@ -55,11 +53,6 @@ describe('HospitalService', () => {
     // Respond with mock data, causing Observable to resolve.
     // Subscribe callback asserts that correct data was returned.
     req.flush(Hospitals);
-
-    // Finally, assert that there are no outstanding requests.
-    httpTestingController.verify();
-
-
   });
 
   it('should get hospital by name', () => {
@@ -67,30 +60,10 @@ describe('HospitalService', () => {
       expect(hospital).toEqual(Hospitals[0])
     });
 
-    // The following `expectOne()` will match the request's URL.
-    // If no requests or multiple requests matched that URL
-    // `expectOne()` would throw.
-    const req = httpTestingController.expectOne(testUrl +  '/api/geopital/hospital_by_name?name=' + Hospitals[0].name);
+    const req = httpTestingController.expectOne(testUrl + '/api/geopital/hospital_by_name?name=' + Hospitals[0].name);
 
-    // Assert that the request is a GET.
     expect(req.request.method).toEqual('GET');
 
-    // Respond with mock data, causing Observable to resolve.
-    // Subscribe callback asserts that correct data was returned.
-    req.flush(Hospitals);
-
-    // Finally, assert that there are no outstanding requests.
-    httpTestingController.verify();
-
-
+    req.flush(Hospitals[0]);
   });
-
-  /*
-  it('should get hospital by name', () => {
-    hospitalService.getHospitalByName(Hospitals[0].name).subscribe((hospital: Hospital) => {
-      expect(hospital).toEqual(Hospitals[0])
-    })
-  });
-  */
-
 });

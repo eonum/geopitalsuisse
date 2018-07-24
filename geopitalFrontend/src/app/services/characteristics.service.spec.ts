@@ -1,48 +1,25 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http'
 
 import { CharacteristicsService } from './characteristics.service';
 import { Attribute } from '../models/attribute.model';
-import { Observable, of } from "rxjs/index";
 
 import { StringAttributes } from '../../mocks/data/mock-string-attributes';
 import { NumericalAttributes } from '../../mocks/data/mock-numerical-attributes';
 
-class MockCharacteristicsService {
-  static getStringAttributes(): Observable<Array<Attribute>> {
-    return of(StringAttributes);
-  }
-
-  static getNumberAttributes(): Observable<Array<Attribute>> {
-    return of(NumericalAttributes);
-  }
-
-  getAttributeByName(name: string): Observable<Attribute> {
-    return of(NumericalAttributes.filter(obj => obj.code === name)[0])
-  }
-
-  static isCategoricalAttribute(attribute: Attribute): boolean {
-    return attribute.variable_type === 'string';
-  }
-
-  static isNumericalAttribute(attribute: Attribute): boolean {
-    return attribute.variable_type === 'number' || attribute.variable_type === 'percentage';
-  }
-}
 
 describe('CharacteristicsService', () => {
 
   let service: CharacteristicsService;
-  let client: HttpClient;
-
-  const stringAttributes = StringAttributes;
-  const numericalAttributes = NumericalAttributes;
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
+  let testUrl = 'http://qm1.ch/de';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: CharacteristicsService, useClass: MockCharacteristicsService }
+        CharacteristicsService
       ],
       imports: [
         HttpClientTestingModule
@@ -50,7 +27,13 @@ describe('CharacteristicsService', () => {
     });
 
     service = TestBed.get(CharacteristicsService);
-    client = TestBed.get(HttpClient);
+    httpClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController);
+  });
+
+  afterEach(() => {
+    // After every test, assert that there are no more pending requests.
+    httpTestingController.verify();
   });
 
   it('should be created', () => {
@@ -58,34 +41,62 @@ describe('CharacteristicsService', () => {
   });
 
   it('should get string attributes', () => {
-    MockCharacteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
-      expect(attributes).toBeDefined();
-      expect(attributes).toEqual(stringAttributes)
+    httpClient.get<Array<Attribute>>(testUrl + '/api/geopital/string_attributes').subscribe((attributes: Array<Attribute>) => {
+      expect(attributes).toEqual(StringAttributes)
     });
+
+    // The following `expectOne()` will match the request's URL.
+    // If no requests or multiple requests matched that URL
+    // `expectOne()` would throw.
+    const req = httpTestingController.expectOne(testUrl +  '/api/geopital/string_attributes');
+
+    // Assert that the request is a GET.
+    expect(req.request.method).toEqual('GET');
+
+    // Respond with mock data, causing Observable to resolve.
+    // Subscribe callback asserts that correct data was returned.
+    req.flush(StringAttributes);
+
+    // Finally, assert that there are no outstanding requests.
+    httpTestingController.verify();
   });
 
 
   it('should get number attributes', () => {
-    MockCharacteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
-      expect(attributes).toBeDefined();
-      expect(attributes).toEqual(numericalAttributes)
+    httpClient.get<Array<Attribute>>(testUrl + '/api/geopital/number_attributes').subscribe((attributes: Array<Attribute>) => {
+      expect(attributes).toEqual(NumericalAttributes)
     });
+
+    const req = httpTestingController.expectOne(testUrl + '/api/geopital/number_attributes');
+
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(NumericalAttributes);
+
+    httpTestingController.verify();
   });
 
-  it('should get attribute by name', () => {
-    service.getAttributeByName(numericalAttributes[0].code).subscribe((attribute: Attribute) => {
-      expect(attribute).toBeDefined();
-      expect(attribute).toEqual(numericalAttributes[0])
+  it('should get attribute by code', () => {
+    httpClient.get<Attribute>(testUrl +  '/api/geopital/attribute?name=' + StringAttributes[0].code).subscribe((attribute: Attribute) => {
+      expect(attribute).toEqual(StringAttributes[0])
     });
+
+    const req = httpTestingController.expectOne(testUrl + '/api/geopital/attribute?name=' + StringAttributes[0].code);
+
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(StringAttributes[0]);
+
+    httpTestingController.verify();
   });
 
   it('should know that attribute is numerical attribute', () => {
-    expect(MockCharacteristicsService.isNumericalAttribute(numericalAttributes[0])).toBeTruthy();
-    expect(MockCharacteristicsService.isCategoricalAttribute(numericalAttributes[0])).toBeFalsy();
+    expect(CharacteristicsService.isNumericalAttribute(NumericalAttributes[0])).toBeTruthy();
+    expect(CharacteristicsService.isCategoricalAttribute(NumericalAttributes[0])).toBeFalsy();
   });
 
   it('should know that attribute is string attribute', () => {
-    expect(MockCharacteristicsService.isNumericalAttribute(stringAttributes[0])).toBeFalsy();
-    expect(MockCharacteristicsService.isCategoricalAttribute(stringAttributes[0])).toBeTruthy();
+    expect(CharacteristicsService.isNumericalAttribute(StringAttributes[0])).toBeFalsy();
+    expect(CharacteristicsService.isCategoricalAttribute(StringAttributes[0])).toBeTruthy();
   });
 });
