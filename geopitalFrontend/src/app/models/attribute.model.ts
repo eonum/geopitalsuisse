@@ -10,6 +10,7 @@ export class Attribute {
   name_de: string;
   name_fr: string;
   name_it: string;
+  multiclass: boolean;
 
   constructor(data: any = {}) {
     this.code = data.code || '';
@@ -22,5 +23,6 @@ export class Attribute {
     this.name_de = data.name_de || '';
     this.name_fr = data.name_fr || '';
     this.name_it = data.name_it || '';
+    this.multiclass = data.multiclass || false;
   }
 }
