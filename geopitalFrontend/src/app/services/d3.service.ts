@@ -31,9 +31,8 @@ export class D3Service {
   private filteredHospitals: Array<Hospital> = null;
   private selectedHospitalTypes: Array<string> = null;
 
-  // Todo: remove this as soon as backend can deliver the data
-  private singleClassCategories = ['RForm', 'KT', 'RwStatus'];
-  private multiClassCategories = ['Akt', 'SL', 'WB', 'SA', 'LA'];
+  private singleClassCategories: Array<string> = [];
+  private multiClassCategories : Array<string> = [];
 
   private xCoordinateAttribute: Attribute = null;
   private yCoordinateAttribute: Attribute = null;
@@ -98,9 +97,21 @@ export class D3Service {
       this.setCategoricalAttribute(this.categoricalAttribute)
     });
 
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      attributes.filter(attr => attr.multiclass === false).map((attr: Attribute) => {
+        this.singleClassCategories.push(attr.code)
+      });
+    });
+
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      attributes.filter(attr => attr.multiclass === true).map((attr: Attribute) => {
+        this.multiClassCategories.push(attr.code)
+      });
+    });
+
     this.hospitalService.getHospitalByName('Inselspital Bern').subscribe((hospital: Hospital) => {
       this.setSelectedHospital(hospital)
-    })
+    });
   }
 
   setCategoricalAttribute(attribute: Attribute) {
@@ -635,6 +646,8 @@ export class D3Service {
 
 
   private filter (hospitals: Array<Hospital>): Array<Hospital> {
+    console.log('singleclassattributes', this.singleClassCategories)
+    console.log('multiclassattributes', this.multiClassCategories)
     const filteredHospitals: Array<Hospital> = [];
     const code = this.categoricalAttribute.code;
     const selectedAttributeOptions = [];
