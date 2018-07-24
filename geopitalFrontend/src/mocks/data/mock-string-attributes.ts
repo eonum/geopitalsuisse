@@ -10,7 +10,8 @@ export const StringAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Kanton',
   name_fr: 'Canton',
-  name_it: 'Cantone'
+  name_it: 'Cantone',
+  multiclass: false,
 }, {
   code: 'Typ',
   variable_type: 'string',
@@ -21,7 +22,8 @@ export const StringAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Spitaltyp, gemäss BFS Spitaltypologie',
   name_fr: 'Type de l’établissement selon la typologie de l’OFS',
-  name_it: 'Tipo di ospedale secondo la tipologia ospedaliera UST'
+  name_it: 'Tipo di ospedale secondo la tipologia ospedaliera UST',
+  multiclass: false,
 },{
   code: 'Akt',
   variable_type: 'string',
@@ -32,7 +34,8 @@ export const StringAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Aktivitätstyp',
   name_fr: 'Type d‘activité',
-  name_it: 'Tipo di attività'
+  name_it: 'Tipo di attività',
+  multiclass: true,
 },{
   code: 'SL',
   variable_type: 'string',
@@ -43,7 +46,8 @@ export const StringAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Spezifische Leistungen',
   name_fr: 'Prestations spécifiques',
-  name_it: 'Prestazioni specifiche'
+  name_it: 'Prestazioni specifiche',
+  multiclass: true,
 },{
   code: 'WB',
   variable_type: 'string',
@@ -54,5 +58,6 @@ export const StringAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Aus­ und Weiterbildung',
   name_fr: 'Formation de base et formation postgrade',
-  name_it: 'Formazione e perfezionamento'
+  name_it: 'Formazione e perfezionamento',
+  multiclass: true,
 }];

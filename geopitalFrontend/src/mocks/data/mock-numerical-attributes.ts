@@ -10,8 +10,9 @@ export const NumericalAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Anzahl Standorte',
   name_fr: 'Nombre de sites',
-  name_it: 'Numero di sedi'
-  }, {
+  name_it: 'Numero di sedi',
+  multiclass: false,
+}, {
   code: 'CMIb',
   variable_type: 'number',
   values: [],
@@ -21,8 +22,9 @@ export const NumericalAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Casemix Index (CMI) brutto',
   name_fr: 'Indice de casemix (CMI) brut',
-  name_it: 'Casemix Index lordo (CMI)'
-  },{
+  name_it: 'Casemix Index lordo (CMI)',
+  multiclass: false,
+},{
   code: 'EtMedL',
   variable_type: 'number',
   values: [],
@@ -32,5 +34,6 @@ export const NumericalAttributes: Array<Attribute> = [{
   variable_sets: ['kzp','geopital_test'],
   name_de: 'Ertrag aus medizinischen Leistungen und Pflege',
   name_fr: 'Produits des hospitalisations et soins',
-  name_it: 'Ricavi per degenze e cure'
+  name_it: 'Ricavi per degenze e cure',
+  multiclass: false,
 }];
