@@ -1,20 +1,20 @@
-<div id="char-container" *ngIf="selectedHospital">
+<div id="char-container">
 
-  <h5 id="hospitalName">{{selectedHospital.name}}</h5>
+  <h5 id="hospitalName">{{hospital?.name}}</h5>
 
   <table class="table table-responsive-md">
     <tbody>
     <tr>
       <td>Adresse:</td>
-      <td id="hospitalAddress">{{address}}</td>
+      <td id="hospitalAddress">{{hospital?.address}}</td>
     </tr>
     <tr>
-      <td id="numericalAttributeName">{{currentNumericalAttribute.nameDE}}</td>
-      <td id="numericalAttributeValue">{{currentNumericalAttributeValue}}</td>
+      <td id="numericalAttributeName">{{numericalAttribute?.name_de}}</td>
+      <td id="numericalAttributeValue">{{numericalAttributeValue}}</td>
     </tr>
     <tr>
-      <td id="categoricalAttributeName">{{currentCategoricalAttribute.nameDE}}</td>
-      <td id="categoricalAttributeValue">{{currentCategoricalAttributeValue}}</td>
+      <td id="categoricalAttributeName">{{categoricalAttribute?.name_de}}</td>
+      <td id="categoricalAttributeValue">{{categoricalAttributeValue}}</td>
     </tr>
     </tbody>
   </table>

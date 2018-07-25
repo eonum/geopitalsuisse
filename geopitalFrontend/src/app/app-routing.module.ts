@@ -9,9 +9,6 @@ const routes: Routes = [
   { path: '', canActivate: [LanguageGuardService], component: MapsComponent},
   { path: 'map', component: MapsComponent },
   { path: 'statistics', component: ScatterplotComponent}
-
-
-
 ];
 
 @NgModule({

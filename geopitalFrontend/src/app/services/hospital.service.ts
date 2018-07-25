@@ -1,49 +1,53 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Hospital} from '../models/hospital.model';
+import { Hospital } from '../models/hospital.model';
 
 /**
- * Loads data from backend with the corresponding route defined in backend
- * and puts them in a data array with the help of the defined models so we can access the data.
+ * Loads data from qualimed-hospital.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HospitalService {
+
+  private hospitals: Array<Hospital> = null;
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Gets all hospitals with all corresponding data (address, coordinates, attributes)
-   * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
-   */
-  getAll(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>(this.getUrl() + '/api/hospitals')
-    .pipe(
-      map(res => {
-      return res as Hospital[];
-    }));
-  }
-
-
-  /**
-   * Gets all dummy hospitals
-   * @returns {Observable<Hospital[]>} data in form of the defined model Hospital
-   */
-  getDummyData(): Observable<Hospital[]> {
-    return this.http.get<Hospital[]>(this.getUrl() + '/api/hospital/public/dummy')
-      .pipe(
-        map(res => {
-        return res['data'] as Hospital[];
-      }));
-  }
-
-  private getUrl(): string {
+  // Todo: replace 'de' with current locale
+  private static getUrl(): string {
     if (isDevMode()) {
-      return 'http://localhost:3000';
+      return 'http://localhost:3000/de';
     } else {
-      return 'http://geopitalsuisse-backend.eonum.ch';
+      return 'http://qm1.ch/de';
     }
+  }
+
+  /**
+   * Gets all hospitals from qualimed-hospital.
+   * @returns {Observable<Array<Hospital>>}
+   */
+  getHospitals(): Observable<Array<Hospital>> {
+    if (this.hospitals) {
+      return of(this.hospitals);
+    } else {
+      return this.http.get<Array<Hospital>>(HospitalService.getUrl() + '/api/geopital/hospitals')
+        .pipe(
+          map( res => {
+            this.hospitals = res.map((hospital: Hospital) => new Hospital(hospital));
+            return this.hospitals;
+          })
+        );
+    }
+  }
+
+  getHospitalByName(name: string): Observable<Hospital> {
+    return this.http.get<Hospital>(HospitalService.getUrl() + '/api/geopital/hospital_by_name?name=' + name)
+      .pipe(
+        map(res => new Hospital(res))
+      );
   }
 }

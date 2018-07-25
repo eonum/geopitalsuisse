@@ -1,72 +1,71 @@
 import { Injectable, isDevMode } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Attribute } from '../models/attribute.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CharacteristicsService {
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient) {}
 
-  private categoricalAttributes;
-  private numericalAttributes;
-  private url;
-  /**
-   * Gets all categorical attributes of all hospitals
-   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
-   */
-  getCategoricalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>(this.getUrl() + '/api/attributeTypes')
-      .pipe(
-        map(res => {
-        this.categoricalAttributes = res['attribute_types_string'] as Attribute[];
-        return res['attribute_types_string'] as Attribute[];
-      }));
-  }
-
-  /**
-   * Gets all categorical attributes of all hospitals
-   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
-   */
-  getNumericalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>(this.getUrl() + '/api/attributeTypes')
-      .pipe(
-        map(res => {
-        this.numericalAttributes = res['attribute_types_number'] as Attribute[];
-        return res['attribute_types_number'] as Attribute[];
-      }));
-  }
-
-  isCategoricalAttribute(attribute): boolean {
-    const position = this.categoricalAttributes.findIndex(cur => {
-      return Object.keys(attribute).every(function (key) {
-        return attribute[key] === cur[key];
-      });
-    });
-
-    return position > -1;
-
-  }
-
-  isNumericalAttribute(attribute): boolean {
-    const position = this.numericalAttributes.findIndex(cur => {
-      return Object.keys(attribute).every(function (key) {
-        return attribute[key] === cur[key];
-      });
-    });
-
-    return position > -1;
-  }
-
-  private getUrl(): string {
+  /* Todo: replace 'de' with current locale */
+  private static getUrl(): string {
     if (isDevMode()) {
-      return 'http://localhost:3000';
+      return 'http://localhost:3000/de';
     } else {
-      return 'http://geopitalsuisse-backend.eonum.ch';
+      return 'qm1.ch/de';
     }
   }
 
+  static isCategoricalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'string';
+  }
+
+  static isNumericalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'number' || attribute.variable_type === 'percentage';
+  }
+
+  /**
+   * Gets all attributes
+   * @returns {Observable<Array<Attribute>>} array of Attributes
+   */
+  getAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/attributes')
+      .pipe(
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
+  }
+
+  /**
+   * Gets all string attributes
+   * @returns {Observable<Array<Attribute>>} array of Attributes
+   */
+  getStringAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/string_attributes')
+      .pipe(
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
+  }
+
+  /**
+   * Gets all string attributes
+   * @returns {Observable<Array<Attribute>>} array of Attributes
+   */
+  getNumberAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/number_attributes')
+      .pipe(
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
+  }
+
+  getAttributeByName(name: string): Observable<Attribute> {
+    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/attribute?name=' + name)
+    .pipe(
+      map(res => new Attribute(res))
+    );
+  }
 }

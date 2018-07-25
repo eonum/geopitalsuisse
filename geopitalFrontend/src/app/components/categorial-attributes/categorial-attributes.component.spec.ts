@@ -8,7 +8,6 @@ describe('CategorialAttributesComponent', () => {
   let fixture: ComponentFixture<CategorialAttributesComponent>;
   let d3ServiceSpy;
   let attribute;
-  let dictionary;
 
   beforeEach(async(() => {
     const d3Spy = jasmine.createSpyObj('D3Service', ['updateSelectedCategoryOption']);
@@ -30,63 +29,24 @@ describe('CategorialAttributesComponent', () => {
   });
 
   beforeEach(() => {
-    attribute = {code: 'RForm', nameDE: 'Rechtsform', nameFR: 'Forme juridique', nameIT: 'Forma giuridica'};
-    dictionary = {
-      'RForm': [
-        ['R1', 'AG / GmbH'],
-        ['R2', 'Verein / Stiftung'],
-        ['R3', 'Einzelfirma / Gesellschaft'],
-        ['R4', 'Öffentliches Unternehmen']],
-      'Akt': [
-        ['A', 'Akutbehandlung'],
-        ['B', 'Geburtshaus'],
-        ['P', 'Psychiatrie'],
-        ['R', 'Rehabilitation / Geriatrie']
-      ],
-      'SL': [
-        ['IPS', 'Intensivpflegestation'],
-        ['NF', 'Notfallaufnahme']
-      ],
-      'WB': [
-        ['Arzt', 'Ärzte'],
-        ['BGs', 'Gesundheitssektor'],
-        ['MSt', 'Medizinstudenten']
-      ],
-      'SA': [
-        ['Angio', 'Angiographie'],
-        ['CC', 'Gamma Camera inkl. Szintigraphie und SPECT-Scanner'],
-        ['CT', 'Computertomograph'],
-        ['Dia', 'Dialyse'],
-        ['LB', 'Linearbeschleuniger'],
-        ['Lito', 'Lithotriptor'],
-        ['MRI', 'Magnetresonanztomograph'],
-        ['PET', 'Positronen-Emissions-Tomograph'],
-      ],
-      'LA': [
-        ['Stat', 'Stationär'],
-        ['Amb', 'Ambulant']
-      ]
+    attribute = {
+      code: 'Akt',
+      variable_type: 'string',
+      values: ['A', 'P', 'R', 'B'],
+      values_de: ['Akutsomatik', 'Psychiatrie', 'Rehabilitation', 'Geburtshäuser'],
+      values_fr: ['soins aiguë', 'psychiatrie', 'Réhabilitation', 'maison de naissance'],
+      values_it: [],
+      variable_sets: ['kzp', 'geopital_test'],
+      name_de: 'Aktivitätstyp',
+      name_fr: 'Type d‘activité',
+      name_it: 'Tipo di attività'
     };
 
-    component.currentAttribute = attribute;
-    component.dict = dictionary;
+    component.attribute = attribute;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  /*
-  it('should call selectedCatValue function if attribute is chosen', () => {
-    fixture.detectChanges();
-
-    spyOn(component, 'selectedCatValue');
-    const link = fixture.debugElement.nativeElement.querySelector('input');
-    link.click();
-
-    fixture.whenStable().then(() => {
-      expect(component.selectedCatValue).toHaveBeenCalled();
-    });
-  });
-  */
 });

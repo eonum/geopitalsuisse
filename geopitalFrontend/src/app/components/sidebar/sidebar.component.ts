@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
-import { Settings } from '../../settings';
 
-declare const $: any;
+import { Attribute } from '../../models/attribute.model';
+import { Hospital } from '../../models/hospital.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,49 +14,40 @@ declare const $: any;
 })
 export class SidebarComponent implements OnInit {
 
-  languages = Settings.LANGUAGES;
+  dropdownCategoricalAttributes = 'Filter';
+  categoricalAttributes: Array<Attribute> = null;
 
-  name1 = 'Filter';
-  selectedCatAttribute;
-  categoricalAttributes;
+  dropdownNumericalAttributes = 'Kennzahlen';
+  numericalAttributes: Array<Attribute> = null;
 
-  name2 = 'Kennzahlen';
-  selectedNumAttribute;
-  numericalAttributes;
+  selectedHospital: Hospital = null;
+  categoricalAttribute: Attribute = null;
+  numericalAttribute: Attribute = null;
 
   constructor(
     private characteristicsService: CharacteristicsService,
-    public translate: TranslateService
+    private d3: D3Service,
   ) { }
 
-  ngOnInit() {
-    this.characteristicsService.getCategoricalAttributes().subscribe(attributes => {
-      this.categoricalAttributes = attributes;
-
-      // extract the categorical attribute 'Typ' since its not used in this selection
-      this.categoricalAttributes = this.categoricalAttributes.filter(attribute => attribute.code !== 'Typ');
+  ngOnInit () {
+    this.d3.selectedHospital$.subscribe(hospital => {
+      this.selectedHospital = hospital;
     });
 
-    this.characteristicsService.getNumericalAttributes().subscribe(attributes => {
+    this.d3.categoricalAttribute$.subscribe((catAttribute: Attribute) => {
+      this.categoricalAttribute = catAttribute;
+    });
+
+    this.d3.numericalAttribute$.subscribe((numAttribute: Attribute) => {
+      this.numericalAttribute = numAttribute;
+    });
+
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      this.categoricalAttributes = attributes;
+    });
+
+    this.characteristicsService.getNumberAttributes().subscribe((attributes: Array<Attribute>) => {
       this.numericalAttributes = attributes;
     });
-
-    this.selectedCatAttribute = D3Service.getDefaultCategoricalAttribute();
-    this.selectedNumAttribute = D3Service.getDefaultNumericalAttribute();
   }
-
-  setLanguage(language: string) {
-    console.log('set language: ' + language);
-  }
-
-  toggleCollapse() {
-    $('#sidebarCollapse').on('hide.bs.collapse', function () {
-      document.getElementById('navSidebar').classList.add('transparent');
-    });
-
-    $('#sidebarCollapse').on('show.bs.collapse', function () {
-      document.getElementById('navSidebar').classList.remove('transparent');
-    });
-  }
-
 }

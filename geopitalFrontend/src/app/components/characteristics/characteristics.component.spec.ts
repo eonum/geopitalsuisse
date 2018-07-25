@@ -1,35 +1,37 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CharacteristicsComponent } from './characteristics.component';
 
-import { HospitalService } from '../../services/hospital.service';
-import { D3Service } from '../../services/d3.service';
+import { CharacteristicsComponent } from './characteristics.component';
+import { VariableService } from '../../services/variable.service';
+import { NumericalAttributes } from '../../../mocks/data/mock-numerical-attributes';
+import { StringAttributes } from '../../../mocks/data/mock-string-attributes';
+import { Hospitals } from '../../../mocks/data/mock-hospitals';
 
 describe('CharacteristicsComponent', () => {
   let component: CharacteristicsComponent;
   let fixture: ComponentFixture<CharacteristicsComponent>;
-  let hospitalServiceSpy;
-  let d3ServiceSpy;
+  let variableServiceSpy;
 
   beforeEach(async(() => {
-    const hospitalSpy = jasmine.createSpyObj('HospitalService', ['getAll']);
-    const d3Spy = jasmine.createSpyObj('D3Service',
-      ['selectedHospital$', 'currentCategoricalAttribute$', 'currentNumericalAttribute$']);
+    const variableSpy = jasmine.createSpyObj('VariableService',
+      ['getVariableOfHospitalByAttribute', 'getValueOfVariable']);
 
     TestBed.configureTestingModule({
       declarations: [ CharacteristicsComponent ],
       providers: [
-        {provide: HospitalService, useValue: hospitalSpy},
-        {provide: D3Service, useValue: d3Spy}
+        {provide: VariableService, useValue: variableSpy},
       ]
     })
-      .compileComponents();
+    .compileComponents().then(() => {
+      fixture = TestBed.createComponent(CharacteristicsComponent);
+      component = fixture.componentInstance;
+      variableServiceSpy = TestBed.get(VariableService);
+    });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CharacteristicsComponent);
-    component = fixture.componentInstance;
-    hospitalServiceSpy = TestBed.get(HospitalService);
-    d3ServiceSpy = TestBed.get(D3Service);
+    component.categoricalAttribute = StringAttributes[0];
+    component.numericalAttribute = NumericalAttributes[0];
+    component.hospital = Hospitals[0];
   });
 
   it('should create', () => {
