@@ -5,35 +5,37 @@ import { Hospital } from '../models/hospital.model';
 import { CharacteristicsService } from './characteristics.service';
 
 import * as d3 from 'd3';
+import { Attribute } from '../models/attribute.model';
+import { HospitalService } from './hospital.service';
+import { VariableService } from './variable.service';
 
 declare const L;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class D3Service {
 
   private svg;
   private map;
   private tooltip;
-
-  private allHospitals = [];
-  private allNumericalAttributes = [];
-  private allCategoricalAttributes = [];
-
-  private currentNumericalAttribute;
-  private currentCategoricalAttribute;
-
-  private modifiedHospitals;
-  private filteredHospitals = [];
-  private selectedHospitalTypes = [];
-
   private circles;
 
-  // Todo: remove this as soon as backend can deliver the data
-  private singleClassCategories = ['RForm'];
-  private multiClassCategories = ['Akt', 'SL', 'WB', 'SA', 'LA'];
+  private hospitals: Array<Hospital> = null;
+  private selectedHospitals: Array<Hospital> = null;
 
-  private xCoordinateNumAttribute;
-  private yCoordinateNumAttribute;
+  private numericalAttribute: Attribute = null;
+  private categoricalAttribute: Attribute = null;
+
+  private modifiedHospitals: Array<any> = null;
+  private filteredHospitals: Array<Hospital> = null;
+  private selectedHospitalTypes: Array<string> = null;
+
+  private singleClassCategories: Array<string> = [];
+  private multiClassCategories: Array<string> = [];
+
+  private xCoordinateAttribute: Attribute = null;
+  private yCoordinateAttribute: Attribute = null;
 
   private sumOfXValues = 0;
   private sumOfYValues = 0;
@@ -49,79 +51,25 @@ export class D3Service {
 
   private correlationCoefficient;
 
-  private RformDict = {'R1': false, 'R2': false, 'R3': false, 'R4': false};
-  private AktDict   = {'A': false, 'B': false, 'P': false, 'R': false};
-  private SLDict    = {'IPS': false, 'NF': false};
-  private WBDict    = {'Arzt': false, 'BGs': false, 'MSt': false};
-  private SADict    = {'Angio': false, 'CC': false, 'CT': false, 'Dia': false, 'LB': false, 'Lito': false, 'MRI': false, 'PET': false};
-  private LADict    = {'Stat': false, 'Amb': false};
-
-  private checkBoxDictionary = {
-    'RForm': this.RformDict,
-    'Akt': this.AktDict,
-    'SL': this.SLDict,
-    'WB': this.WBDict,
-    'SA': this.SADict,
-    'LA': this.LADict};
+  private stringAttributeValuesDictionary = {};
 
   // Observable string sources
-  private currentNumericalAttributeSource = new Subject<any>();
-  private currentCategoricalAttributeSource = new Subject<any>();
+  private numericalAttributeSource = new Subject<any>();
+  private categoricalAttributeSource = new Subject<any>();
   private selectedHospitalSource = new Subject<any>();
 
   // Observable string streams
-  currentNumericalAttribute$ = this.currentNumericalAttributeSource.asObservable();
-  currentCategoricalAttribute$ = this.currentCategoricalAttributeSource.asObservable();
+  numericalAttribute$ = this.numericalAttributeSource.asObservable();
+  categoricalAttribute$ = this.categoricalAttributeSource.asObservable();
   selectedHospital$ = this.selectedHospitalSource.asObservable();
 
   constructor(
     private characteristicsService: CharacteristicsService,
-  ) {}
-
-
-  /* Public static methods */
-
-  // Todo: remove this as soon as backend can deliver the data
-  static getDefaultNumericalAttribute(): any {
-    return {
-      category: 'number',
-      code: 'EtMedL',
-      nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
-      nameFR: 'Produits des hospitalisations et soins',
-      nameIT: 'Ricavi per degenze e cure'};
-  }
-
-  // Todo: remove this as soon as backend can deliver the data
-  static getDefaultCategoricalAttribute(): any {
-    return {
-      category: 'string',
-      code: 'RForm',
-      nameDE: 'Rechtsform',
-      nameFR: 'Forme juridique',
-      nameIT: 'Forma giuridica'
-    };
-  }
-
-  // Todo: remove this as soon as backend can deliver the data
-  static getDefaultXAxisAttribute(): any {
-    return {
-      category: 'number',
-      code: 'CMIb',
-      nameDE: 'Casemix Index (CMI) brutto',
-      nameFR: 'Indice de casemix (CMI) brut',
-      nameIT: 'Casemix Index lordo (CMI)',
-    };
-  }
-
-  // Todo: remove this as soon as backend can deliver the data
-  static getDefaultYAxisAttribute(): any {
-    return {
-      category: 'number',
-      code: 'EtMedL',
-      nameDE: 'Ertrag aus medizinischen Leistungen und Pflege',
-      nameFR: 'Produits des hospitalisations et soins',
-      nameIT: 'Ricavi per degenze e cure'
-    };
+    private hospitalService: HospitalService,
+    private variableService: VariableService
+  ) {
+    this.initDefaultValues();
+    this.generateDict();
   }
 
   /**
@@ -133,37 +81,28 @@ export class D3Service {
     return document.getElementById('mapid') !== null;
   }
 
-  /* Private static methods */
   /**
    * Gives markers different color according to its type attribute
-   * @param d data which is displayed as a circle
+   * @param hospital data which is displayed as a circle
    * @returns {string} color of the marker (according to type)
    */
-  private static getColourBasedOnHospitalType(d)  {
-    if (d.Typ === 'K111') {
+  private static getColourBasedOnHospitalType(hospital: Hospital)  {
+    if (hospital.typ === 'K111') {
       return '#a82a2a';
-    } else if (d.Typ === 'K112') {
+    } else if (hospital.typ === 'K112') {
       return '#a89f2a';
-    } else if (d.Typ === 'K121' || d.Typ === 'K122' || d.Typ === 'K123') {
+    } else if (hospital.typ === 'K121' || hospital.typ === 'K122' || hospital.typ === 'K123') {
       return '#2ca82a';
-    } else if (d.Typ === 'K211' || d.Typ === 'K212') {
+    } else if (hospital.typ === 'K211' || hospital.typ === 'K212') {
       return '#2a8ea8';
-    } else if (d.Typ === 'K221') {
+    } else if (hospital.typ === 'K221') {
       return '#2c2aa8';
-    } else if (d.Typ === 'K231' || d.Typ === 'K232' || d.Typ === 'K233' || d.Typ === 'K234' || d.Typ === 'K235') {
+    } else if (hospital.typ === 'K231' || hospital.typ === 'K232' || hospital.typ === 'K233' || hospital.typ === 'K234'
+      || hospital.typ === 'K235') {
       return '#772aa8';
     } else {
       return '#d633ff';
     }
-  }
-
-  /**
-   * Returns the maximal value of the chosen numerical attribute
-   * @param currentHospitals data which is displayed as a circle
-   * @returns {number} maximal radius of the chosen attribute
-   */
-  private static getMaxRadius (currentHospitals: any) {
-    return currentHospitals.reduce((max, p) => p.radius > max ? p.radius : max, currentHospitals[0].radius);
   }
 
   private static xValue(d) {
@@ -178,51 +117,90 @@ export class D3Service {
     return d.yhat;
   }
 
-  /* Public methods */
-
-  setCurrentCategoricalAttribute(attribute: any) {
-    this.currentCategoricalAttributeSource.next(attribute);
+  private generateDict() {
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      attributes.forEach((attribute: Attribute) => {
+        const values = {};
+        attribute.values.forEach((value) => {
+          values[value] = false;
+        });
+        this.stringAttributeValuesDictionary[attribute.code] = values;
+      });
+    });
   }
 
-  setCurrentNumericalAttribute(attribute: any) {
-    this.currentNumericalAttributeSource.next(attribute);
+  private initDefaultValues() {
+    this.characteristicsService.getAttributeByName('EtMedL').subscribe((attribute: Attribute) => {
+      this.numericalAttribute = attribute;
+      this.setNumericalAttribute(this.numericalAttribute);
+    });
+
+    this.characteristicsService.getAttributeByName('KT').subscribe((attribute: Attribute) => {
+      this.categoricalAttribute = attribute;
+      this.setCategoricalAttribute(this.categoricalAttribute);
+    });
+
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      attributes.filter(attr => attr.multiclass === false).map((attr: Attribute) => {
+        this.singleClassCategories.push(attr.code);
+      });
+    });
+
+    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+      attributes.filter(attr => attr.multiclass === true).map((attr: Attribute) => {
+        this.multiClassCategories.push(attr.code);
+      });
+    });
+
+    this.hospitalService.getHospitalByName('Insel Gruppe AG (universitär)').subscribe((hospital: Hospital) => {
+      this.setSelectedHospital(hospital);
+    });
   }
 
-  setSelectedHospital(attribute: any) {
-    this.selectedHospitalSource.next(attribute);
+  setCategoricalAttribute(attribute: Attribute) {
+    this.categoricalAttributeSource.next(attribute);
   }
 
-  drawMap(hospitals, numericalAttributes, categoricalAttributes) {
-    /* ------------------------ Reset variables ------------------------------------------ */
+  setNumericalAttribute(attribute: Attribute) {
+    this.numericalAttributeSource.next(attribute);
+  }
+
+  setSelectedHospital(hospital: Hospital) {
+    this.selectedHospitalSource.next(hospital);
+  }
+
+  setXCoordinateAttribute(attribute: Attribute) {
+    this.xCoordinateAttribute = attribute;
+  }
+
+  setYCoordinateAttribute(attribute: Attribute) {
+    this.yCoordinateAttribute = attribute;
+  }
+
+  async drawMap() {
+    this.hospitals = await this.hospitalService.getHospitals().toPromise();
+
     this.filteredHospitals = [];
     this.selectedHospitalTypes = [];
-
-    /* ------------------------ Initialize map ------------------------------------------ */
     this.initializeMap();
-
-    /* --------------------- Initialize data --------------------------------- */
-    this.allHospitals = hospitals;
-    this.allNumericalAttributes = numericalAttributes;
-    this.allCategoricalAttributes = categoricalAttributes;
-    this.currentNumericalAttribute = D3Service.getDefaultNumericalAttribute();
-    this.currentCategoricalAttribute = D3Service.getDefaultCategoricalAttribute();
-    this.initMapData(this.allHospitals);
-
-    /* ------------------------ Initialize svg element, tooltip, circles and zoom ------- */
     this.addSVGelement();
-    this.calculateSVGBounds(this.allHospitals);
+
+    this.selectedHospitals = this.initMapData(this.hospitals);
+    this.calculateSVGBounds(this.selectedHospitals);
+    this.initCircles(this.selectedHospitals);
+
     this.initTooltip();
-    this.initCircles(this.modifiedHospitals);
     this.initZoomableBehaviour();
   }
 
-  drawGraph(hospitals, numAttributes) {
+  async drawGraph () {
+    this.hospitals = await this.hospitalService.getHospitals().toPromise();
+
+    this.yCoordinateAttribute = await this.characteristicsService.getAttributeByName('CMIb').toPromise();
+    this.xCoordinateAttribute = await this.characteristicsService.getAttributeByName('EtMedL').toPromise();
+
     this.filteredHospitals = [];
     this.selectedHospitalTypes = [];
-    this.allHospitals = hospitals;
-    this.allNumericalAttributes = numAttributes;
-    this.xCoordinateNumAttribute = D3Service.getDefaultXAxisAttribute();
-    this.yCoordinateNumAttribute = D3Service.getDefaultYAxisAttribute();
 
     // add the graph canvas to the body of the webpage
     this.initializeGraph();
@@ -255,40 +233,52 @@ export class D3Service {
   }
 
   /**
-   * Updates the selected hospital types based on how many times the checkbox has been clicked.
-   * An odd number means that the checkbox is checked and therefore hospitals of that type should be shown.
-   *
-   * @param numUniSp  number of times 'Universitätsspitäler' checkbox was pressed
-   * @param numZentSp  number of times 'Zentrumsspitäler' checkbox was pressed
-   * @param numGrundVers number of times 'Grundversorgung' checkbox was pressed
-   * @param numPsychKl number of times 'Psychiatrische Kliniken' checkbox was pressed
-   * @param numRehaKl number of times 'Rehabilitationskliniken' checkbox was pressed
-   * @param numSpezKl number of times 'Spezialkliniken' checkbox was pressed
+   * Returns the maximal value of the chosen numerical attribute
+   * @param selectedHospitals data which is displayed as a circle
+   * @returns {number} maximal radius of the chosen attribute
    */
-  updateSelectedHospitalTypes(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+  private getMaxRadius (selectedHospitals: Array<Hospital>) {
+    const radiuses = [];
+
+    selectedHospitals.forEach( (hospital) => {
+      radiuses.push(
+        {radius: Number(VariableService.getValueOfVariable(this.variableService
+          .getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
+      );
+    });
+    if (radiuses.length === 0) {
+      return null;
+    }
+    return radiuses.reduce((max, p) => p.radius > max ? p.radius : max, radiuses[0].radius);
+  }
+
+  /**
+   * Updates the selected hospital types based on whether the checkbox has been clicked.
+   *
+   */
+  updateSelectedHospitalTypes(selectedHospitalTypes) {
     this.selectedHospitalTypes = [];
 
-    if ((numUniSp % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('U') > -1) {
       this.selectedHospitalTypes.push('K111');
     }
-    if ((numZentSp % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('Z') > -1) {
       this.selectedHospitalTypes.push('K112');
     }
-    if ((numGrundVers % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('G') > -1) {
       this.selectedHospitalTypes.push('K121', 'K122', 'K123');
     }
-    if ((numPsychKl % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('P') > -1) {
       this.selectedHospitalTypes.push('K211', 'K212');
     }
-    if ((numRehaKl % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('R') > -1) {
       this.selectedHospitalTypes.push('K221');
     }
-    if ((numSpezKl % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('S') > -1) {
       this.selectedHospitalTypes.push('K231', 'K232', 'K233', 'K234', 'K235');
     }
 
-    if (((numUniSp % 2) === 0) && ((numZentSp % 2) === 0) && ((numGrundVers % 2) === 0) && ((numPsychKl % 2) === 0) &&
-      ((numRehaKl % 2) === 0) && ((numSpezKl % 2) === 0)) {
+    if (selectedHospitalTypes.length === 6) {
       this.selectedHospitalTypes
         .push('K111', 'K112', 'K121', 'K122', 'K123', 'K211', 'K212', 'K221', 'K231', 'K232', 'K233', 'K234', 'K235');
     }
@@ -300,15 +290,15 @@ export class D3Service {
     }
   }
 
-  updateAttribute(attribute: any, axis: string) {
+  updateAttribute(attribute: Attribute, axis: string | null) {
     if (D3Service.showMap()) {
 
-      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
-        this.currentCategoricalAttribute = attribute;
+      if (CharacteristicsService.isCategoricalAttribute(attribute)) {
+        this.categoricalAttribute = attribute;
         this.updateMap('categoricalAttribute');
 
-      } else if (this.characteristicsService.isNumericalAttribute(attribute)) {
-        this.currentNumericalAttribute = attribute;
+      } else if (CharacteristicsService.isNumericalAttribute(attribute)) {
+        this.numericalAttribute = attribute;
         this.updateMap('numericalAttribute');
 
       } else {
@@ -316,22 +306,22 @@ export class D3Service {
       }
     } else {
       if (axis === 'x') {
-        this.xCoordinateNumAttribute = attribute;
+        this.xCoordinateAttribute = attribute;
       } else {
-        this.yCoordinateNumAttribute = attribute;
+        this.yCoordinateAttribute = attribute;
       }
       this.updateGraph();
     }
   }
 
   /**
-   * Updates the selected/deselected option for the given category and code.
+   * Updates the selected/deselected option for the given attribute and value.
    *
-   * @param {string} category the categorical attribute
-   * @param {string} code the code of the selected/deselected option
+   * @param {Attribute} attribute the categorical attribute
+   * @param {string} value the code of the selected/deselected option
    */
-  updateSelectedCategoryOption(category: string, code: string) {
-    this.checkBoxDictionary[category][code] = !this.checkBoxDictionary[category][code];
+  updateSelectedCategoryOption(attribute: Attribute, value: string) {
+    this.stringAttributeValuesDictionary[attribute.code][value] = !this.stringAttributeValuesDictionary[attribute.code][value];
     this.updateCircles();
   }
 
@@ -387,15 +377,15 @@ export class D3Service {
    * calculate the y max and x max value for all datapoints and add a padding.
    * xmax is width and ymax is height of svg-layer
    *
-   * @param {Hospital[]} allHospitals
+   * @param {Hospital[]} hospitals
    */
-  private calculateSVGBounds(allHospitals: Hospital[]) {
+  private calculateSVGBounds(hospitals: Array<Hospital>) {
     let xMax = 0;
     let yMax = 0;
     const heightPadding = 100;
     const widthPadding = 300;
 
-    allHospitals.forEach((d) => {
+    hospitals.forEach((d) => {
       xMax = Math.max(this.projectPoint(d.longitude, d.latitude).x, xMax);
       yMax = Math.max(this.projectPoint(d.longitude, d.latitude).y, yMax);
     });
@@ -422,13 +412,13 @@ export class D3Service {
     });
 
     this.map.on('zoomend', () => {
-      const maxValue = D3Service.getMaxRadius(this.modifiedHospitals);
+      const maxValue = this.getMaxRadius(this.selectedHospitals);
       this.circles
         .attr('cx', (d) => { return this.projectPoint(d.longitude, d.latitude).x; })
         .attr('cy', (d) => { return this.projectPoint(d.longitude, d.latitude).y; })
         .attr('r', (d) => { return this.calculateCircleRadius(d, maxValue); });
 
-      this.calculateSVGBounds(this.allHospitals);
+      this.calculateSVGBounds(this.hospitals);
       d3.select('#circleSVG').style('visibility', 'visible');
     });
   }
@@ -450,45 +440,27 @@ export class D3Service {
   /**
    * Stores data in array for displaying it. Builds up array with the important information.
    *
-   * @param {Hospital[]} allHospitals
+   * @param {Hospital[]} hospitals
    */
-  private initMapData (allHospitals: any) {
-    this.modifiedHospitals = [];
+  private initMapData (hospitals: Array<Hospital>): Array<Hospital> {
+    const selectedHospitals = [];
 
-    for (let i = 0; i < allHospitals.length; i++) {
+    for (let i = 0; i < hospitals.length; i++) {
 
-      const currentHospital = allHospitals[i];
-      const name = currentHospital.name;
+      const currentHospital = hospitals[i];
+      const name = currentHospital.name === 'Ganze Schweiz' ? null : currentHospital.name;
       const latitude = currentHospital.latitude;
       const longitude = currentHospital.longitude;
-      const attributes = currentHospital.hospital_attributes;
 
-      if (name !== null && latitude !== null && longitude !== null) {
-        let sizeAttribute;
-        let typeAttribute ;
+      if (name !== null && latitude !== null && longitude !== null && this.variableService
+          .getVariableOfHospitalByAttribute(currentHospital, this.numericalAttribute) !== null) {
 
-        const sizeResult = attributes.find(obj => obj.code === this.currentNumericalAttribute.code );
-        const typeResult = attributes.find(obj => obj.code === 'Typ' );
-
-        if (sizeResult == null || sizeResult.value == null) {
-          continue;
-        } else {
-          sizeAttribute = Number(sizeResult.value);
-        }
-
-        if (typeResult == null || typeResult.value == null) {
-          typeAttribute = null;
-        } else {
-          typeAttribute = String(typeResult.value);
-        }
-
-        const basicInformation = {longitude: longitude, latitude: latitude, name: name, radius: sizeAttribute, Typ: typeAttribute};
-
-        if (this.selectedHospitalTypes.length === 0 || this.selectedHospitalTypes.indexOf(typeAttribute) > -1) {
-          this.modifiedHospitals.push(basicInformation);
+        if (this.selectedHospitalTypes.length === 0 || this.selectedHospitalTypes.indexOf(currentHospital.typ) > -1) {
+          selectedHospitals.push(currentHospital);
         }
       }
     }
+    return selectedHospitals;
   }
 
 
@@ -517,39 +489,39 @@ export class D3Service {
    * Initialize circles on the map for the given hospitals. Use the maximal radius
    * of all hospitals to calculate the circle radius for every hospital.
    *
-   * @param {Array} currentHospitals data that is visualized as circles (with x- and y-coordinates and radius r)
+   * @param {Array} selectedHospitals data that is visualized as circles (with x- and y-coordinates and radius r)
    */
-  private initCircles (currentHospitals: Hospital[]) {
-    const maxRadius = D3Service.getMaxRadius(currentHospitals);
+  private initCircles (selectedHospitals: Array<Hospital>) {
+    const maxRadius = this.getMaxRadius(selectedHospitals);
 
     this.circles = this.svg.selectAll('circle')
-      .data(currentHospitals)
+      .data(selectedHospitals)
       .enter()
       .append('circle')
       .style('fill-opacity', 0.7)
-      .attr('r', (d) => {
-        return this.calculateCircleRadius(d, maxRadius);
+      .attr('r', (hospital) => {
+        return this.calculateCircleRadius(hospital, maxRadius);
       })
-      .attr('fill', (d) => {
-        return D3Service.getColourBasedOnHospitalType(d);
+      .attr('fill', (hospital) => {
+        return D3Service.getColourBasedOnHospitalType(hospital);
       })
-      .attr('stroke', (d) => {
-        return D3Service.getColourBasedOnHospitalType(d);
+      .attr('stroke', (hospital) => {
+        return D3Service.getColourBasedOnHospitalType(hospital);
       })
-      .attr('cx', (d) => {
-        return this.projectPoint(d.longitude, d.latitude).x;
+      .attr('cx', (hospital) => {
+        return this.projectPoint(hospital.longitude, hospital.latitude).x;
       })
-      .attr('cy', (d) => {
-        return this.projectPoint(d.longitude, d.latitude).y;
+      .attr('cy', (hospital) => {
+        return this.projectPoint(hospital.longitude, hospital.latitude).y;
       })
-      .on('mouseover', (d) => {
-        return this.showTooltip(d);
+      .on('mouseover', (hospital) => {
+        return this.showTooltip(hospital);
       })
       .on('mouseout', () => {
         return this.removeTooltip();
       })
-      .on('click', (d) => {
-        this.setSelectedHospital(d);
+      .on('click', (hospital) => {
+        this.setSelectedHospital(hospital);
       });
   }
 
@@ -571,31 +543,40 @@ export class D3Service {
     let data;
 
     if (changedAttribute === 'categoricalAttribute') {
-      data = this.allHospitals;
+      data = this.hospitals;
       this.filteredHospitals = [];
       this.resetCheckBoxes();
 
     } else if (changedAttribute === 'numericalAttribute' || changedAttribute === 'hospitalTypes') {
-      data = (this.filteredHospitals.length !== 0) ? this.filteredHospitals : this.allHospitals;
+      data = (this.filteredHospitals.length !== 0) ? this.filteredHospitals : this.hospitals;
     }
 
     this.removeCircles();
-    this.initMapData(data);
-    this.initCircles(this.modifiedHospitals);
+    this.selectedHospitals = this.initMapData(data);
+    this.initCircles(this.selectedHospitals);
   }
 
   /**
    * Gives markers different radius according to the numerical attribute
-   * @param d data which is displayed as a circle
+   * @param hospital hospital which is displayed as a circle
    * @param maxValue
    * @returns {number} radius of the marker (according numerical attribute)
    */
-  private calculateCircleRadius (d: any, maxValue: any) {
+  private calculateCircleRadius (hospital: Hospital, maxValue: number) {
+    let radius;
+    const variable = this.variableService.getVariableOfHospitalByAttribute(hospital, this.numericalAttribute);
+
+    if (variable === null || VariableService.getValueOfVariable(variable) === null) {
+      return;
+    } else {
+      radius = Number(VariableService.getValueOfVariable(variable));
+    }
+
     const zoomLevel = this.map.getZoom();
-    if (d.radius === 0) {
+    if (radius === 0) {
       return 3 * zoomLevel * zoomLevel / 100; // circles with value 0 have radius 3
     } else {
-      return ((d.radius / maxValue) * 40 + 5) * zoomLevel * zoomLevel / 100;
+      return ((radius / maxValue) * 40 + 5) * zoomLevel * zoomLevel / 100;
     }
   }
 
@@ -604,7 +585,7 @@ export class D3Service {
    * Displays tooltip when hovering over a marker
    * @param d data which is displayed as a circle
    */
-  private showTooltip(d) {
+  private showTooltip(d: any) {
     this.tooltip.transition()
       .duration(100)
       .style('opacity', .98)
@@ -634,11 +615,11 @@ export class D3Service {
       (<HTMLInputElement>allCheckboxContainers[i]).checked = false;
     }
 
-    for (const key in this.checkBoxDictionary) {
-      if (this.checkBoxDictionary.hasOwnProperty(key)) {
-        for (const innerKey in this.checkBoxDictionary[key]) {
-          if (this.checkBoxDictionary[key].hasOwnProperty(innerKey)) {
-            this.checkBoxDictionary[key][innerKey] = false;
+    for (const key in this.stringAttributeValuesDictionary) {
+      if (this.stringAttributeValuesDictionary.hasOwnProperty(key)) {
+        for (const innerKey in this.stringAttributeValuesDictionary[key]) {
+          if (this.stringAttributeValuesDictionary[key].hasOwnProperty(innerKey)) {
+            this.stringAttributeValuesDictionary[key][innerKey] = false;
           }
         }
       }
@@ -650,82 +631,60 @@ export class D3Service {
    * selected options from the categorical attributes.
    */
   private updateCircles() {
-    this.filteredHospitals = this.filter(this.allHospitals, this.checkBoxDictionary);
-    this.initMapData(this.filteredHospitals);
+    this.filteredHospitals = this.filter(this.hospitals);
+    this.selectedHospitals = this.initMapData(this.filteredHospitals);
     this.removeCircles();
-    this.initCircles(this.modifiedHospitals);
+    this.initCircles(this.selectedHospitals);
   }
 
 
-  private filter (hospitalsToFilter: any, checkBoxDictionary: any) {
-    const filteredHospitalData = [];
+  private filter (hospitals: Array<Hospital>): Array<Hospital> {
+    const filteredHospitals: Array<Hospital> = [];
+    const code = this.categoricalAttribute.code;
+    const selectedAttributeOptions = [];
 
-    for (let i = 0; i < hospitalsToFilter.length; i++) {
-      let skip = true;
-
-      for (let j = 0; j < hospitalsToFilter[i].hospital_attributes.length; j++) {
-
-        const currentCode = hospitalsToFilter[i].hospital_attributes[j].code;
-        let checkPerformed = false;
-
-        // check only the attributes who are the current selected attribute
-        // and who are part of the categorical attributes (in allDict)
-        if ((currentCode === this.currentCategoricalAttribute.code)  && (currentCode in checkBoxDictionary)) {
-
-          const checkedAttributes = [];
-          for (const key in checkBoxDictionary[currentCode]) {
-            if (checkBoxDictionary[currentCode][key]) {
-              checkedAttributes.push(key);
-            }
-          }
-
-          if (checkedAttributes.length === 0) {
-            skip = false;
-            checkPerformed = true;
-            break;
-          }
-
-          if (this.singleClassCategories.indexOf(this.currentCategoricalAttribute.code) >= 0) {
-            for (let key = 0; key < checkedAttributes.length; key++) {
-              if (hospitalsToFilter[i].hospital_attributes[j].value.includes(checkedAttributes[key])) {
-                skip = false;
-                checkPerformed = true;
-                break;
-              }
-            }
-            checkPerformed = true;
-          } else if (this.multiClassCategories.indexOf(this.currentCategoricalAttribute.code) >= 0) {
-            let containsEverySelectedKey = true;
-
-            for (let key = 0; key < checkedAttributes.length; key++) {
-              if (!hospitalsToFilter[i].hospital_attributes[j].value.includes(checkedAttributes[key])) {
-                containsEverySelectedKey = false;
-              }
-            }
-
-            if (containsEverySelectedKey) {
-              skip = false;
-            }
-
-            checkPerformed = true;
-          }
-
-        } else {
-          // attribute is not part of the filter dictionary
-          continue;
-        }
-        // if we checked the currentCatAttribute we are done
-        if (checkPerformed) {
-          break;
-        }
-      }
-
-      // if skip is true, we don't add the hospital and continue with the next
-      if (!skip) {
-        filteredHospitalData.push(hospitalsToFilter[i]);
+    for (const key in this.stringAttributeValuesDictionary[code]) {
+      if (this.stringAttributeValuesDictionary[code].hasOwnProperty(key) && this.stringAttributeValuesDictionary[code][key]) {
+        selectedAttributeOptions.push(key.trim());
       }
     }
-    return filteredHospitalData;
+
+    if (selectedAttributeOptions.length === 0) {
+      return hospitals;
+    } else {
+      for (let i = 0; i < hospitals.length; i++) {
+        const currentHospital = hospitals[i];
+
+        const variable = this.variableService.getVariableOfHospitalByAttribute(currentHospital, this.categoricalAttribute);
+        let values = [];
+
+        if (VariableService.getValueOfVariable(variable) !== null) {
+          values = VariableService.getValueOfVariable(variable).split(',').map((value) => value.trim());
+        }
+
+        if (this.singleClassCategories.indexOf(code) >= 0) {
+          for (let key = 0; key < selectedAttributeOptions.length; key++) {
+            if (values.indexOf(selectedAttributeOptions[key]) > -1) {
+              filteredHospitals.push(currentHospital);
+            }
+          }
+        } else if (this.multiClassCategories.indexOf(code) >= 0) {
+          let containsEverySelectedKey = true;
+
+          for (let key = 0; key < selectedAttributeOptions.length; key++) {
+            if (values.indexOf(selectedAttributeOptions[key]) === -1) {
+              containsEverySelectedKey = false;
+            }
+          }
+
+          if (containsEverySelectedKey) {
+            filteredHospitals.push(currentHospital);
+          }
+
+        }
+      }
+    }
+    return filteredHospitals;
   }
 
   private scale(data) {
@@ -760,7 +719,7 @@ export class D3Service {
       .attr('fill', '#000')
       .style('text-anchor', 'middle')
       .style('font-size', '.8rem')
-      .text(this.xCoordinateNumAttribute.nameDE);
+      .text(this.xCoordinateAttribute.name_de);
 
     this.svg.append('g')
       .classed('y', true)
@@ -780,7 +739,7 @@ export class D3Service {
       .attr('fill', '#000')
       .style('text-anchor', 'middle')
       .style('font-size', '.8rem')
-      .text(this.yCoordinateNumAttribute.nameDE);
+      .text(this.yCoordinateAttribute.name_de);
   }
 
   private drawRegressionLine(data) {
@@ -850,44 +809,32 @@ export class D3Service {
     this.sumOfXValues = 0;
     this.sumOfYValues = 0;
 
-    for (let i = 0; i < this.allHospitals.length; i++) {
+    for (let i = 0; i < this.hospitals.length; i++) {
+      const currentHospital = this.hospitals[i];
+      const typ = currentHospital.typ;
 
-      const hospitalName = this.allHospitals[i].name;
-      const attributes = this.allHospitals[i].hospital_attributes;
-      let xCoordinateValue;
-      let yCoordinateValue;
-      let type;
+      const xCoordinateVariable = this.variableService.getVariableOfHospitalByAttribute(currentHospital, this.xCoordinateAttribute);
+      const yCoordinateVariable = this.variableService.getVariableOfHospitalByAttribute(currentHospital, this.yCoordinateAttribute);
 
-      if (hospitalName === 'Ganze Schweiz') { continue; }
+      const xCoordinateValue = VariableService.getValueOfVariable(xCoordinateVariable);
+      const yCoordinateValue = VariableService.getValueOfVariable(yCoordinateVariable);
 
-      const xCoordinate = attributes.find(obj =>  obj.code === this.xCoordinateNumAttribute.code);
-      const yCoordinate = attributes.find(obj => obj.code === this.yCoordinateNumAttribute.code);
-
-      if (xCoordinate == null || xCoordinate.value == null || yCoordinate == null || yCoordinate.value == null) {
+      if (xCoordinateVariable === null || xCoordinateValue === null || yCoordinateVariable === null || yCoordinateValue === null) {
         continue;
       }
 
-      xCoordinateValue = Number(xCoordinate.value);
-      yCoordinateValue = Number(yCoordinate.value);
-
-
-
-      let typeResult = attributes.find(obj => obj.code === 'Typ');
-
-      if (typeResult == null || typeResult.value == null) {
-        typeResult = null;
-      } else {
-        type = String(typeResult.value);
+      if (typ && (this.selectedHospitalTypes.length === 0 ||
+          (this.selectedHospitalTypes.length > 0 && this.selectedHospitalTypes.indexOf(typ) > -1))) {
+        this.sumOfXValues += Number(xCoordinateValue);
+        this.sumOfYValues += Number(yCoordinateValue);
+        this.modifiedHospitals.push({
+          name: currentHospital.name,
+          x: Number(xCoordinateValue),
+          y: Number(yCoordinateValue),
+          typ: typ,
+          yhat: null
+        });
       }
-
-      if (this.selectedHospitalTypes.length > 0 && typeResult !== null && this.selectedHospitalTypes.indexOf(typeResult.value) === -1) {
-        continue;
-      } else {
-        this.sumOfXValues += xCoordinateValue;
-        this.sumOfYValues += yCoordinateValue;
-        this.modifiedHospitals.push({name: hospitalName, x: xCoordinateValue, y: yCoordinateValue, Typ: type, yhat: null});
-      }
-
     }
   }
 
@@ -915,8 +862,8 @@ export class D3Service {
     this.correlationCoefficient = Math.round(term1 / (Math.sqrt(term2 * term3)) * 100 + Number.EPSILON) / 100;
 
     // perform regression
-    for (let i = 0; i < this.allHospitals.length; i++) {
-      const hospital = this.modifiedHospitals.find(obj => obj.name === this.allHospitals[i].name);
+    for (let i = 0; i < this.hospitals.length; i++) {
+      const hospital = this.modifiedHospitals.find(obj => obj.name === this.hospitals[i].name);
       if (hospital) {
         hospital.yhat = (y_intercept + (hospital.x * m));
       }

@@ -1,37 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 
-import { D3Service } from '../../services/d3.service';
-import { HospitalService } from '../../services/hospital.service';
+import { Attribute } from '../../models/attribute.model';
+import { Hospital } from '../../models/hospital.model';
+import { VariableService } from '../../services/variable.service';
 
 /**
  * Component for the short information (Steckbrief) of the selected hospital.
  */
-
 @Component({
   selector: 'app-characteristics',
   templateUrl: './characteristics.component.html',
   styleUrls: ['./characteristics.component.css']
 })
-export class CharacteristicsComponent implements OnInit {
+export class CharacteristicsComponent implements OnInit, OnChanges {
 
-  allHospitals;
-  selectedHospital;
+  @Input() hospital: Hospital;
+  @Input() categoricalAttribute: Attribute;
+  @Input() numericalAttribute: Attribute;
 
-  address;
-
-  currentCategoricalAttribute;
-  currentCategoricalAttributeValue;
-
-  currentNumericalAttribute;
-  currentNumericalAttributeValue;
+  categoricalAttributeValue: string;
+  numericalAttributeValue: string;
 
   constructor (
-    private hospitalService: HospitalService,
-    private d3: D3Service
+    private variableService: VariableService,
   ) {}
 
-  private static formatValues(attribute: any, value: string) {
-    if (attribute.nameDE.includes('Anteil')) {
+  private static formatValues(attribute: Attribute, value: string) {
+    if (attribute.name_de.includes('Anteil')) {
       if (parseFloat(value) > 1) {
         return (parseFloat(value) / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
       } else {
@@ -43,51 +38,29 @@ export class CharacteristicsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.hospitalService.getAll().subscribe(hospitals => {
-      this.allHospitals = hospitals;
-      this.selectedHospital = this.allHospitals[0];
-      this.updateCharacteristicsData();
-    });
-
-    this.d3.selectedHospital$.subscribe(hospital => {
-      this.selectedHospital = this.allHospitals.find(obj => obj.name === hospital.name);
-      this.updateCharacteristicsData();
-    });
-
-    this.d3.currentCategoricalAttribute$.subscribe(catAttribute => {
-      this.currentCategoricalAttribute = catAttribute;
-      this.updateCharacteristicsData();
-    });
-
-    this.d3.currentNumericalAttribute$.subscribe(attribute => {
-      this.currentNumericalAttribute = attribute;
-      this.updateCharacteristicsData();
-    });
-
-    this.currentCategoricalAttribute = D3Service.getDefaultCategoricalAttribute();
-    this.currentNumericalAttribute = D3Service.getDefaultNumericalAttribute();
+    this.updateCharacteristicsData(this.hospital, this.categoricalAttribute, this.numericalAttribute);
   }
 
-  private updateCharacteristicsData () {
-    const sizeResult = this.selectedHospital.hospital_attributes.find(obj => obj.code === this.currentNumericalAttribute.code);
-    const catResult = this.selectedHospital.hospital_attributes.find(obj => obj.code === this.currentCategoricalAttribute.code);
+  ngOnChanges() {
+    this.updateCharacteristicsData(this.hospital, this.categoricalAttribute, this.numericalAttribute);
+  }
 
-    if (this.selectedHospital.streetAndNumber !== '') {
-      this.address = this.selectedHospital.streetAndNumber + ', ' + this.selectedHospital.zipCodeAndCity;
+
+  private updateCharacteristicsData (hospital: Hospital, categoricalAttribute: Attribute, numericalAttribute: Attribute) {
+    const numericalVariable = this.variableService.getVariableOfHospitalByAttribute(hospital, numericalAttribute);
+    const categoricalVariable = this.variableService.getVariableOfHospitalByAttribute(hospital, categoricalAttribute);
+
+    if (numericalVariable != null) {
+      this.numericalAttributeValue = CharacteristicsComponent.formatValues(numericalAttribute,
+        VariableService.getValueOfVariable(numericalVariable));
     } else {
-      this.address = this.selectedHospital.zipCodeAndCity;
+      this.numericalAttributeValue = 'Keine Daten';
     }
 
-    if (sizeResult != null) {
-      this.currentNumericalAttributeValue = CharacteristicsComponent.formatValues(this.currentCategoricalAttribute, sizeResult.value);
+    if (categoricalVariable != null) {
+      this.categoricalAttributeValue = VariableService.getValueOfVariable(categoricalVariable);
     } else {
-      this.currentNumericalAttributeValue = 'Keine Daten';
-    }
-
-    if (catResult != null) {
-      this.currentCategoricalAttributeValue = catResult.value;
-    } else {
-      this.currentCategoricalAttributeValue = 'Keine Daten';
+      this.categoricalAttributeValue = 'Keine Daten';
     }
   }
 }

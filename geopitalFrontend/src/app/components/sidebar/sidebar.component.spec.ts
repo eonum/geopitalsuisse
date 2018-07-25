@@ -22,10 +22,14 @@ describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
   let characteristicsServiceSpy;
+  let d3ServiceSpy;
 
   beforeEach(async(() => {
     const spy = jasmine.createSpyObj('CharacteristicsService',
-      ['getCategoricalAttributes', 'getNumericalAttributes']);
+      ['getStringAttributes', 'getNumberAttributes']);
+
+    const d3Spy = jasmine.createSpyObj('D3Service',
+      ['selectedHospital$', 'categoricalAttribute$', 'numericalAttribute$']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -36,21 +40,21 @@ describe('SidebarComponent', () => {
         CharacteristicsStubComponent
       ],
       providers: [
-        D3Service,
+        { provide: D3Service, useValue: d3Spy },
         { provide: CharacteristicsService, useValue: spy }
       ],
       schemas: [
         NO_ERRORS_SCHEMA
       ]
     })
-    .compileComponents();
-  }));
+    .compileComponents().then(() => {
+      fixture = TestBed.createComponent(SidebarComponent);
+      component = fixture.componentInstance;
+      characteristicsServiceSpy = TestBed.get(CharacteristicsService);
+      d3ServiceSpy = TestBed.get(D3Service);
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SidebarComponent);
-    component = fixture.componentInstance;
-    characteristicsServiceSpy = TestBed.get(CharacteristicsService);
-  });
+    });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

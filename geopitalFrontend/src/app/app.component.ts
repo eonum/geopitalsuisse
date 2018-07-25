@@ -13,46 +13,38 @@ declare const $: any;
   styleUrls: ['app.component.css'],
 })
 export class AppComponent implements OnInit {
-
   faGlobe = faGlobe;
   faChartLine = faChartLine;
 
   linkToBlog = 'http://eonum.ch/de/allgemein/geopitalsuisse/';
-  linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
+  linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/' +
+    'zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
-  private userAgent;
+  component = AppComponent;
 
-  constructor(
-    private d3: D3Service
-  ) { }
+  constructor() {}
 
-
-  ngOnInit() {
-    $(document).ready(() => {
-      this.userAgent = navigator.userAgent;
-      if (AppComponent.isMobile(this.userAgent) || !D3Service.showMap()) {
-        this.closeSidebar();
-      } else {
-        this.openSidebar();
-      }
-    });
+  static openSidebar() {
+    document.getElementById('externalContent').classList.add('show');
   }
 
-  showMap() {
-    return D3Service.showMap();
-  }
-
-  openSidebar() {
-    if (!AppComponent.isMobile(this.userAgent)) {
-      document.getElementById('externalContent').classList.add('show');
-    }
-  }
-
-  closeSidebar() {
+  static closeSidebar() {
     document.getElementById('externalContent').classList.remove('show');
   }
 
-  private static isMobile(userAgent): boolean {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
+  static showMap() {
+    return D3Service.showMap();
+  }
+
+  ngOnInit() {
+    $(document).ready(() => {
+      const userAgent = navigator.userAgent;
+      const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
+      if (isMobile || !D3Service.showMap()) {
+        AppComponent.closeSidebar();
+      } else if (!isMobile && D3Service.showMap()) {
+        AppComponent.openSidebar();
+      }
+    });
   }
 }

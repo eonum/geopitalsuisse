@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ScatterplotComponent } from './scatterplot.component';
 import { CharacteristicsService } from '../../services/characteristics.service';
-import { HospitalService } from '../../services/hospital.service';
 import { D3Service } from '../../services/d3.service';
 
 @Component({selector: 'app-navbar', template: ''})
@@ -17,12 +16,10 @@ describe('ScatterplotComponent', () => {
   let component: ScatterplotComponent;
   let fixture: ComponentFixture<ScatterplotComponent>;
 
-  let hospitalServiceSpy;
   let characteristicsServiceSpy;
   let d3ServiceSpy;
 
   beforeEach(async(() => {
-    const hospitalSpy = jasmine.createSpyObj('HospitalService', ['getAll']);
     const characteristicsSpy = jasmine.createSpyObj('CharacteristicsService', ['getNumericalAttributes']);
     const d3Spy = jasmine.createSpyObj('D3Service', ['drawGraph']);
 
@@ -36,21 +33,17 @@ describe('ScatterplotComponent', () => {
         NO_ERRORS_SCHEMA
       ],
       providers: [
-        { provide: HospitalService, useValue: hospitalSpy },
         { provide: CharacteristicsService, useValue: characteristicsSpy },
         { provide: D3Service, useValue: d3Spy}
       ]
     })
-    .compileComponents();
+    .compileComponents().then(() => {
+      fixture = TestBed.createComponent(ScatterplotComponent);
+      component = fixture.componentInstance;
+      characteristicsServiceSpy = TestBed.get(CharacteristicsService);
+      d3ServiceSpy = TestBed.get(D3Service);
+    });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ScatterplotComponent);
-    component = fixture.componentInstance;
-    hospitalServiceSpy = TestBed.get(HospitalService);
-    characteristicsServiceSpy = TestBed.get(CharacteristicsService);
-    d3ServiceSpy = TestBed.get(D3Service);
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

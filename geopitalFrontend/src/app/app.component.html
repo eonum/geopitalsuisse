@@ -1,24 +1,24 @@
 <nav class="navbar navbar-dark" style="background: transparent;">
 
-  <button *ngIf="showMap()" class="navbar-toggler bg-dark" type="button" data-toggle="collapse" data-target="#externalContent" aria-controls="externalContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button *ngIf="component.showMap()" class="navbar-toggler bg-dark" type="button" data-toggle="collapse" data-target="#externalContent" aria-controls="externalContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <ul class="navbar-nav">
     <li class="nav-item">
-      <div *ngIf="showMap()">
+      <div *ngIf="component.showMap()">
         <span class="icon" data-toggle="tooltip" data-placement="top" title="Statistik">
           <fa-icon
             routerLink="statistics"
-            (click)="closeSidebar()"
+            (click)="component.closeSidebar()"
             [icon]="faChartLine"></fa-icon>
         </span>
       </div>
-      <div *ngIf="!showMap()">
+      <div *ngIf="!component.showMap()">
         <span class="icon" data-toggle="tooltip" data-placement="top" title="Map">
           <fa-icon
             routerLink=""
-            (click)="openSidebar()"
+            (click)="component.openSidebar()"
             [icon]="faGlobe"></fa-icon>
         </span>
       </div>
@@ -30,7 +30,7 @@
   <app-sidebar></app-sidebar>
 </div>
 
-<footer *ngIf="!showMap()">
+<footer *ngIf="!component.showMap()">
   <a href={{linkToBlog}} target="_blank" style="color: #DF691A;">created by eonum & University of Berne</a>
   |
   <a href={{linkToData}} target="_blank" style="color: #DF691A;">data by BAG / FOPH</a>
