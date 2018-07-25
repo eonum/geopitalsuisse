@@ -72,6 +72,51 @@ export class D3Service {
     this.generateDict();
   }
 
+  /**
+   * Indicates whether the map or the scatterplot is active.
+   *
+   * @returns {boolean} true if the map is shown, false if the scatterplot is shown
+   */
+  static showMap() {
+    return document.getElementById('mapid') !== null;
+  }
+
+  /**
+   * Gives markers different color according to its type attribute
+   * @param hospital data which is displayed as a circle
+   * @returns {string} color of the marker (according to type)
+   */
+  private static getColourBasedOnHospitalType(hospital: Hospital)  {
+    if (hospital.typ === 'K111') {
+      return '#a82a2a';
+    } else if (hospital.typ === 'K112') {
+      return '#a89f2a';
+    } else if (hospital.typ === 'K121' || hospital.typ === 'K122' || hospital.typ === 'K123') {
+      return '#2ca82a';
+    } else if (hospital.typ === 'K211' || hospital.typ === 'K212') {
+      return '#2a8ea8';
+    } else if (hospital.typ === 'K221') {
+      return '#2c2aa8';
+    } else if (hospital.typ === 'K231' || hospital.typ === 'K232' || hospital.typ === 'K233' || hospital.typ === 'K234'
+      || hospital.typ === 'K235') {
+      return '#772aa8';
+    } else {
+      return '#d633ff';
+    }
+  }
+
+  private static xValue(d) {
+    return d.x;
+  }
+
+  private static yValue(d) {
+    return d.y;
+  }
+
+  private static yHatValue(d) {
+    return d.yhat;
+  }
+
   private generateDict() {
     this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.forEach((attribute: Attribute) => {
@@ -132,71 +177,6 @@ export class D3Service {
     this.yCoordinateAttribute = attribute;
   }
 
-
-
-  /**
-   * Indicates whether the map or the scatterplot is active.
-   *
-   * @returns {boolean} true if the map is shown, false if the scatterplot is shown
-   */
-  static showMap() {
-    return document.getElementById('mapid') !== null;
-  }
-
-  /* Private static methods */
-  /**
-   * Gives markers different color according to its type attribute
-   * @param hospital data which is displayed as a circle
-   * @returns {string} color of the marker (according to type)
-   */
-  private static getColourBasedOnHospitalType(hospital: Hospital)  {
-    if (hospital.typ === 'K111') {
-      return '#a82a2a';
-    } else if (hospital.typ === 'K112') {
-      return '#a89f2a';
-    } else if (hospital.typ === 'K121' || hospital.typ === 'K122' || hospital.typ === 'K123') {
-      return '#2ca82a';
-    } else if (hospital.typ === 'K211' || hospital.typ === 'K212') {
-      return '#2a8ea8';
-    } else if (hospital.typ === 'K221') {
-      return '#2c2aa8';
-    } else if (hospital.typ === 'K231' || hospital.typ === 'K232' || hospital.typ === 'K233' || hospital.typ === 'K234'
-      || hospital.typ === 'K235') {
-      return '#772aa8';
-    } else {
-      return '#d633ff';
-    }
-  }
-
-  /**
-   * Returns the maximal value of the chosen numerical attribute
-   * @param selectedHospitals data which is displayed as a circle
-   * @returns {number} maximal radius of the chosen attribute
-   */
-  private getMaxRadius (selectedHospitals: Array<Hospital>) {
-    const radiuses = [];
-
-    selectedHospitals.forEach( (hospital) => {
-        radiuses.push(
-          {radius: Number(VariableService.getValueOfVariable(this.variableService
-            .getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
-        );
-    });
-    return radiuses.reduce((max, p) => p.radius > max ? p.radius : max, radiuses[0].radius);
-  }
-
-  private static xValue(d) {
-    return d.x;
-  }
-
-  private static yValue(d) {
-    return d.y;
-  }
-
-  private static yHatValue(d) {
-    return d.yhat;
-  }
-
   async drawMap() {
     this.hospitals = await this.hospitalService.getHospitals().toPromise();
 
@@ -250,6 +230,23 @@ export class D3Service {
 
     // draw a dot for every hospital
     this.drawDots(this.modifiedHospitals);
+  }
+
+  /**
+   * Returns the maximal value of the chosen numerical attribute
+   * @param selectedHospitals data which is displayed as a circle
+   * @returns {number} maximal radius of the chosen attribute
+   */
+  private getMaxRadius (selectedHospitals: Array<Hospital>) {
+    const radiuses = [];
+
+    selectedHospitals.forEach( (hospital) => {
+      radiuses.push(
+        {radius: Number(VariableService.getValueOfVariable(this.variableService
+          .getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
+      );
+    });
+    return radiuses.reduce((max, p) => p.radius > max ? p.radius : max, radiuses[0].radius);
   }
 
   /**

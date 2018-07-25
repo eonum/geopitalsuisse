@@ -25,6 +25,17 @@ export class CharacteristicsComponent implements OnInit, OnChanges {
     private variableService: VariableService,
   ) {}
 
+  private static formatValues(attribute: Attribute, value: string) {
+    if (attribute.name_de.includes('Anteil')) {
+      if (parseFloat(value) > 1) {
+        return (parseFloat(value) / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
+      } else {
+        return parseFloat(value).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
+      }
+    } else {
+      return parseFloat(value).toLocaleString('de-CH', { maximumFractionDigits: 3});
+    }
+  }
 
   ngOnInit() {
     this.updateCharacteristicsData(this.hospital, this.categoricalAttribute, this.numericalAttribute);
@@ -50,18 +61,6 @@ export class CharacteristicsComponent implements OnInit, OnChanges {
       this.categoricalAttributeValue = VariableService.getValueOfVariable(categoricalVariable);
     } else {
       this.categoricalAttributeValue = 'Keine Daten';
-    }
-  }
-
-  private static formatValues(attribute: Attribute, value: string) {
-    if (attribute.name_de.includes('Anteil')) {
-      if (parseFloat(value) > 1) {
-        return (parseFloat(value) / 100).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
-      } else {
-        return parseFloat(value).toLocaleString('de-CH', { style: 'percent', minimumFractionDigits: 3});
-      }
-    } else {
-      return parseFloat(value).toLocaleString('de-CH', { maximumFractionDigits: 3});
     }
   }
 }
