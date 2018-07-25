@@ -4,12 +4,12 @@ import { CharacteristicsComponent } from './characteristics.component';
 import { VariableService } from '../../services/variable.service';
 import { NumericalAttributes } from '../../../mocks/data/mock-numerical-attributes';
 import { StringAttributes } from '../../../mocks/data/mock-string-attributes';
+import { Hospitals } from '../../../mocks/data/mock-hospitals';
 
 describe('CharacteristicsComponent', () => {
   let component: CharacteristicsComponent;
   let fixture: ComponentFixture<CharacteristicsComponent>;
   let variableServiceSpy;
-  const hospital;
 
   beforeEach(async(() => {
     const variableSpy = jasmine.createSpyObj('VariableService',
@@ -31,7 +31,7 @@ describe('CharacteristicsComponent', () => {
   beforeEach(() => {
     component.categoricalAttribute = StringAttributes[0];
     component.numericalAttribute = NumericalAttributes[0];
-    component.hospital = hospital;
+    component.hospital = Hospitals[0];
   });
 
   it('should create', () => {
