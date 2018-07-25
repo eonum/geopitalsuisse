@@ -250,40 +250,32 @@ export class D3Service {
   }
 
   /**
-   * Updates the selected hospital types based on how many times the checkbox has been clicked.
-   * An odd number means that the checkbox is checked and therefore hospitals of that type should be shown.
+   * Updates the selected hospital types based on whether the checkbox has been clicked.
    *
-   * @param numUniSp  number of times 'Universitätsspitäler' checkbox was pressed
-   * @param numZentSp  number of times 'Zentrumsspitäler' checkbox was pressed
-   * @param numGrundVers number of times 'Grundversorgung' checkbox was pressed
-   * @param numPsychKl number of times 'Psychiatrische Kliniken' checkbox was pressed
-   * @param numRehaKl number of times 'Rehabilitationskliniken' checkbox was pressed
-   * @param numSpezKl number of times 'Spezialkliniken' checkbox was pressed
    */
-  updateSelectedHospitalTypes(numUniSp, numZentSp, numGrundVers, numPsychKl, numRehaKl, numSpezKl) {
+  updateSelectedHospitalTypes(selectedHospitalTypes) {
     this.selectedHospitalTypes = [];
 
-    if ((numUniSp % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('U') > -1) {
       this.selectedHospitalTypes.push('K111');
     }
-    if ((numZentSp % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('Z') > -1) {
       this.selectedHospitalTypes.push('K112');
     }
-    if ((numGrundVers % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('G') > -1) {
       this.selectedHospitalTypes.push('K121', 'K122', 'K123');
     }
-    if ((numPsychKl % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('P') > -1) {
       this.selectedHospitalTypes.push('K211', 'K212');
     }
-    if ((numRehaKl % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('R') > -1) {
       this.selectedHospitalTypes.push('K221');
     }
-    if ((numSpezKl % 2) === 1) {
+    if (selectedHospitalTypes.indexOf('S') > -1) {
       this.selectedHospitalTypes.push('K231', 'K232', 'K233', 'K234', 'K235');
     }
 
-    if (((numUniSp % 2) === 0) && ((numZentSp % 2) === 0) && ((numGrundVers % 2) === 0) && ((numPsychKl % 2) === 0) &&
-      ((numRehaKl % 2) === 0) && ((numSpezKl % 2) === 0)) {
+    if (selectedHospitalTypes.length === 6) {
       this.selectedHospitalTypes
         .push('K111', 'K112', 'K121', 'K122', 'K123', 'K211', 'K212', 'K221', 'K231', 'K232', 'K233', 'K234', 'K235');
     }
