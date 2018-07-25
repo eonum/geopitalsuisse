@@ -63,4 +63,18 @@ export const StringAttributes: Array<Attribute> = [{
   name_fr: 'Formation de base et formation postgrade',
   name_it: 'Formazione e perfezionamento',
   multiclass: true,
+}, {
+  code: 'geopital_main_type',
+  variable_type: 'string',
+  values: ['U', 'Z', 'G', 'P', 'R', 'S'],
+  values_de: ['Universitätsspital', 'Allgemeinspital, Zentrumsversorgung', 'Allgemeinspital, Grundversorgung',
+    'Psychiatrische Klinik', 'Rehabilitationsklinik', 'Spezialklinik'],
+  values_fr: ['Hôpital universitaire', 'Hôpital de soins généraux, prise en charge centralisée',
+    'Hôpital de soins généraux, soins de base', 'Clinique psychiatrique', 'Clinique de réadaptation', 'Clinique spécialisée'],
+  values_it: [],
+  variable_sets: [],
+  name_de: 'Name Deutsch',
+  name_fr: 'Nom français',
+  name_it: 'Nome italiano',
+  multiclass: false
 }];
