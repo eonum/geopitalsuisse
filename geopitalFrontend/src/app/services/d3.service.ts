@@ -246,6 +246,9 @@ export class D3Service {
           .getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
       );
     });
+    if (radiuses.length === 0) {
+      return null;
+    }
     return radiuses.reduce((max, p) => p.radius > max ? p.radius : max, radiuses[0].radius);
   }
 
