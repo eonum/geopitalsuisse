@@ -15,7 +15,7 @@ import { Settings } from '../settings';
 @Injectable({
   providedIn: 'root'
 })
-export class LanguageGuardService implements CanActivate {
+export class LanguageGuard implements CanActivate {
 
   private languages = Settings.LANGUAGES;
 
@@ -37,7 +37,7 @@ export class LanguageGuardService implements CanActivate {
    * */
   public canActivate(route: ActivatedRouteSnapshot): boolean {
 
-    let language = route.params['locale'];
+    let language = route.params['language'];
     // set language and return if it exists
 
     if (language && this.languages.indexOf(language) > -1) {
@@ -49,7 +49,7 @@ export class LanguageGuardService implements CanActivate {
     language = this.matchingLanguage(navigator.language) || Settings.DEFAULT_LANGUAGE;
 
     // redirect
-    this.router.navigate(['map'], {queryParams: {locale: language} }).catch(error => console.error('Error ', error));
+    this.router.navigate([language]).catch(error => console.error('Error ', error));
     return false;
   }
 

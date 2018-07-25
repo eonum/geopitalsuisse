@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
 import { Attribute } from '../../models/attribute.model';
@@ -19,9 +21,11 @@ export class DropdownComponent implements OnInit {
   @Input() name: string;
   @Input() axis?: string;
 
+  locale: string;
 
   constructor(
-    private d3: D3Service
+    private d3: D3Service,
+    private translate: TranslateService
   ) {  }
 
   /**
@@ -30,7 +34,12 @@ export class DropdownComponent implements OnInit {
    * numerical and the other that contains all categorical attributes
    * The attributes are then displayed in the html.
    */
-  ngOnInit() {}
+  ngOnInit() {
+    this.locale = this.translate.currentLang;
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.locale = event.lang;
+    });
+  }
 
   filterDropdownOptions() {
     const input = (<HTMLInputElement>document.getElementById('searchField-' + this.name));

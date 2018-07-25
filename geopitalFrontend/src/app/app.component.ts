@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { D3Service } from './services/d3.service';
 
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons/faChartLine';
+
 import { Settings } from './settings';
 
 declare const $: any;
@@ -25,20 +26,19 @@ export class AppComponent implements OnInit {
     'zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
   component = AppComponent;
-
-  public languages = Settings.LANGUAGES;
-  private locale;
+  languages = Settings.LANGUAGES;
+  currentLang = '';
 
   constructor(
     public translate: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
-    translate.addLangs(this.languages);
-    translate.setDefaultLang('de');
+    this.translate.addLangs(this.languages);
+    this.translate.setDefaultLang(Settings.DEFAULT_LANGUAGE);
 
-    const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/de|it|fr/) ? browserLang : 'de');
+    const browserLang = this.translate.getBrowserLang();
+    this.translate.use(browserLang.match(/de|fr/) ? browserLang : 'de');
   }
 
   static openSidebar() {
@@ -54,15 +54,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.queryParams
-      .subscribe(params => {
-        if (params.locale != null) {
-          this.locale = params.locale;
-          this.translate.use(this.locale.match(/de|fr/) ? this.locale : 'de');
-        }
-
-      });
-
     $(document).ready(() => {
       const userAgent = navigator.userAgent;
       const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
@@ -76,6 +67,10 @@ export class AppComponent implements OnInit {
 
   selectLanguage(language: string) {
     this.translate.use(language);
-    this.router.navigate([], {relativeTo: this.activatedRoute, queryParams: {locale: language} });
+    if (AppComponent.showMap()) {
+      this.router.navigate([language, 'map']);
+    } else {
+      this.router.navigate([language, 'statistics']);
+    }
   }
 }

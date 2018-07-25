@@ -1,6 +1,6 @@
-<div id="checkboxes-container">
+<div id="checkboxes-container" *ngIf="hospitalMainTypes && locale">
   <h6>Spitaltypen:</h6>
-  <div *ngFor="let value of hospitalMainTypes?.values_de; let i = index">
+  <div *ngFor="let value of hospitalMainTypes['values_' + locale]; let i = index">
     <label class="container">{{value}}
       <input type="checkbox"
              class="checkbox"

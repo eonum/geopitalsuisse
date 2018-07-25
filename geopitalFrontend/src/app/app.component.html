@@ -9,7 +9,7 @@
       <div *ngIf="component.showMap()">
         <span class="icon" data-toggle="tooltip" data-placement="top" title="Statistik">
           <fa-icon
-            [routerLink]="['/statistics']" [queryParams]="{locale: translate.currentLang}"
+            [routerLink]="[translate.currentLang, 'statistics']"
             (click)="component.closeSidebar()"
             [icon]="faChartLine"></fa-icon>
         </span>
@@ -17,7 +17,7 @@
       <div *ngIf="!component.showMap()">
         <span class="icon" data-toggle="tooltip" data-placement="top" title="Map">
           <fa-icon
-            [routerLink]="['/map']" [queryParams]="{locale: translate.currentLang}"
+            [routerLink]="[translate.currentLang, 'map']"
             (click)="component.openSidebar()"
             [icon]="faGlobe"></fa-icon>
         </span>
@@ -28,7 +28,7 @@
       <ul href="#" class="language-select ml-auto">
         <li *ngFor="let language of languages">
           <a href="javascript:void(0)"
-             [class.active]="translate.currentLang===language"
+             [class.active]="translate.currentLang === language"
              (click)="selectLanguage(language)">{{language}}</a>
         </li>
       </ul>

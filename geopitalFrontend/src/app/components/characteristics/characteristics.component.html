@@ -8,12 +8,12 @@
       <td>Adresse:</td>
       <td id="hospitalAddress">{{hospital?.address}}</td>
     </tr>
-    <tr>
-      <td id="numericalAttributeName">{{numericalAttribute?.name_de}}</td>
+    <tr *ngIf="numericalAttribute && locale">
+      <td id="numericalAttributeName">{{numericalAttribute['name_' + locale]}}</td>
       <td id="numericalAttributeValue">{{numericalAttributeValue}}</td>
     </tr>
-    <tr>
-      <td id="categoricalAttributeName">{{categoricalAttribute?.name_de}}</td>
+    <tr *ngIf="categoricalAttribute && locale">
+      <td id="categoricalAttributeName">{{categoricalAttribute['name_' + locale]}}</td>
       <td id="categoricalAttributeValue">{{categoricalAttributeValue}}</td>
     </tr>
     </tbody>

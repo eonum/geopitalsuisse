@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
-import { D3Service } from '../../services/d3.service';
-import { CharacteristicsService } from '../../services/characteristics.service';
 import { Attribute } from '../../models/attribute.model';
+import { CharacteristicsService } from '../../services/characteristics.service';
+import { D3Service } from '../../services/d3.service';
 
 /**
  * Handles checkbox-events implemented in the html-file of this component.
@@ -17,15 +18,22 @@ import { Attribute } from '../../models/attribute.model';
 export class NavbarComponent implements OnInit {
 
   hospitalMainTypes: Attribute;
+  locale: string;
 
   constructor(
     private d3: D3Service,
     private characteristicsService: CharacteristicsService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
     this.characteristicsService.getAttributeByName('geopital_main_type').subscribe((attribute: Attribute) => {
       this.hospitalMainTypes = attribute;
+    });
+
+    this.locale = this.translate.currentLang;
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.locale = event.lang;
     });
   }
 
