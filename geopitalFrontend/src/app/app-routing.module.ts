@@ -3,12 +3,26 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MapsComponent } from './components/maps/maps.component';
 import { ScatterplotComponent } from './components/scatterplot/scatterplot.component';
-import { LanguageGuardService } from './services/language-guard.service';
+import { LanguageGuard } from './services/language-guard.service';
 
 const routes: Routes = [
-  { path: '', canActivate: [LanguageGuardService], component: MapsComponent},
-  { path: 'map', component: MapsComponent },
-  { path: 'statistics', component: ScatterplotComponent}
+  {
+    path: ':language',
+    canActivate: [LanguageGuard],
+    component: MapsComponent,
+  }, {
+    path: ':language/map',
+    component: MapsComponent
+  }, {
+    path: ':language/statistics',
+    component: ScatterplotComponent
+  }, {
+    path: '',
+    pathMatch: 'full',
+    canActivate: [LanguageGuard],
+    redirectTo: '',
+  },
+  { path: '**', redirectTo: ''  }
 ];
 
 @NgModule({
