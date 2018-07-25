@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
 import { D3Service } from '../../services/d3.service';
-
+import { CharacteristicsService } from '../../services/characteristics.service';
+import { Attribute } from '../../models/attribute.model';
 
 /**
  * Handles checkbox-events implemented in the html-file of this component.
  * User can select or deselect a checkbox that contain the types of hospitals.
  * Hospitals of a certain type must only be displayed when the according checkbox is selected.
  */
-
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -16,65 +16,29 @@ import { D3Service } from '../../services/d3.service';
 })
 export class NavbarComponent implements OnInit {
 
-  private numUniSp = 0;
-  private numZentSp = 0;
-  private numGrundVers = 0;
-  private numPsychKl = 0;
-  private numRehaKl = 0;
-  private numSpezKl = 0;
-
-  hospitalTypes = [
-    'Universitätsspitäler',
-    'Zentrumsspitäler',
-    'Grundversorgung',
-    'Psychiatrische Kliniken',
-    'Rehabilitationskliniken',
-    'Spezialkliniken'
-  ];
+  hospitalMainTypes: Attribute;
 
   constructor(
-    private d3: D3Service
+    private d3: D3Service,
+    private characteristicsService: CharacteristicsService,
   ) {}
 
   ngOnInit() {
-
+    this.characteristicsService.getAttributeByName('geopital_main_type').subscribe((attribute: Attribute) => {
+      this.hospitalMainTypes = attribute;
+    });
   }
 
-  /**
-   * Is called when a click-event occurs in checkbox (html of component).
-   * Defines hospital type which the user has selected or deselected.
-   * The number tells us whether the user has selected (even number) or deselected (uneven number) a type.
-   * Hospitals of a certain type must only be displayed when the according checkbox is selected.
-   *
-   * @param hospitalType hospitals from this type need to be displayed (if they are hidden) or hidden (if they are displayed)
-   */
-  selectHospitalType(hospitalType) {
+  selectHospitalType() {
+    const input = (<HTMLInputElement>document.getElementsByClassName('checkbox'));
+    const selectedHospitalTypes = [];
 
-    if (hospitalType === 'Universitätsspitäler') {
-      this.numUniSp = this.numUniSp + 1;
+    for (let i = 0; i < input.length; i++) {
+      if (input[i].checked) {
+        selectedHospitalTypes.push(input[i].value);
+      }
     }
 
-    if (hospitalType === 'Zentrumsspitäler') {
-      this.numZentSp = this.numZentSp + 1;
-    }
-
-    if (hospitalType === 'Grundversorgung') {
-      this.numGrundVers = this.numGrundVers + 1;
-    }
-
-    if (hospitalType === 'Psychiatrische Kliniken') {
-      this.numPsychKl = this.numPsychKl + 1;
-    }
-
-    if (hospitalType === 'Rehabilitationskliniken') {
-      this.numRehaKl = this.numRehaKl + 1;
-    }
-
-    if (hospitalType === 'Spezialkliniken') {
-      this.numSpezKl = this.numSpezKl + 1;
-    }
-
-    this.d3.updateSelectedHospitalTypes(this.numUniSp, this.numZentSp, this.numGrundVers, this.numPsychKl, this.numRehaKl, this.numSpezKl);
+    this.d3.updateSelectedHospitalTypes(selectedHospitalTypes);
   }
-
 }
