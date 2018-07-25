@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
   }
 
   selectHospitalType() {
-    const input = (<HTMLInputElement>document.getElementsByClassName('checkbox'));
+    const input = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName('checkbox'));
     const selectedHospitalTypes = [];
 
     for (let i = 0; i < input.length; i++) {
