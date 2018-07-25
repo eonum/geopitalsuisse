@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
       const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
       if (isMobile || !D3Service.showMap()) {
         AppComponent.closeSidebar();
-      } else if (!isMobile && !D3Service.showMap()) {
+      } else if (!isMobile && D3Service.showMap()) {
         AppComponent.openSidebar();
       }
     });
