@@ -36,8 +36,8 @@ export class AppComponent implements OnInit {
     this.translate.addLangs(this.languages);
     this.translate.setDefaultLang(Settings.DEFAULT_LANGUAGE);
 
-    const browserLang = this.translate.getBrowserLang();
-    this.translate.use(browserLang.match(/de|fr/) ? browserLang : 'de');
+    const locale = window.location.href.split('/').indexOf('de') > -1 ? 'de' : 'fr';
+    this.translate.use(locale.match(/de|fr/) ? locale : 'de');
   }
 
   static openSidebar() {
