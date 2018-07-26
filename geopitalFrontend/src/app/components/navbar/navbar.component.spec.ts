@@ -1,25 +1,29 @@
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
+import { HttpLoaderFactory } from '../../app.module';
 import { NavbarComponent } from './navbar.component';
-import { StringAttributes } from '../../../mocks/data/mock-string-attributes';
 import { Attribute } from '../../models/attribute.model';
 import { D3Service } from '../../services/d3.service';
 import { CharacteristicsService } from '../../services/characteristics.service';
+import { StringAttributes } from '../../../mocks/data/mock-string-attributes';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
 
-  let d3ServiceSpy;
-  let characteristicsServiceSpy;
+  let translate: TranslateService;
+  let d3Service: D3Service;
   let hospitalMainTypes: Attribute;
 
   beforeEach(async(() => {
-    d3ServiceSpy = jasmine.createSpyObj('D3Service', ['updateSelectedHospitalTypes']);
+    const d3ServiceSpy = jasmine.createSpyObj('D3Service', ['updateSelectedHospitalTypes']);
 
-    characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService', ['getAttributeByName']);
+    const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService', ['getAttributeByName']);
     characteristicsServiceSpy.getAttributeByName.and.returnValue(
       of(StringAttributes.filter(attr => attr.code === 'geopital_main_type')[0]));
 
@@ -30,19 +34,29 @@ describe('NavbarComponent', () => {
       providers: [
         { provide: D3Service, useValue: d3ServiceSpy },
         { provide: CharacteristicsService, useValue: characteristicsServiceSpy }
+      ],
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
       ]
-    })
-    .compileComponents().then(() => {
+    }).compileComponents().then(() => {
       fixture = TestBed.createComponent(NavbarComponent);
       component = fixture.componentInstance;
-      d3ServiceSpy = TestBed.get(D3Service);
-      characteristicsServiceSpy = TestBed.get(CharacteristicsService);
+      d3Service = TestBed.get(D3Service);
+      translate = TestBed.get(TranslateService);
     });
   }));
 
   beforeEach(() => {
     hospitalMainTypes = StringAttributes.filter(attr => attr.code === 'geopital_main_type')[0];
     component.hospitalMainTypes = hospitalMainTypes;
+    translate.use('de');
   });
 
   it('should create', () => {
@@ -59,6 +73,8 @@ describe('NavbarComponent', () => {
 
   it('should display all hospital main types after detectChanges', () => {
     fixture.detectChanges();
+    expect(component.hospitalMainTypes).toBeDefined();
+    expect(component.locale).toBeDefined();
     expect(fixture.debugElement.queryAll(By.css('.checkbox')).length).toBe(hospitalMainTypes.values_de.length);
   });
 
@@ -80,8 +96,8 @@ describe('NavbarComponent', () => {
 
     component.selectHospitalType();
 
-    expect(d3ServiceSpy.updateSelectedHospitalTypes).toHaveBeenCalled();
-    expect(d3ServiceSpy.updateSelectedHospitalTypes).toHaveBeenCalledWith(['U', 'P']);
+    expect(d3Service.updateSelectedHospitalTypes).toHaveBeenCalled();
+    expect(d3Service.updateSelectedHospitalTypes).toHaveBeenCalledWith(['U', 'P']);
   });
 
   it('should deselect hospital type if clicked twice', () => {
@@ -93,7 +109,7 @@ describe('NavbarComponent', () => {
 
     component.selectHospitalType();
 
-    expect(d3ServiceSpy.updateSelectedHospitalTypes).toHaveBeenCalled();
-    expect(d3ServiceSpy.updateSelectedHospitalTypes).toHaveBeenCalledWith(['U']);
+    expect(d3Service.updateSelectedHospitalTypes).toHaveBeenCalled();
+    expect(d3Service.updateSelectedHospitalTypes).toHaveBeenCalledWith(['U']);
   });
 });

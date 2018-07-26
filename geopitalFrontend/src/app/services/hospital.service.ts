@@ -1,5 +1,7 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
+
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -15,16 +17,11 @@ export class HospitalService {
 
   private hospitals: Array<Hospital> = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private translate: TranslateService,
+  ) {}
 
-  // Todo: replace 'de' with current locale
-  private static getUrl(): string {
-    if (isDevMode()) {
-      return 'http://localhost:3000/de';
-    } else {
-      return 'http://qm1.ch/de';
-    }
-  }
 
   /**
    * Gets all hospitals from qualimed-hospital.
@@ -34,7 +31,7 @@ export class HospitalService {
     if (this.hospitals) {
       return of(this.hospitals);
     } else {
-      return this.http.get<Array<Hospital>>(HospitalService.getUrl() + '/api/geopital/hospitals')
+      return this.http.get<Array<Hospital>>(this.getUrl() + '/api/geopital/hospitals')
         .pipe(
           map( res => {
             this.hospitals = res.map((hospital: Hospital) => new Hospital(hospital));
@@ -45,9 +42,17 @@ export class HospitalService {
   }
 
   getHospitalByName(name: string): Observable<Hospital> {
-    return this.http.get<Hospital>(HospitalService.getUrl() + '/api/geopital/hospital_by_name?name=' + name)
+    return this.http.get<Hospital>(this.getUrl() + '/api/geopital/hospital_by_name?name=' + name)
       .pipe(
         map(res => new Hospital(res))
       );
+  }
+
+  private getUrl(): string {
+    if (isDevMode()) {
+      return 'http://localhost:3000/' + this.translate.currentLang;
+    } else {
+      return 'qm1.ch/' + this.translate.currentLang;
+    }
   }
 }

@@ -8,6 +8,7 @@ import * as d3 from 'd3';
 import { Attribute } from '../models/attribute.model';
 import { HospitalService } from './hospital.service';
 import { VariableService } from './variable.service';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 declare const L;
 
@@ -53,6 +54,8 @@ export class D3Service {
 
   private stringAttributeValuesDictionary = {};
 
+  private locale = 'de';
+
   // Observable string sources
   private numericalAttributeSource = new Subject<any>();
   private categoricalAttributeSource = new Subject<any>();
@@ -66,10 +69,20 @@ export class D3Service {
   constructor(
     private characteristicsService: CharacteristicsService,
     private hospitalService: HospitalService,
-    private variableService: VariableService
+    private variableService: VariableService,
+    private translate: TranslateService
   ) {
     this.initDefaultValues();
     this.generateDict();
+
+    this.locale = this.translate.currentLang;
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.locale = event.lang;
+      if (!D3Service.showMap()) {
+        this.translateGraph();
+      }
+
+    });
   }
 
   /**
@@ -700,6 +713,18 @@ export class D3Service {
     this.yAxis = d3.axisLeft(this.yScale);
   }
 
+  private translateGraph() {
+    if (this.svg != null && this.svg.selectAll('.axis') != null) {
+      this.svg.selectAll('.axis').remove();
+      this.drawAxes();
+    }
+
+    if (this.svg != null && this.svg.select('.legend') != null) {
+      this.svg.select('.legend').remove();
+      this.drawLegend();
+    }
+  }
+
   private drawAxes() {
     this.svg.append('g')
       .classed('x', true)
@@ -714,12 +739,13 @@ export class D3Service {
           }
         }))
       .append('text')
+      .attr('id', 'textXAxis')
       .attr('x', this.width / 2)
       .attr('y', this.margin.bottom / 2)
       .attr('fill', '#000')
       .style('text-anchor', 'middle')
       .style('font-size', '.8rem')
-      .text(this.xCoordinateAttribute.name_de);
+      .text(this.xCoordinateAttribute['name_' + this.locale]);
 
     this.svg.append('g')
       .classed('y', true)
@@ -733,13 +759,14 @@ export class D3Service {
           }
         }))
       .append('text')
+      .attr('id', 'textYAxis')
       .attr('transform', 'rotate(-90)')
       .attr('y', - this.margin.left / 2)
       .attr('x', - this.height / 2)
       .attr('fill', '#000')
       .style('text-anchor', 'middle')
       .style('font-size', '.8rem')
-      .text(this.yCoordinateAttribute.name_de);
+      .text(this.yCoordinateAttribute['name_' + this.locale]);
   }
 
   private drawRegressionLine(data) {
@@ -757,7 +784,7 @@ export class D3Service {
   }
 
   private drawLegend() {
-    const label = [{text: 'Regressionslinie (Korrelation: ' + this.correlationCoefficient + ')'}];
+    const label = [{text: ['regression_line', 'correlation'], value: this.correlationCoefficient}];
     const legend = this.svg.append('g')
       .attr('class', 'legend');
 
@@ -777,14 +804,35 @@ export class D3Service {
         .attr('transform', 'translate(' + x + ',' + y + ')');
 
 
-      legend.append('text')
+      const text = legend.append('text')
         .attr('class', 'legend')
         .attr('x', x + 12)
         .attr('y', y)
         .attr('dominant-baseline', 'central')
-        .style('font-size', '.8rem')
-        .text(d.text);
+        .style('font-size', '.8rem');
+
+      text.append('tspan')
+        .attr('x', x + 12)
+        .text(this.prepareTextForLabel(d.text[0], null));
+
+
+      text.append('tspan')
+        .attr('x', x + 12)
+        .attr('dy', '1.2em')
+        .text(this.prepareTextForLabel(d.text[1], d.value));
     });
+  }
+
+  private prepareTextForLabel(textToTranslate: string, value: number | null): string {
+    let text = '';
+    this.translate.get(textToTranslate).subscribe((translation: string) => {
+      text += translation;
+    });
+
+    if (value) {
+      text += ' :' + value;
+    }
+    return text;
   }
 
   private drawDots(data) {

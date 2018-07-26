@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
+
 import { Attribute } from '../../models/attribute.model';
 import { Hospital } from '../../models/hospital.model';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SidebarComponent implements OnInit {
 
-  dropdownCategoricalAttributes = 'Filter';
+  dropdownCategoricalAttributes = 'filter';
   categoricalAttributes: Array<Attribute> = null;
 
-  dropdownNumericalAttributes = 'Kennzahlen';
+  dropdownNumericalAttributes = 'characteristics_number';
   numericalAttributes: Array<Attribute> = null;
 
   selectedHospital: Hospital = null;
@@ -24,7 +26,7 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private characteristicsService: CharacteristicsService,
-    private d3: D3Service
+    private d3: D3Service,
   ) { }
 
   ngOnInit () {

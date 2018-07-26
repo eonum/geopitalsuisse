@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 import { D3Service } from './services/d3.service';
 
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons/faChartLine';
+
+import { Settings } from './settings';
 
 declare const $: any;
 
@@ -21,8 +26,19 @@ export class AppComponent implements OnInit {
     'zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
   component = AppComponent;
+  languages = Settings.LANGUAGES;
+  currentLang = '';
 
-  constructor() {}
+  constructor(
+    public translate: TranslateService,
+    private router: Router,
+  ) {
+    this.translate.addLangs(this.languages);
+    this.translate.setDefaultLang(Settings.DEFAULT_LANGUAGE);
+
+    const locale = window.location.href.split('/').indexOf('de') > -1 ? 'de' : 'fr';
+    this.translate.use(locale.match(/de|fr/) ? locale : 'de');
+  }
 
   static openSidebar() {
     document.getElementById('externalContent').classList.add('show');
@@ -46,5 +62,14 @@ export class AppComponent implements OnInit {
         AppComponent.openSidebar();
       }
     });
+  }
+
+  selectLanguage(language: string) {
+    this.translate.use(language);
+    if (AppComponent.showMap()) {
+      this.router.navigate([language, 'map']);
+    } else {
+      this.router.navigate([language, 'statistics']);
+    }
   }
 }

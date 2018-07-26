@@ -1,6 +1,9 @@
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+
+import { HttpLoaderFactory } from '../app.module';
 
 import { CharacteristicsService } from './characteristics.service';
 import { Attribute } from '../models/attribute.model';
@@ -10,10 +13,10 @@ import { NumericalAttributes } from '../../mocks/data/mock-numerical-attributes'
 
 
 describe('CharacteristicsService', () => {
-
   let service: CharacteristicsService;
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
+  let translate: TranslateService;
   const testUrl = 'http://qm1.ch/de';
 
   beforeEach(() => {
@@ -22,13 +25,21 @@ describe('CharacteristicsService', () => {
         CharacteristicsService
       ],
       imports: [
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
       ]
     });
 
     service = TestBed.get(CharacteristicsService);
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
+    translate = TestBed.get(TranslateService);
   });
 
   afterEach(() => {

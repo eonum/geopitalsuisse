@@ -1,16 +1,16 @@
 <div id="dropdown-container">
-  <h6>{{name}}</h6>
+  <h6>{{ name | translate}}</h6>
 
-  <div id="attributeDropdown-{{name}}" class="dropdown">
-    <button type="button" id="attributeDropdownButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{{selectedAttribute.name_de}}</button>
+  <div *ngIf="selectedAttribute && locale" id="attributeDropdown-{{name}}" class="dropdown">
+    <button type="button" id="attributeDropdownButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{{selectedAttribute['name_' + locale]}}</button>
 
-    <div class="dropdown-menu">
+    <div *ngIf="attributes" class="dropdown-menu">
       <input *ngIf="input" class="form-control" type="text" placeholder="Suchen..." id="searchField-{{name}}" (keyup)="filterDropdownOptions()">
       <a *ngFor="let attribute of attributes"
          [class.active]="attribute.name_de === selectedAttribute.name_de"
          class="dropdown-item"
          id="{{attribute.code}}-{{name}}"
-         (click)="selectAttribute(attribute)">{{attribute.name_de}}</a>
+         (click)="selectAttribute(attribute)">{{attribute['name_' + locale]}}</a>
     </div>
   </div>
 </div>

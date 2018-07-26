@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 import { Attribute } from '../../models/attribute.model';
 import { Hospital } from '../../models/hospital.model';
@@ -20,9 +21,11 @@ export class CharacteristicsComponent implements OnInit, OnChanges {
 
   categoricalAttributeValue: string;
   numericalAttributeValue: string;
+  locale: string;
 
   constructor (
     private variableService: VariableService,
+    private translate: TranslateService
   ) {}
 
   private static formatValues(attribute: Attribute, value: string) {
@@ -39,6 +42,11 @@ export class CharacteristicsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.updateCharacteristicsData(this.hospital, this.categoricalAttribute, this.numericalAttribute);
+
+    this.locale = this.translate.currentLang;
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.locale = event.lang;
+    });
   }
 
   ngOnChanges() {

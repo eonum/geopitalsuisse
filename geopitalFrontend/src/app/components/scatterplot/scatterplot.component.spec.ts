@@ -16,12 +16,9 @@ describe('ScatterplotComponent', () => {
   let component: ScatterplotComponent;
   let fixture: ComponentFixture<ScatterplotComponent>;
 
-  let characteristicsServiceSpy;
-  let d3ServiceSpy;
-
   beforeEach(async(() => {
-    const characteristicsSpy = jasmine.createSpyObj('CharacteristicsService', ['getNumericalAttributes']);
-    const d3Spy = jasmine.createSpyObj('D3Service', ['drawGraph']);
+    const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService', ['getNumericalAttributes']);
+    const d3ServiceSpy = jasmine.createSpyObj('D3Service', ['drawGraph']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -33,15 +30,13 @@ describe('ScatterplotComponent', () => {
         NO_ERRORS_SCHEMA
       ],
       providers: [
-        { provide: CharacteristicsService, useValue: characteristicsSpy },
-        { provide: D3Service, useValue: d3Spy}
+        { provide: CharacteristicsService, useValue: characteristicsServiceSpy },
+        { provide: D3Service, useValue: d3ServiceSpy}
       ]
     })
     .compileComponents().then(() => {
       fixture = TestBed.createComponent(ScatterplotComponent);
       component = fixture.componentInstance;
-      characteristicsServiceSpy = TestBed.get(CharacteristicsService);
-      d3ServiceSpy = TestBed.get(D3Service);
     });
   }));
 

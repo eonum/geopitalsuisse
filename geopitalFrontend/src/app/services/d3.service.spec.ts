@@ -1,33 +1,35 @@
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
+import { HttpLoaderFactory } from '../app.module';
+
+import { Hospital } from '../models/hospital.model';
 import { D3Service } from './d3.service';
 import { CharacteristicsService } from './characteristics.service';
 import { HospitalService } from './hospital.service';
 import { VariableService } from './variable.service';
-
 import { Hospitals } from '../../mocks/data/mock-hospitals';
 import { NumericalAttributes } from '../../mocks/data/mock-numerical-attributes';
 import { StringAttributes } from '../../mocks/data/mock-string-attributes';
-import { of } from 'rxjs';
-import { Hospital } from '../models/hospital.model';
 
 describe('D3Service', () => {
-  let characteristicsServiceSpy;
-  let hospitalServiceSpy;
-  let variableServiceSpy;
-  let d3Service;
+  let d3Service: any; // if declared as 'D3Service', it is not possible to spy on private methods
+  let translate: TranslateService;
 
   beforeEach(() => {
-    characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService',
+    const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService',
       ['isCategoricalAttribute', 'isNumericalAttribute', 'getAttributeByName', 'getStringAttributes']);
     characteristicsServiceSpy.getAttributeByName.and.returnValue(of(NumericalAttributes.filter(attr => attr.code === 'EtMedL')));
     characteristicsServiceSpy.getStringAttributes.and.returnValue(of(StringAttributes));
 
-    hospitalServiceSpy = jasmine.createSpyObj('HospitalService', ['getHospitalByName', 'getHospitals']);
+    const hospitalServiceSpy = jasmine.createSpyObj('HospitalService', ['getHospitalByName', 'getHospitals']);
     hospitalServiceSpy.getHospitalByName.and.returnValue(of(Hospitals[0]));
     hospitalServiceSpy.getHospitals.and.returnValue(of(Hospitals));
 
-    variableServiceSpy = jasmine.createSpyObj('VariableService', ['getValueOfVariable', 'getVariableOfHospitalByAttribute']);
+    const variableServiceSpy = jasmine.createSpyObj('VariableService', ['getValueOfVariable', 'getVariableOfHospitalByAttribute']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -36,12 +38,20 @@ describe('D3Service', () => {
         { provide: HospitalService, useValue: hospitalServiceSpy },
         { provide: VariableService, useValue: variableServiceSpy }
       ],
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
+      ]
     });
 
-    characteristicsServiceSpy = TestBed.get(CharacteristicsService);
-    hospitalServiceSpy = TestBed.get(HospitalService);
-    variableServiceSpy = TestBed.get(VariableService);
     d3Service = TestBed.get(D3Service);
+    translate = TestBed.get(TranslateService);
   });
 
   it('should be created', () => {

@@ -1,5 +1,7 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -10,16 +12,10 @@ import { Attribute } from '../models/attribute.model';
 })
 export class CharacteristicsService {
 
-  constructor(private http: HttpClient) {}
-
-  /* Todo: replace 'de' with current locale */
-  private static getUrl(): string {
-    if (isDevMode()) {
-      return 'http://localhost:3000/de';
-    } else {
-      return 'qm1.ch/de';
-    }
-  }
+  constructor(
+    private http: HttpClient,
+    private translate: TranslateService
+  ) {}
 
   static isCategoricalAttribute(attribute: Attribute): boolean {
     return attribute.variable_type === 'string';
@@ -34,7 +30,7 @@ export class CharacteristicsService {
    * @returns {Observable<Array<Attribute>>} array of Attributes
    */
   getAttributes(): Observable<Array<Attribute>> {
-    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/attributes')
+    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/attributes')
       .pipe(
         map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
       );
@@ -45,7 +41,7 @@ export class CharacteristicsService {
    * @returns {Observable<Array<Attribute>>} array of Attributes
    */
   getStringAttributes(): Observable<Array<Attribute>> {
-    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/string_attributes')
+    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/string_attributes')
       .pipe(
         map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
       );
@@ -56,16 +52,24 @@ export class CharacteristicsService {
    * @returns {Observable<Array<Attribute>>} array of Attributes
    */
   getNumberAttributes(): Observable<Array<Attribute>> {
-    return this.http.get<Array<Attribute>>(CharacteristicsService.getUrl() + '/api/geopital/number_attributes')
+    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/number_attributes')
       .pipe(
         map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
       );
   }
 
   getAttributeByName(name: string): Observable<Attribute> {
-    return this.http.get<Attribute>(CharacteristicsService.getUrl() + '/api/geopital/attribute?name=' + name)
+    return this.http.get<Attribute>(this.getUrl() + '/api/geopital/attribute?name=' + name)
     .pipe(
       map(res => new Attribute(res))
     );
+  }
+
+  private getUrl(): string {
+    if (isDevMode()) {
+      return 'http://localhost:3000/' + this.translate.currentLang;
+    } else {
+      return 'qm1.ch/'  + this.translate.currentLang;
+    }
   }
 }
