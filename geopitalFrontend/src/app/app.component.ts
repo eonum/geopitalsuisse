@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import { D3Service } from './services/d3.service';
 
@@ -32,7 +32,6 @@ export class AppComponent implements OnInit {
   constructor(
     public translate: TranslateService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
   ) {
     this.translate.addLangs(this.languages);
     this.translate.setDefaultLang(Settings.DEFAULT_LANGUAGE);
