@@ -11,19 +11,17 @@ import { NumericalAttributes } from '../../../mocks/data/mock-numerical-attribut
 describe('CategorialAttributesComponent', () => {
   let component: CategorialAttributesComponent;
   let fixture: ComponentFixture<CategorialAttributesComponent>;
-
-  let d3Service: D3Service;
   let translate: TranslateService;
 
   beforeEach(async(() => {
-    d3Service = jasmine.createSpyObj('D3Service', ['updateSelectedCategoryOption']);
+    const d3ServiceSpy = jasmine.createSpyObj('D3Service', ['updateSelectedCategoryOption']);
     TestBed.configureTestingModule({
       declarations: [
         CategorialAttributesComponent
       ],
       providers: [
         TranslateService,
-        {provide: D3Service, useValue: d3Service}
+        {provide: D3Service, useValue: d3ServiceSpy}
       ],
       imports: [
         HttpClientTestingModule,
@@ -38,7 +36,6 @@ describe('CategorialAttributesComponent', () => {
     }).compileComponents().then(() => {
       fixture = TestBed.createComponent(CategorialAttributesComponent);
       component = fixture.componentInstance;
-      d3Service = TestBed.get(D3Service);
       translate = TestBed.get(TranslateService);
     });
   }));

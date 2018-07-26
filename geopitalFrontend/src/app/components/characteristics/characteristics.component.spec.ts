@@ -13,18 +13,17 @@ import { Hospitals } from '../../../mocks/data/mock-hospitals';
 describe('CharacteristicsComponent', () => {
   let component: CharacteristicsComponent;
   let fixture: ComponentFixture<CharacteristicsComponent>;
-  let variableService: VariableService;
   let translate: TranslateService;
 
   beforeEach(async(() => {
-    variableService = jasmine.createSpyObj('VariableService',
+    const variableServiceSpy = jasmine.createSpyObj('VariableService',
       ['getVariableOfHospitalByAttribute', 'getValueOfVariable']);
 
     TestBed.configureTestingModule({
       declarations: [ CharacteristicsComponent ],
       providers: [
         TranslateService,
-        {provide: VariableService, useValue: variableService},
+        {provide: VariableService, useValue: variableServiceSpy},
       ],
       imports: [
         HttpClientTestingModule,
@@ -40,7 +39,6 @@ describe('CharacteristicsComponent', () => {
     .compileComponents().then(() => {
       fixture = TestBed.createComponent(CharacteristicsComponent);
       component = fixture.componentInstance;
-      variableService = TestBed.get(VariableService);
       translate = TestBed.get(TranslateService);
     });
   }));

@@ -16,30 +16,27 @@ import { NumericalAttributes } from '../../mocks/data/mock-numerical-attributes'
 import { StringAttributes } from '../../mocks/data/mock-string-attributes';
 
 describe('D3Service', () => {
-  let characteristicsService: CharacteristicsService;
-  let hospitalService: HospitalService;
-  let variableService: VariableService;
-  let d3Service: D3Service;
+  let d3Service: any; // if declared as 'D3Service', it is not possible to spy on private methods
   let translate: TranslateService;
 
   beforeEach(() => {
-    characteristicsService = jasmine.createSpyObj('CharacteristicsService',
+    const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService',
       ['isCategoricalAttribute', 'isNumericalAttribute', 'getAttributeByName', 'getStringAttributes']);
-    characteristicsService.getAttributeByName.and.returnValue(of(NumericalAttributes.filter(attr => attr.code === 'EtMedL')));
-    characteristicsService.getStringAttributes.and.returnValue(of(StringAttributes));
+    characteristicsServiceSpy.getAttributeByName.and.returnValue(of(NumericalAttributes.filter(attr => attr.code === 'EtMedL')));
+    characteristicsServiceSpy.getStringAttributes.and.returnValue(of(StringAttributes));
 
-    hospitalService = jasmine.createSpyObj('HospitalService', ['getHospitalByName', 'getHospitals']);
-    hospitalService.getHospitalByName.and.returnValue(of(Hospitals[0]));
-    hospitalService.getHospitals.and.returnValue(of(Hospitals));
+    const hospitalServiceSpy = jasmine.createSpyObj('HospitalService', ['getHospitalByName', 'getHospitals']);
+    hospitalServiceSpy.getHospitalByName.and.returnValue(of(Hospitals[0]));
+    hospitalServiceSpy.getHospitals.and.returnValue(of(Hospitals));
 
-    variableService = jasmine.createSpyObj('VariableService', ['getValueOfVariable', 'getVariableOfHospitalByAttribute']);
+    const variableServiceSpy = jasmine.createSpyObj('VariableService', ['getValueOfVariable', 'getVariableOfHospitalByAttribute']);
 
     TestBed.configureTestingModule({
       providers: [
         D3Service,
-        { provide: CharacteristicsService, useValue: characteristicsService },
-        { provide: HospitalService, useValue: hospitalService },
-        { provide: VariableService, useValue: variableService }
+        { provide: CharacteristicsService, useValue: characteristicsServiceSpy },
+        { provide: HospitalService, useValue: hospitalServiceSpy },
+        { provide: VariableService, useValue: variableServiceSpy }
       ],
       imports: [
         HttpClientTestingModule,
@@ -53,9 +50,6 @@ describe('D3Service', () => {
       ]
     });
 
-    characteristicsService = TestBed.get(CharacteristicsService);
-    hospitalService = TestBed.get(HospitalService);
-    variableService = TestBed.get(VariableService);
     d3Service = TestBed.get(D3Service);
     translate = TestBed.get(TranslateService);
   });

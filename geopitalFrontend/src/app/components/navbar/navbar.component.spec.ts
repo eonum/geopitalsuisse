@@ -18,14 +18,13 @@ describe('NavbarComponent', () => {
 
   let translate: TranslateService;
   let d3Service: D3Service;
-  let characteristicsService: CharacteristicsService;
   let hospitalMainTypes: Attribute;
 
   beforeEach(async(() => {
-    d3Service = jasmine.createSpyObj('D3Service', ['updateSelectedHospitalTypes']);
+    const d3ServiceSpy = jasmine.createSpyObj('D3Service', ['updateSelectedHospitalTypes']);
 
-    characteristicsService = jasmine.createSpyObj('CharacteristicsService', ['getAttributeByName']);
-    characteristicsService.getAttributeByName.and.returnValue(
+    const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService', ['getAttributeByName']);
+    characteristicsServiceSpy.getAttributeByName.and.returnValue(
       of(StringAttributes.filter(attr => attr.code === 'geopital_main_type')[0]));
 
     TestBed.configureTestingModule({
@@ -33,8 +32,8 @@ describe('NavbarComponent', () => {
         NavbarComponent
       ],
       providers: [
-        { provide: D3Service, useValue: d3Service },
-        { provide: CharacteristicsService, useValue: characteristicsService }
+        { provide: D3Service, useValue: d3ServiceSpy },
+        { provide: CharacteristicsService, useValue: characteristicsServiceSpy }
       ],
       imports: [
         HttpClientTestingModule,
@@ -50,7 +49,6 @@ describe('NavbarComponent', () => {
       fixture = TestBed.createComponent(NavbarComponent);
       component = fixture.componentInstance;
       d3Service = TestBed.get(D3Service);
-      characteristicsService = TestBed.get(CharacteristicsService);
       translate = TestBed.get(TranslateService);
     });
   }));

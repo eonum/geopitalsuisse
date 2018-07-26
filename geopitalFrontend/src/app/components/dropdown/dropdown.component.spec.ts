@@ -18,17 +18,14 @@ describe('DropdownComponent', () => {
   let component: DropdownComponent;
   let fixture: ComponentFixture<DropdownComponent>;
 
-  let characteristicsService: CharacteristicsService;
-  let d3Service: D3Service;
   let translate: TranslateService;
-
-  let http: HttpClient;
+  let http: HttpTestingController;
 
   beforeEach(async(() => {
-    d3Service = jasmine.createSpyObj('D3Service',
+    const d3ServiceSpy = jasmine.createSpyObj('D3Service',
       ['showMap', 'setCategoricalAttribute', 'setNumericalAttribute',
         'setXCoordinateAttribute', 'setYCoordinateAttribute', 'updateAttribute']);
-    characteristicsService = jasmine.createSpyObj('CharacteristicsService',
+    const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService',
       ['isCategoricalAttribute', 'isNumericalAttribute']);
 
     TestBed.configureTestingModule({
@@ -36,8 +33,8 @@ describe('DropdownComponent', () => {
         DropdownComponent,
       ],
       providers: [
-        {provide: CharacteristicsService, useValue: characteristicsService},
-        {provide: D3Service, useValue: d3Service}
+        {provide: CharacteristicsService, useValue: characteristicsServiceSpy},
+        {provide: D3Service, useValue: d3ServiceSpy}
       ],
       imports: [
         HttpClientTestingModule,
@@ -53,9 +50,6 @@ describe('DropdownComponent', () => {
     .compileComponents().then(() => {
       fixture = TestBed.createComponent(DropdownComponent);
       component = fixture.componentInstance;
-
-      characteristicsService = TestBed.get(CharacteristicsService);
-      d3Service = TestBed.get(D3Service);
       translate = TestBed.get(TranslateService);
 
       http = TestBed.get(HttpTestingController);
