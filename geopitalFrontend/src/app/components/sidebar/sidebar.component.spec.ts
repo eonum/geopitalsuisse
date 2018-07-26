@@ -21,14 +21,14 @@ class CharacteristicsStubComponent {}
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
-  let characteristicsServiceSpy;
-  let d3ServiceSpy;
+  let characteristicsService: CharacteristicsService;
+  let d3Service: D3Service;
 
   beforeEach(async(() => {
-    const spy = jasmine.createSpyObj('CharacteristicsService',
+    characteristicsService = jasmine.createSpyObj('CharacteristicsService',
       ['getStringAttributes', 'getNumberAttributes']);
 
-    const d3Spy = jasmine.createSpyObj('D3Service',
+    d3Service = jasmine.createSpyObj('D3Service',
       ['selectedHospital$', 'categoricalAttribute$', 'numericalAttribute$']);
 
     TestBed.configureTestingModule({
@@ -40,8 +40,8 @@ describe('SidebarComponent', () => {
         CharacteristicsStubComponent
       ],
       providers: [
-        { provide: D3Service, useValue: d3Spy },
-        { provide: CharacteristicsService, useValue: spy }
+        { provide: D3Service, useValue: d3Service },
+        { provide: CharacteristicsService, useValue: characteristicsService }
       ],
       schemas: [
         NO_ERRORS_SCHEMA
@@ -50,9 +50,8 @@ describe('SidebarComponent', () => {
     .compileComponents().then(() => {
       fixture = TestBed.createComponent(SidebarComponent);
       component = fixture.componentInstance;
-      characteristicsServiceSpy = TestBed.get(CharacteristicsService);
-      d3ServiceSpy = TestBed.get(D3Service);
-
+      characteristicsService = TestBed.get(CharacteristicsService);
+      d3Service = TestBed.get(D3Service);
     });
   }));
 

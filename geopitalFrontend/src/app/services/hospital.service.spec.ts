@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+
+import { HttpLoaderFactory } from '../app.module';
 
 import { HospitalService } from './hospital.service';
 import { Hospital } from '../models/hospital.model';
@@ -11,6 +14,7 @@ describe('HospitalService', () => {
   let hospitalService: HospitalService;
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
+  let translate: TranslateService;
   const testUrl = 'http://qm1.ch/de';
 
   beforeEach(() => {
@@ -19,13 +23,21 @@ describe('HospitalService', () => {
         HospitalService
       ],
       imports: [
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
       ]
     });
 
     hospitalService = TestBed.get(HospitalService);
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
+    translate = TestBed.get(TranslateService);
   });
 
   afterEach(() => {
