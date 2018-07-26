@@ -12,11 +12,11 @@ import { CharacteristicsService } from '../../services/characteristics.service';
 })
 export class ScatterplotComponent implements OnInit {
 
-  name_x_axis = 'Kennzahl x-Achse';
+  name_x_axis = 'characteristics_number_x';
   x_axis = 'x';
   xCoordinateAttribute: Attribute = null;
 
-  name_y_axis = 'Kennzahl y-Achse';
+  name_y_axis = 'characteristics_number_y';
   y_axis = 'y';
   yCoordinateAttribute: Attribute = null;
 

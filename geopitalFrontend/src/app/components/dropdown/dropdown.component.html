@@ -1,5 +1,5 @@
 <div id="dropdown-container">
-  <h6>{{name}}</h6>
+  <h6>{{ name | translate}}</h6>
 
   <div *ngIf="selectedAttribute && locale" id="attributeDropdown-{{name}}" class="dropdown">
     <button type="button" id="attributeDropdownButton" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{{selectedAttribute['name_' + locale]}}</button>
