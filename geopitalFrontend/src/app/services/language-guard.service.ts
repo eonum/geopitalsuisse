@@ -36,7 +36,7 @@ export class LanguageGuard implements CanActivate {
    * @returns {boolean} - True, if a valid language parameter is in the route.
    * */
   public canActivate(route: ActivatedRouteSnapshot): boolean {
-
+    console.log('route.params[\'language\']', route.params['language'])
     let language = route.params['language'];
     // set language and return if it exists
 
