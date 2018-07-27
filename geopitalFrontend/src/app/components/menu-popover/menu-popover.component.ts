@@ -30,7 +30,7 @@ export class MenuPopoverComponent implements OnInit {
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.currentRoute = event.url.split('/').indexOf('map') > -1 ? 'map' : 'statistics';
+        this.currentRoute = event.urlAfterRedirects.split('/').indexOf('map') > -1 ? 'map' : 'statistics';
       }
     });
 
