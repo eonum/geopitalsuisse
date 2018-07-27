@@ -1,3 +1,40 @@
-<p>
-  menu-popover works!
-</p>
+<button type="button"
+        class="btn btn-primary"
+        data-toggle="popover"
+        data-html="true"
+        data-popover-content="#popover-content-menu"><fa-icon [icon]="faEllipsisV"></fa-icon>
+</button>
+
+<div id="popover-content-menu">
+  <div class="popover-body">
+    <div class="card-body" style="background-color: white;">
+      <ul>
+        <li>
+          <a [routerLink]="[translate.currentLang, 'statistics']"  [class.active]="currentRoute === 'statistics'">
+            <fa-icon class="icon" [icon]="faChartLine"></fa-icon>
+            <div class="label">{{ 'statistics' | translate}}</div>
+          </a>
+        </li>
+
+        <li>
+          <a [routerLink]="[translate.currentLang, 'map']" [class.active]="currentRoute === 'map'">
+            <fa-icon class="icon"  [icon]="faGlobe"></fa-icon>
+            <div class="label">{{ 'map' | translate}}</div>
+          </a>
+        </li>
+      </ul>
+
+      <hr>
+
+      <ul>
+        <li *ngFor="let language of languages">
+          <a [routerLink]="[language, currentRoute]"
+             class="card-link"
+             [class.active]="translate.currentLang === language"
+             (click)="translate.use(language)">{{language}}</a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>
