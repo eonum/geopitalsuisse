@@ -22,6 +22,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MenuPopoverComponent } from './components/menu-popover/menu-popover.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -37,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     CategorialAttributesComponent,
     SidebarComponent,
     ScatterplotComponent,
+    MenuPopoverComponent,
   ],
   imports: [
     BrowserModule,
