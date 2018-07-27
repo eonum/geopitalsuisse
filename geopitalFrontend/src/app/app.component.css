@@ -10,46 +10,11 @@
   z-index:0;
 }
 
-ul, li {
-  display: inline-block;
-}
-
 .navbar-toggler {
   z-index:9999;
   top: 0;
   right: 0;
   position: fixed;
-}
-
-.routingButton {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.icon {
-  cursor: pointer;
-  display: inline-block;
-  width: auto;
-  height: auto;
-  color: #DF691A;
-  font-size: 2.5rem;
-  text-align: center;
-  z-index: 9999;
-}
-
-.language-select {
-  padding: 0;
-  list-style: none;
-}
-
-.language-select a {
-  padding-left: 1rem;
-}
-
-.active {
-  font-size: large;
-  color: #9a4912;
 }
 
 footer {
