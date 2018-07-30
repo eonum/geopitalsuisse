@@ -7,7 +7,7 @@
   cursor: pointer;
   width: auto;
   height: auto;
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   z-index: 9999;
 }
 
@@ -16,16 +16,23 @@
   color: #4E5D6C;
 }
 
-ul {
+.navigation {
+  /* remove default ul settings */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
   flex: 100%;
   width: 100%;
   max-width: 100%;
   float: none;
 }
 
-li {
+.navigation-element {
   display: inline-block;
-  padding: 0 1rem;
+  padding: 0 .5rem;
+  max-width: 50%;
+  flex: 50%;
 }
 
 .active {

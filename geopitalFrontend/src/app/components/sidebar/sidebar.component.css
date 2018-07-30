@@ -1,9 +1,9 @@
-ul {
+#sidebar {
   list-style-type: none;
   overflow: auto;
 }
 
-li {
+.sidebarElement {
   padding: 1rem;
   width: 100%;
   border-bottom: 1px solid;
