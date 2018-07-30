@@ -1,17 +1,28 @@
+/* For mobile: */
 #externalContent {
-  min-width: 20rem;
-  max-width: 20rem;
+  width: 100%;
+  max-width: 100%;
   height: auto;
   max-height: 100%;
   overflow-y: auto;
   position: absolute;
-  right: 0;
   top: 0;
   z-index:0;
 }
 
-ul, li {
-  display: inline-block;
+/* For desktop: */
+@media only screen and (min-width: 768px) {
+  #externalContent {
+    min-width: 25rem;
+    max-width: 25rem;
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index:0;
+  }
 }
 
 .navbar-toggler {
@@ -19,37 +30,6 @@ ul, li {
   top: 0;
   right: 0;
   position: fixed;
-}
-
-.routingButton {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.icon {
-  cursor: pointer;
-  display: inline-block;
-  width: auto;
-  height: auto;
-  color: #DF691A;
-  font-size: 2.5rem;
-  text-align: center;
-  z-index: 9999;
-}
-
-.language-select {
-  padding: 0;
-  list-style: none;
-}
-
-.language-select a {
-  padding-left: 1rem;
-}
-
-.active {
-  font-size: large;
-  color: #9a4912;
 }
 
 footer {

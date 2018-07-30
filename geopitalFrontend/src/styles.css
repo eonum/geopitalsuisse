@@ -23,5 +23,6 @@ div.tooltip {
   color: rgb(255, 255, 255)
 }
 .leaflet-top {
-  top: 5%;
+  top: 8%;
+  margin-left: 6px;
 }

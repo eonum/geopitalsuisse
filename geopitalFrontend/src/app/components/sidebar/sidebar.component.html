@@ -1,9 +1,9 @@
-<ul class="nav nav-tabs">
-  <li>
+<ul class="nav nav-tabs" id="sidebar">
+  <li class="sidebarElement">
     <app-navbar></app-navbar>
   </li>
 
-  <li>
+  <li class="sidebarElement">
     <app-dropdown
       *ngIf="numericalAttributes && numericalAttribute"
       [input]="true"
@@ -26,7 +26,7 @@
 
   </li>
 
-  <li>
+  <li class="sidebarElement">
     <app-characteristics
       *ngIf="categoricalAttribute && numericalAttribute && selectedHospital"
       [categoricalAttribute]="categoricalAttribute"

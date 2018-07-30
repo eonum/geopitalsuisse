@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
-import { D3Service } from './services/d3.service';
-
-import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe';
-import { faChartLine } from '@fortawesome/free-solid-svg-icons/faChartLine';
 
 import { Settings } from './settings';
 
@@ -18,58 +13,41 @@ declare const $: any;
   styleUrls: ['app.component.css'],
 })
 export class AppComponent implements OnInit {
-  faGlobe = faGlobe;
-  faChartLine = faChartLine;
-
   linkToBlog = 'http://eonum.ch/de/allgemein/geopitalsuisse/';
   linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/' +
     'zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
   component = AppComponent;
   languages = Settings.LANGUAGES;
-  currentLang = '';
+  view;
 
   constructor(
     public translate: TranslateService,
-    private router: Router,
+    private router: Router
   ) {
     this.translate.addLangs(this.languages);
     this.translate.setDefaultLang(Settings.DEFAULT_LANGUAGE);
 
-    const locale = window.location.href.split('/').indexOf('de') > -1 ? 'de' : 'fr';
-    this.translate.use(locale.match(/de|fr/) ? locale : 'de');
-  }
-
-  static openSidebar() {
-    document.getElementById('externalContent').classList.add('show');
-  }
-
-  static closeSidebar() {
-    document.getElementById('externalContent').classList.remove('show');
-  }
-
-  static showMap() {
-    return D3Service.showMap();
+    const isGerman = window.location.href.split('/').indexOf('de') > -1;
+    const isFrench = window.location.href.split('/').indexOf('fr') > -1;
+    this.translate.use(isGerman ? 'de' : isFrench ? 'fr' : Settings.DEFAULT_LANGUAGE);
   }
 
   ngOnInit() {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.view = event.urlAfterRedirects.split('/').indexOf('map') > -1 ? 'map' : 'statistics';
+      }
+    });
+
     $(document).ready(() => {
       const userAgent = navigator.userAgent;
       const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent));
-      if (isMobile || !D3Service.showMap()) {
-        AppComponent.closeSidebar();
-      } else if (!isMobile && D3Service.showMap()) {
-        AppComponent.openSidebar();
+      if (isMobile || this.view === 'statistics') {
+        document.getElementById('externalContent').classList.remove('show');
+      } else if (!isMobile && this.view === 'map') {
+        document.getElementById('externalContent').classList.add('show');
       }
     });
-  }
-
-  selectLanguage(language: string) {
-    this.translate.use(language);
-    if (AppComponent.showMap()) {
-      this.router.navigate([language, 'map']);
-    } else {
-      this.router.navigate([language, 'statistics']);
-    }
   }
 }

@@ -8,13 +8,14 @@ import { LanguageGuard } from './services/language-guard.service';
 const routes: Routes = [
   {
     path: ':language',
-    canActivate: [LanguageGuard],
-    component: MapsComponent,
+    redirectTo: ':language/map'
   }, {
     path: ':language/map',
+    canActivate: [LanguageGuard],
     component: MapsComponent
   }, {
     path: ':language/statistics',
+    canActivate: [LanguageGuard],
     component: ScatterplotComponent
   }, {
     path: '',
