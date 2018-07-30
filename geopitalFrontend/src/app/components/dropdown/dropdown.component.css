@@ -1,9 +1,3 @@
-
-#dropdown-container {
-  margin: 0;
-  padding: .5rem .5rem .5rem .5rem;
-}
-
 .dropdown {
   margin-top: .5rem;
   margin-bottom: .5rem;
@@ -18,7 +12,6 @@
   left: auto;
   right: auto;
   max-height: 10rem;
-  max-width: 75vw;
   overflow-y: scroll;
 }
 
