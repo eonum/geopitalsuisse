@@ -24,7 +24,7 @@ describe('SidebarComponent', () => {
 
   beforeEach(async(() => {
     const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService',
-      ['getStringAttributes', 'getNumberAttributes']);
+      ['getEnumAttributes', 'getNumberAttributes']);
 
     const d3ServiceSpy = jasmine.createSpyObj('D3Service',
       ['selectedHospital$', 'categoricalAttribute$', 'numericalAttribute$']);

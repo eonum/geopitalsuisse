@@ -18,7 +18,7 @@ export class CharacteristicsService {
   ) {}
 
   static isCategoricalAttribute(attribute: Attribute): boolean {
-    return attribute.variable_type === 'string';
+    return attribute.variable_type === 'string' || attribute.variable_type === 'enum';
   }
 
   static isNumericalAttribute(attribute: Attribute): boolean {
@@ -26,29 +26,18 @@ export class CharacteristicsService {
   }
 
   /**
-   * Gets all attributes
+   * Gets all numerical attributes (type enum)
    * @returns {Observable<Array<Attribute>>} array of Attributes
    */
-  getAttributes(): Observable<Array<Attribute>> {
-    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/attributes')
+  getEnumAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/enum_attributes')
       .pipe(
         map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
       );
   }
 
   /**
-   * Gets all string attributes
-   * @returns {Observable<Array<Attribute>>} array of Attributes
-   */
-  getStringAttributes(): Observable<Array<Attribute>> {
-    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/string_attributes')
-      .pipe(
-        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
-      );
-  }
-
-  /**
-   * Gets all string attributes
+   * Gets all numerical attributes (type number or percentage)
    * @returns {Observable<Array<Attribute>>} array of Attributes
    */
   getNumberAttributes(): Observable<Array<Attribute>> {
@@ -58,6 +47,11 @@ export class CharacteristicsService {
       );
   }
 
+  /**
+   * Gets an attribute by its name
+   * @param {string} name name of the attribute
+   * @returns {Observable<Attribute>}
+   */
   getAttributeByName(name: string): Observable<Attribute> {
     return this.http.get<Attribute>(this.getUrl() + '/api/geopital/attribute?name=' + name)
     .pipe(

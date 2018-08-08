@@ -52,7 +52,7 @@ export class D3Service {
 
   private correlationCoefficient;
 
-  private stringAttributeValuesDictionary = {};
+  private enumAttributeValuesDictionary = {};
 
   private locale = 'de';
 
@@ -131,13 +131,13 @@ export class D3Service {
   }
 
   private generateDict() {
-    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+    this.characteristicsService.getEnumAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.forEach((attribute: Attribute) => {
         const values = {};
         attribute.values.forEach((value) => {
           values[value] = false;
         });
-        this.stringAttributeValuesDictionary[attribute.code] = values;
+        this.enumAttributeValuesDictionary[attribute.code] = values;
       });
     });
   }
@@ -153,13 +153,13 @@ export class D3Service {
       this.setCategoricalAttribute(this.categoricalAttribute);
     });
 
-    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+    this.characteristicsService.getEnumAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.filter(attr => attr.multiclass === false).map((attr: Attribute) => {
         this.singleClassCategories.push(attr.code);
       });
     });
 
-    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+    this.characteristicsService.getEnumAttributes().subscribe((attributes: Array<Attribute>) => {
       attributes.filter(attr => attr.multiclass === true).map((attr: Attribute) => {
         this.multiClassCategories.push(attr.code);
       });
@@ -334,7 +334,7 @@ export class D3Service {
    * @param {string} value the code of the selected/deselected option
    */
   updateSelectedCategoryOption(attribute: Attribute, value: string) {
-    this.stringAttributeValuesDictionary[attribute.code][value] = !this.stringAttributeValuesDictionary[attribute.code][value];
+    this.enumAttributeValuesDictionary[attribute.code][value] = !this.enumAttributeValuesDictionary[attribute.code][value];
     this.updateCircles();
   }
 
@@ -628,11 +628,11 @@ export class D3Service {
       (<HTMLInputElement>allCheckboxContainers[i]).checked = false;
     }
 
-    for (const key in this.stringAttributeValuesDictionary) {
-      if (this.stringAttributeValuesDictionary.hasOwnProperty(key)) {
-        for (const innerKey in this.stringAttributeValuesDictionary[key]) {
-          if (this.stringAttributeValuesDictionary[key].hasOwnProperty(innerKey)) {
-            this.stringAttributeValuesDictionary[key][innerKey] = false;
+    for (const key in this.enumAttributeValuesDictionary) {
+      if (this.enumAttributeValuesDictionary.hasOwnProperty(key)) {
+        for (const innerKey in this.enumAttributeValuesDictionary[key]) {
+          if (this.enumAttributeValuesDictionary[key].hasOwnProperty(innerKey)) {
+            this.enumAttributeValuesDictionary[key][innerKey] = false;
           }
         }
       }
@@ -656,8 +656,8 @@ export class D3Service {
     const code = this.categoricalAttribute.code;
     const selectedAttributeOptions = [];
 
-    for (const key in this.stringAttributeValuesDictionary[code]) {
-      if (this.stringAttributeValuesDictionary[code].hasOwnProperty(key) && this.stringAttributeValuesDictionary[code][key]) {
+    for (const key in this.enumAttributeValuesDictionary[code]) {
+      if (this.enumAttributeValuesDictionary[code].hasOwnProperty(key) && this.enumAttributeValuesDictionary[code][key]) {
         selectedAttributeOptions.push(key.trim());
       }
     }

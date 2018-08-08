@@ -21,9 +21,9 @@ describe('D3Service', () => {
 
   beforeEach(() => {
     const characteristicsServiceSpy = jasmine.createSpyObj('CharacteristicsService',
-      ['isCategoricalAttribute', 'isNumericalAttribute', 'getAttributeByName', 'getStringAttributes']);
+      ['isCategoricalAttribute', 'isNumericalAttribute', 'getAttributeByName', 'getEnumAttributes']);
     characteristicsServiceSpy.getAttributeByName.and.returnValue(of(NumericalAttributes.filter(attr => attr.code === 'EtMedL')));
-    characteristicsServiceSpy.getStringAttributes.and.returnValue(of(StringAttributes));
+    characteristicsServiceSpy.getEnumAttributes.and.returnValue(of(StringAttributes));
 
     const hospitalServiceSpy = jasmine.createSpyObj('HospitalService', ['getHospitalByName', 'getHospitals']);
     hospitalServiceSpy.getHospitalByName.and.returnValue(of(Hospitals[0]));

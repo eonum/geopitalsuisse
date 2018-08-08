@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit {
       this.numericalAttribute = numAttribute;
     });
 
-    this.characteristicsService.getStringAttributes().subscribe((attributes: Array<Attribute>) => {
+    this.characteristicsService.getEnumAttributes().subscribe((attributes: Array<Attribute>) => {
       this.categoricalAttributes = attributes;
     });
 
