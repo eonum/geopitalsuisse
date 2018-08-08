@@ -1,92 +1,52 @@
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { HttpLoaderFactory } from '../../app.module';
 import { CategorialAttributesComponent } from './categorial-attributes.component';
 import { D3Service } from '../../services/d3.service';
+import { NumericalAttributes } from '../../../mocks/data/mock-numerical-attributes';
 
 describe('CategorialAttributesComponent', () => {
   let component: CategorialAttributesComponent;
   let fixture: ComponentFixture<CategorialAttributesComponent>;
-  let d3ServiceSpy;
-  let attribute;
-  let dictionary;
+  let translate: TranslateService;
 
   beforeEach(async(() => {
-    const d3Spy = jasmine.createSpyObj('D3Service', ['updateSelectedCategoryOption']);
+    const d3ServiceSpy = jasmine.createSpyObj('D3Service', ['updateSelectedCategoryOption']);
     TestBed.configureTestingModule({
       declarations: [
         CategorialAttributesComponent
       ],
       providers: [
-        {provide: D3Service, useValue: d3Spy}
+        TranslateService,
+        {provide: D3Service, useValue: d3ServiceSpy}
+      ],
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
       ]
-    })
-      .compileComponents();
+    }).compileComponents().then(() => {
+      fixture = TestBed.createComponent(CategorialAttributesComponent);
+      component = fixture.componentInstance;
+      translate = TestBed.get(TranslateService);
+    });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CategorialAttributesComponent);
-    component = fixture.componentInstance;
-    d3ServiceSpy = TestBed.get(D3Service);
-  });
-
-  beforeEach(() => {
-    attribute = {code: 'RForm', nameDE: 'Rechtsform', nameFR: 'Forme juridique', nameIT: 'Forma giuridica'};
-    dictionary = {
-      'RForm': [
-        ['R1', 'AG / GmbH'],
-        ['R2', 'Verein / Stiftung'],
-        ['R3', 'Einzelfirma / Gesellschaft'],
-        ['R4', 'Öffentliches Unternehmen']],
-      'Akt': [
-        ['A', 'Akutbehandlung'],
-        ['B', 'Geburtshaus'],
-        ['P', 'Psychiatrie'],
-        ['R', 'Rehabilitation / Geriatrie']
-      ],
-      'SL': [
-        ['IPS', 'Intensivpflegestation'],
-        ['NF', 'Notfallaufnahme']
-      ],
-      'WB': [
-        ['Arzt', 'Ärzte'],
-        ['BGs', 'Gesundheitssektor'],
-        ['MSt', 'Medizinstudenten']
-      ],
-      'SA': [
-        ['Angio', 'Angiographie'],
-        ['CC', 'Gamma Camera inkl. Szintigraphie und SPECT-Scanner'],
-        ['CT', 'Computertomograph'],
-        ['Dia', 'Dialyse'],
-        ['LB', 'Linearbeschleuniger'],
-        ['Lito', 'Lithotriptor'],
-        ['MRI', 'Magnetresonanztomograph'],
-        ['PET', 'Positronen-Emissions-Tomograph'],
-      ],
-      'LA': [
-        ['Stat', 'Stationär'],
-        ['Amb', 'Ambulant']
-      ]
-    };
-
-    component.currentAttribute = attribute;
-    component.dict = dictionary;
+    component.attribute = NumericalAttributes[0];
+    translate.use('de');
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  /*
-  it('should call selectedCatValue function if attribute is chosen', () => {
-    fixture.detectChanges();
-
-    spyOn(component, 'selectedCatValue');
-    const link = fixture.debugElement.nativeElement.querySelector('input');
-    link.click();
-
-    fixture.whenStable().then(() => {
-      expect(component.selectedCatValue).toHaveBeenCalled();
-    });
-  });
-  */
 });

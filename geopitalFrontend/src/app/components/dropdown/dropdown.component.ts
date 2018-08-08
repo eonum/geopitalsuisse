@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+
 import { CharacteristicsService } from '../../services/characteristics.service';
 import { D3Service } from '../../services/d3.service';
+import { Attribute } from '../../models/attribute.model';
 
 /**
  * Class is responsible that the data for the attribute-options in the dropdown is correctly loaded.
@@ -12,16 +15,17 @@ import { D3Service } from '../../services/d3.service';
 })
 export class DropdownComponent implements OnInit {
 
-  @Input() input;
-  @Input() selectedAttribute;
-  @Input() attributes;
-  @Input() name;
-  @Input() axis?;
+  @Input() input: boolean;
+  @Input() selectedAttribute: Attribute;
+  @Input() attributes: Array<Attribute>;
+  @Input() name: string;
+  @Input() axis?: string;
 
+  locale: string;
 
   constructor(
-    private characteristicsService: CharacteristicsService,
-    private d3: D3Service
+    private d3: D3Service,
+    private translate: TranslateService
   ) {  }
 
   /**
@@ -30,7 +34,12 @@ export class DropdownComponent implements OnInit {
    * numerical and the other that contains all categorical attributes
    * The attributes are then displayed in the html.
    */
-  ngOnInit() {}
+  ngOnInit() {
+    this.locale = this.translate.currentLang;
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.locale = event.lang;
+    });
+  }
 
   filterDropdownOptions() {
     const input = (<HTMLInputElement>document.getElementById('searchField-' + this.name));
@@ -47,21 +56,26 @@ export class DropdownComponent implements OnInit {
     }
   }
 
-  selectAttribute(attribute) {
+  selectAttribute(attribute: Attribute) {
     this.selectedAttribute = attribute;
 
     if (D3Service.showMap()) {
-      if (this.characteristicsService.isCategoricalAttribute(attribute)) {
-        this.d3.setCurrentCategoricalAttribute(attribute);
+      if (CharacteristicsService.isCategoricalAttribute(attribute)) {
+        this.d3.setCategoricalAttribute(attribute);
       }
 
-      if (this.characteristicsService.isNumericalAttribute(attribute)) {
-        this.d3.setCurrentNumericalAttribute(attribute);
+      if (CharacteristicsService.isNumericalAttribute(attribute)) {
+        this.d3.setNumericalAttribute(attribute);
       }
 
       this.d3.updateAttribute(attribute, null);
 
     } else {
+      if (this.axis === 'x') {
+        this.d3.setXCoordinateAttribute(attribute);
+      } else if (this.axis === 'y') {
+        this.d3.setYCoordinateAttribute(attribute);
+      }
       this.d3.updateAttribute(attribute, this.axis);
 
     }

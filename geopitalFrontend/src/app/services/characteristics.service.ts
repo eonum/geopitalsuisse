@@ -1,72 +1,69 @@
 import { Injectable, isDevMode } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Attribute } from '../models/attribute.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CharacteristicsService {
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private translate: TranslateService
+  ) {}
 
-  private categoricalAttributes;
-  private numericalAttributes;
-  private url;
-  /**
-   * Gets all categorical attributes of all hospitals
-   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
-   */
-  getCategoricalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>(this.getUrl() + '/api/attributeTypes')
-      .pipe(
-        map(res => {
-        this.categoricalAttributes = res['attribute_types_string'] as Attribute[];
-        return res['attribute_types_string'] as Attribute[];
-      }));
+  static isCategoricalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'string' || attribute.variable_type === 'enum';
+  }
+
+  static isNumericalAttribute(attribute: Attribute): boolean {
+    return attribute.variable_type === 'number' || attribute.variable_type === 'percentage';
   }
 
   /**
-   * Gets all categorical attributes of all hospitals
-   * @returns {Observable<Attributes[]>} data in form of the defined model Attributes
+   * Gets all numerical attributes (type enum)
+   * @returns {Observable<Array<Attribute>>} array of Attributes
    */
-  getNumericalAttributes(): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>(this.getUrl() + '/api/attributeTypes')
+  getEnumAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/enum_attributes')
       .pipe(
-        map(res => {
-        this.numericalAttributes = res['attribute_types_number'] as Attribute[];
-        return res['attribute_types_number'] as Attribute[];
-      }));
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
   }
 
-  isCategoricalAttribute(attribute): boolean {
-    const position = this.categoricalAttributes.findIndex(cur => {
-      return Object.keys(attribute).every(function (key) {
-        return attribute[key] === cur[key];
-      });
-    });
-
-    return position > -1;
-
+  /**
+   * Gets all numerical attributes (type number or percentage)
+   * @returns {Observable<Array<Attribute>>} array of Attributes
+   */
+  getNumberAttributes(): Observable<Array<Attribute>> {
+    return this.http.get<Array<Attribute>>(this.getUrl() + '/api/geopital/number_attributes')
+      .pipe(
+        map( res => res.map((attribute: Attribute) => new Attribute(attribute)))
+      );
   }
 
-  isNumericalAttribute(attribute): boolean {
-    const position = this.numericalAttributes.findIndex(cur => {
-      return Object.keys(attribute).every(function (key) {
-        return attribute[key] === cur[key];
-      });
-    });
-
-    return position > -1;
+  /**
+   * Gets an attribute by its name
+   * @param {string} name name of the attribute
+   * @returns {Observable<Attribute>}
+   */
+  getAttributeByName(name: string): Observable<Attribute> {
+    return this.http.get<Attribute>(this.getUrl() + '/api/geopital/attribute?name=' + name)
+    .pipe(
+      map(res => new Attribute(res))
+    );
   }
 
   private getUrl(): string {
     if (isDevMode()) {
-      return 'http://localhost:3000';
+      return 'http://localhost:3000/' + this.translate.currentLang;
     } else {
-      return 'http://geopitalsuisse-backend.eonum.ch';
+      return 'qm1.ch/'  + this.translate.currentLang;
     }
   }
-
 }

@@ -1,8 +1,12 @@
-<div id="checkboxes-container">
-  <h6>Spitaltypen:</h6>
-  <div *ngFor="let hospitalType of hospitalTypes; let i = index">
-    <label class="container">{{hospitalType}}
-      <input type="checkbox" (change)="selectHospitalType(hospitalType)">
+<div id="checkboxes-container" *ngIf="hospitalMainTypes && locale">
+  <h6>{{ 'hospital_types' | translate }}</h6>
+  <div *ngFor="let value of hospitalMainTypes['values_' + locale]; let i = index">
+    <label class="container">{{value}}
+      <input type="checkbox"
+             class="checkbox"
+             id="{{hospitalMainTypes?.values[i]}}"
+             value="{{hospitalMainTypes?.values[i]}}"
+             (click)="selectHospitalType()">
       <span class="checkmark{{i+1}}"></span>
     </label>
   </div>

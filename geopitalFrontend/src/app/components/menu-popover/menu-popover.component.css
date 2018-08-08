@@ -1,0 +1,41 @@
+#popover-content-menu {
+  z-index:9999;
+  display: none;
+}
+
+.icon {
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  font-size: 3.5rem;
+  z-index: 9999;
+}
+
+.label {
+  width: 120%;
+  color: #4E5D6C;
+}
+
+.navigation {
+  /* remove default ul settings */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  flex: 100%;
+  width: 100%;
+  max-width: 100%;
+  float: none;
+}
+
+.navigation-element {
+  display: inline-block;
+  padding: 0 .5rem;
+  max-width: 50%;
+  flex: 50%;
+}
+
+.active {
+  font-weight: bold;
+  color: #9a4912;
+}
