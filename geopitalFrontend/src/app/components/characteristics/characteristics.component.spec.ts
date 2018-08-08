@@ -1,35 +1,52 @@
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CharacteristicsComponent } from './characteristics.component';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { HospitalService } from '../../services/hospital.service';
-import { D3Service } from '../../services/d3.service';
+import { HttpLoaderFactory } from '../../app.module';
+import { CharacteristicsComponent } from './characteristics.component';
+import { VariableService } from '../../services/variable.service';
+import { NumericalAttributes } from '../../../mocks/data/mock-numerical-attributes';
+import { StringAttributes } from '../../../mocks/data/mock-string-attributes';
+import { Hospitals } from '../../../mocks/data/mock-hospitals';
 
 describe('CharacteristicsComponent', () => {
   let component: CharacteristicsComponent;
   let fixture: ComponentFixture<CharacteristicsComponent>;
-  let hospitalServiceSpy;
-  let d3ServiceSpy;
+  let translate: TranslateService;
 
   beforeEach(async(() => {
-    const hospitalSpy = jasmine.createSpyObj('HospitalService', ['getAll']);
-    const d3Spy = jasmine.createSpyObj('D3Service',
-      ['selectedHospital$', 'currentCategoricalAttribute$', 'currentNumericalAttribute$']);
+    const variableServiceSpy = jasmine.createSpyObj('VariableService',
+      ['getVariableOfHospitalByAttribute', 'getValueOfVariable']);
 
     TestBed.configureTestingModule({
       declarations: [ CharacteristicsComponent ],
       providers: [
-        {provide: HospitalService, useValue: hospitalSpy},
-        {provide: D3Service, useValue: d3Spy}
+        TranslateService,
+        {provide: VariableService, useValue: variableServiceSpy},
+      ],
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
       ]
     })
-      .compileComponents();
+    .compileComponents().then(() => {
+      fixture = TestBed.createComponent(CharacteristicsComponent);
+      component = fixture.componentInstance;
+      translate = TestBed.get(TranslateService);
+    });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CharacteristicsComponent);
-    component = fixture.componentInstance;
-    hospitalServiceSpy = TestBed.get(HospitalService);
-    d3ServiceSpy = TestBed.get(D3Service);
+    component.categoricalAttribute = StringAttributes[0];
+    component.numericalAttribute = NumericalAttributes[0];
+    component.hospital = Hospitals[0];
   });
 
   it('should create', () => {

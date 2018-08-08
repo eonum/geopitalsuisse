@@ -1,0 +1,13 @@
+{
+  "hospital_types": "Spitaltypen",
+  "characteristics_number": "Kennzahl",
+  "characteristics_number_x": "Kennzahl x-Achse",
+  "characteristics_number_y": "Kennzahl y-Achse",
+  "filter": "Filter",
+  "map": "Karte",
+  "statistics": "Statistik",
+  "regression_line": "Regressionslinie",
+  "correlation": "Korrelation",
+  "x_axis": "x-Achse",
+  "y_axis": "y-Achse"
+}

@@ -10,21 +10,23 @@
     <div class="filter" style="float: right">
       <div class="nestedFilter">
         <app-dropdown
-            [input]="true"
-            [name]="name1"
-            [attributes]="numericalAttributes"
-            [selectedAttribute]="xCoordinateNumAttribute"
-            [axis]="axis1">
+          *ngIf="attributes && xCoordinateAttribute"
+          [input]="true"
+          [name]="name_x_axis"
+          [attributes]="attributes"
+          [selectedAttribute]="xCoordinateAttribute"
+          [axis]="x_axis">
         </app-dropdown>
       </div>
 
       <div class="nestedFilter">
         <app-dropdown
-            [input]="true"
-            [name]="name2"
-            [attributes]="numericalAttributes"
-            [selectedAttribute]="yCoordinateNumAttribute"
-            [axis]="axis2">
+          *ngIf="attributes && yCoordinateAttribute"
+          [input]="true"
+          [name]="name_y_axis"
+          [attributes]="attributes"
+          [selectedAttribute]="yCoordinateAttribute"
+          [axis]="y_axis">
         </app-dropdown>
       </div>
 

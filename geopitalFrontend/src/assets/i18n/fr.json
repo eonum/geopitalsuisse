@@ -1,0 +1,13 @@
+{
+  "hospital_types": "Type de l’établissement",
+  "characteristics_number": "Nombre caractéristique",
+  "characteristics_number_x": "Nombre caractéristique axe des x",
+  "characteristics_number_y": "Nombre caractéristique axe des y",
+  "filter": "Filtre",
+  "map": "Carte",
+  "statistics": "Statistique",
+  "regression_line": "Ligne de régression",
+  "correlation": "corrélation",
+  "x_axis": "axe des x",
+  "y_axis": "axe des y"
+}
