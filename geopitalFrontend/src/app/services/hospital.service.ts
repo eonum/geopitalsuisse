@@ -52,7 +52,7 @@ export class HospitalService {
     if (isDevMode()) {
       return 'http://localhost:3000/' + this.translate.currentLang;
     } else {
-      return 'qm1.ch/' + this.translate.currentLang;
+      return 'https://qm1.ch/' + this.translate.currentLang;
     }
   }
 }
