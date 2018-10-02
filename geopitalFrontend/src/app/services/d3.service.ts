@@ -358,8 +358,7 @@ export class D3Service {
     const linkToMap = 'https://api.mapbox.com/styles/v1/nathi/cjf8cggx93p3u2qrqrgwoh5nh/tiles/256/{z}/{x}/{y}?access_' +
       'token=pk.eyJ1IjoibmF0aGkiLCJhIjoiY2pmOGJ4ZXJmMXMyZDJ4bzRoYWRxbzhteCJ9.x2dbGjsVZTA9HLw6VWaQow';
     const linkToBlog = 'http://eonum.ch/de/allgemein/geopitalsuisse/';
-    const linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/zahlen-fakten-zu-spitaelern/' +
-      'kennzahlen-der-schweizer-spitaeler.html';
+    const linkToData = 'https://www.bag.admin.ch/bag/de/home/zahlen-und-statistiken/zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
     this.map = L.map('mapid', {
       center: [46.818188, 8.97512],

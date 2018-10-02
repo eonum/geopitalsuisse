@@ -14,8 +14,7 @@ declare const $: any;
 })
 export class AppComponent implements OnInit {
   linkToBlog = 'http://eonum.ch/de/allgemein/geopitalsuisse/';
-  linkToData = 'https://www.bag.admin.ch/bag/de/home/service/zahlen-fakten/' +
-    'zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
+  linkToData = 'https://www.bag.admin.ch/bag/de/home/zahlen-und-statistiken/zahlen-fakten-zu-spitaelern/kennzahlen-der-schweizer-spitaeler.html';
 
   component = AppComponent;
   languages = Settings.LANGUAGES;
