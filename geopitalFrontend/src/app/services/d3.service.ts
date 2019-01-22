@@ -266,6 +266,26 @@ export class D3Service {
   }
 
   /**
+   * Returns the minimum value of the chosen numerical attribute
+   * @param selectedHospitals data which is displayed as a circle
+   * @returns {number} minimum radius of the chosen attribute
+   */
+  private getMinRadius (selectedHospitals: Array<Hospital>) {
+    const radiuses = [];
+
+    selectedHospitals.forEach( (hospital) => {
+      radiuses.push(
+        {radius: Number(VariableService.getValueOfVariable(this.variableService
+          .getVariableOfHospitalByAttribute(hospital, this.numericalAttribute)))}
+      );
+    });
+    if (radiuses.length === 0) {
+      return null;
+    }
+    return radiuses.reduce((min, p) => p.radius < min ? p.radius : min, radiuses[0].radius);
+  }
+
+  /**
    * Updates the selected hospital types based on whether the checkbox has been clicked.
    *
    */
@@ -425,10 +445,11 @@ export class D3Service {
 
     this.map.on('zoomend', () => {
       const maxValue = this.getMaxRadius(this.selectedHospitals);
+      const maxValue = this.getMinRadius(this.selectedHospitals);
       this.circles
         .attr('cx', (d) => { return this.projectPoint(d.longitude, d.latitude).x; })
         .attr('cy', (d) => { return this.projectPoint(d.longitude, d.latitude).y; })
-        .attr('r', (d) => { return this.calculateCircleRadius(d, maxValue); });
+        .attr('r', (d) => { return this.calculateCircleRadius(d, maxValue, minValue); });
 
       this.calculateSVGBounds(this.hospitals);
       d3.select('#circleSVG').style('visibility', 'visible');
@@ -505,6 +526,7 @@ export class D3Service {
    */
   private initCircles (selectedHospitals: Array<Hospital>) {
     const maxRadius = this.getMaxRadius(selectedHospitals);
+    const minRadius = this.getMinRadius(selectedHospitals);
 
     this.circles = this.svg.selectAll('circle')
       .data(selectedHospitals)
@@ -512,7 +534,7 @@ export class D3Service {
       .append('circle')
       .style('fill-opacity', 0.7)
       .attr('r', (hospital) => {
-        return this.calculateCircleRadius(hospital, maxRadius);
+        return this.calculateCircleRadius(hospital, maxRadius, minRadius);
       })
       .attr('fill', (hospital) => {
         return D3Service.getColourBasedOnHospitalType(hospital);
@@ -574,21 +596,21 @@ export class D3Service {
    * @param maxValue
    * @returns {number} radius of the marker (according numerical attribute)
    */
-  private calculateCircleRadius (hospital: Hospital, maxValue: number) {
+  private calculateCircleRadius (hospital: Hospital, maxValue: number, minValue: number) {
     let radius;
     const variable = this.variableService.getVariableOfHospitalByAttribute(hospital, this.numericalAttribute);
 
     if (variable === null || VariableService.getValueOfVariable(variable) === null) {
       return;
     } else {
-      radius = Number(VariableService.getValueOfVariable(variable));
+      radius = Number(VariableService.getValueOfVariable(variable)) - minValue;
     }
 
     const zoomLevel = this.map.getZoom();
     if (radius === 0) {
       return 3 * zoomLevel * zoomLevel / 100; // circles with value 0 have radius 3
     } else {
-      return ((radius / maxValue) * 40 + 5) * zoomLevel * zoomLevel / 100;
+      return ((radius / (maxValue - minValue)) * 40 + 5) * zoomLevel * zoomLevel / 100;
     }
   }
 
