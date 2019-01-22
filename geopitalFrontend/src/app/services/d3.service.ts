@@ -445,7 +445,7 @@ export class D3Service {
 
     this.map.on('zoomend', () => {
       const maxValue = this.getMaxRadius(this.selectedHospitals);
-      const maxValue = this.getMinRadius(this.selectedHospitals);
+      const minValue = this.getMinRadius(this.selectedHospitals);
       this.circles
         .attr('cx', (d) => { return this.projectPoint(d.longitude, d.latitude).x; })
         .attr('cy', (d) => { return this.projectPoint(d.longitude, d.latitude).y; })
